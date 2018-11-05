@@ -1,0 +1,2 @@
+!TIME		Err (pos)	Err(neg)	Flux		Error
+     209.866	   592.572	   -127.284	2.85524e-12	4.98605e-13

@@ -1,0 +1,370 @@
+date,jdobs,filter,absmag,magpsf,sigmamagpsf,limmag,instrument,reducedby,refsys,issub 
+"2018 Aug 10",2458340.8270,"g", 99.0, 99.0,99.0, 19.54,"P48+ZTF","None","None",True
+"2018 Aug 13",2458343.6600,"r", 99.0, 99.0,99.0, 20.69,"P48+ZTF","None","None",True
+"2018 Aug 13",2458343.6798,"g", 99.0, 99.0,99.0, 20.71,"P48+ZTF","None","None",True
+"2018 Aug 16",2458346.6564,"g", 99.0, 99.0,99.0, 20.52,"P48+ZTF","None","None",True
+"2018 Aug 16",2458346.6796,"r", 99.0, 99.0,99.0, 20.66,"P48+ZTF","None","None",True
+"2018 Aug 19",2458349.6606,"g", 99.0, 99.0,99.0, 20.13,"P48+ZTF","None","None",True
+"2018 Aug 19",2458349.6615,"g", 99.0, 99.0,99.0, 20.21,"P48+ZTF","None","None",True
+"2018 Aug 19",2458349.6710,"g", 99.0, 99.0,99.0, 20.22,"P48+ZTF","None","None",True
+"2018 Aug 19",2458349.6923,"g", 99.0, 99.0,99.0, 20.28,"P48+ZTF","None","None",True
+"2018 Aug 19",2458349.7346,"r", 99.0, 99.0,99.0, 20.22,"P48+ZTF","None","None",True
+"2018 Aug 19",2458349.7355,"r", 99.0, 99.0,99.0, 20.23,"P48+ZTF","None","None",True
+"2018 Aug 19",2458349.7568,"r", 99.0, 99.0,99.0, 20.13,"P48+ZTF","None","None",True
+"2018 Aug 19",2458349.7755,"r", 99.0, 99.0,99.0, 20.15,"P48+ZTF","None","None",True
+"2018 Aug 20",2458350.6545,"r", 99.0, 99.0,99.0, 20.36,"P48+ZTF","None","None",True
+"2018 Aug 20",2458350.6823,"r", 99.0, 99.0,99.0, 20.37,"P48+ZTF","None","None",True
+"2018 Aug 20",2458350.7062,"r", 99.0, 99.0,99.0, 20.36,"P48+ZTF","None","None",True
+"2018 Aug 20",2458350.7355,"g", 99.0, 99.0,99.0, 20.16,"P48+ZTF","None","None",True
+"2018 Aug 20",2458350.7666,"g", 99.0, 99.0,99.0, 20.11,"P48+ZTF","None","None",True
+"2018 Aug 20",2458350.7790,"g", 99.0, 99.0,99.0, 20.04,"P48+ZTF","None","None",True
+"2018 Aug 21",2458351.6620,"r", 99.0, 99.0,99.0, 20.37,"P48+ZTF","None","None",True
+"2018 Aug 21",2458351.6764,"r", 99.0, 99.0,99.0, 20.37,"P48+ZTF","None","None",True
+"2018 Aug 21",2458351.6906,"r", 99.0, 99.0,99.0, 20.39,"P48+ZTF","None","None",True
+"2018 Aug 21",2458351.7345,"g", 99.0, 99.0,99.0, 20.03,"P48+ZTF","None","None",True
+"2018 Aug 21",2458351.7675,"g", 99.0, 99.0,99.0, 20.00,"P48+ZTF","None","None",True
+"2018 Aug 21",2458351.7856,"g", 99.0, 99.0,99.0, 19.84,"P48+ZTF","None","None",True
+"2018 Aug 22",2458352.6598,"g", 99.0, 99.0,99.0, 19.68,"P48+ZTF","None","None",True
+"2018 Aug 22",2458352.6608,"g", 99.0, 99.0,99.0, 19.78,"P48+ZTF","None","None",True
+"2018 Aug 22",2458352.6789,"g", 99.0, 99.0,99.0, 19.70,"P48+ZTF","None","None",True
+"2018 Aug 22",2458352.7057,"g", 99.0, 99.0,99.0, 19.96,"P48+ZTF","None","None",True
+"2018 Aug 22",2458352.7138,"r", 99.0, 99.0,99.0, 20.06,"P48+ZTF","None","None",True
+"2018 Aug 22",2458352.7359,"r", 99.0, 99.0,99.0, 20.06,"P48+ZTF","None","None",True
+"2018 Aug 22",2458352.7443,"r", 99.0, 99.0,99.0, 20.06,"P48+ZTF","None","None",True
+"2018 Aug 22",2458352.7561,"r", 99.0, 99.0,99.0, 20.07,"P48+ZTF","None","None",True
+"2018 Aug 23",2458353.6612,"r", 99.0, 99.0,99.0, 20.16,"P48+ZTF","None","None",True
+"2018 Aug 23",2458353.6802,"r", 99.0, 99.0,99.0, 20.13,"P48+ZTF","None","None",True
+"2018 Aug 23",2458353.6953,"r", 99.0, 99.0,99.0, 20.28,"P48+ZTF","None","None",True
+"2018 Aug 23",2458353.7450,"r", 99.0, 99.0,99.0, 20.18,"P48+ZTF","None","None",True
+"2018 Aug 23",2458353.7553,"r", 99.0, 99.0,99.0, 20.16,"P48+ZTF","None","None",True
+"2018 Aug 23",2458353.7979,"r", 99.0, 99.0,99.0, 19.97,"P48+ZTF","None","None",True
+"2018 Aug 24",2458354.6863,"r", 99.0, 99.0,99.0, 20.05,"P48+ZTF","None","None",True
+"2018 Aug 24",2458354.6932,"r", 99.0, 99.0,99.0, 19.99,"P48+ZTF","None","None",True
+"2018 Aug 24",2458354.7261,"r", 99.0, 99.0,99.0, 20.02,"P48+ZTF","None","None",True
+"2018 Aug 24",2458354.7472,"r", 99.0, 99.0,99.0, 19.93,"P48+ZTF","None","None",True
+"2018 Aug 25",2458355.7490,"r", 99.0, 99.0,99.0, 20.00,"P48+ZTF","None","None",True
+"2018 Aug 25",2458355.7543,"r", 99.0, 99.0,99.0, 20.01,"P48+ZTF","None","None",True
+"2018 Aug 26",2458356.7153,"r", 99.0, 99.0,99.0, 19.72,"P48+ZTF","None","None",True
+"2018 Aug 26",2458356.7238,"r", 99.0, 99.0,99.0, 19.83,"P48+ZTF","None","None",True
+"2018 Aug 26",2458356.7461,"r", 99.0, 99.0,99.0, 19.85,"P48+ZTF","None","None",True
+"2018 Aug 26",2458356.7554,"r", 99.0, 99.0,99.0, 19.88,"P48+ZTF","None","None",True
+"2018 Aug 27",2458357.6830,"r", 99.0, 99.0,99.0, 19.75,"P48+ZTF","None","None",True
+"2018 Aug 27",2458357.7426,"r", 99.0, 99.0,99.0, 19.75,"P48+ZTF","None","None",True
+"2018 Aug 27",2458357.7649,"r", 99.0, 99.0,99.0, 19.68,"P48+ZTF","None","None",True
+"2018 Aug 27",2458357.7845,"r", 99.0, 99.0,99.0, 19.53,"P48+ZTF","None","None",True
+"2018 Aug 28",2458358.7016,"r", 99.0, 99.0,99.0, 20.04,"P48+ZTF","None","None",True
+"2018 Aug 28",2458358.7249,"r", 99.0, 99.0,99.0, 19.88,"P48+ZTF","None","None",True
+"2018 Aug 28",2458358.7416,"r", 99.0, 99.0,99.0, 19.84,"P48+ZTF","None","None",True
+"2018 Aug 29",2458359.7142,"r", 99.0, 99.0,99.0, 19.84,"P48+ZTF","None","None",True
+"2018 Aug 29",2458359.7184,"r", 99.0, 99.0,99.0, 19.27,"P48+ZTF","None","None",True
+"2018 Aug 29",2458359.7455,"r", 99.0, 99.0,99.0, 18.74,"P48+ZTF","None","None",True
+"2018 Aug 29",2458359.7683,"r", 99.0, 99.0,99.0, 19.43,"P48+ZTF","None","None",True
+"2018 Aug 30",2458360.6423,"g", 99.0, 99.0,99.0, 20.39,"P48+ZTF","None","None",True
+"2018 Aug 30",2458360.6569,"g", 99.0, 99.0,99.0, 20.78,"P48+ZTF","None","None",True
+"2018 Aug 30",2458360.7256,"r", 99.0, 99.0,99.0, 20.04,"P48+ZTF","None","None",True
+"2018 Aug 30",2458360.7468,"r", 99.0, 99.0,99.0, 20.16,"P48+ZTF","None","None",True
+"2018 Aug 30",2458360.7647,"r", 99.0, 99.0,99.0, 19.87,"P48+ZTF","None","None",True
+"2018 Aug 31",2458361.6461,"r", 99.0, 99.0,99.0, 20.42,"P48+ZTF","None","None",True
+"2018 Aug 31",2458361.6666,"g", 99.0, 99.0,99.0, 20.78,"P48+ZTF","None","None",True
+"2018 Aug 31",2458361.6696,"g", 99.0, 99.0,99.0, 20.84,"P48+ZTF","None","None",True
+"2018 Aug 31",2458361.6971,"g", 99.0, 99.0,99.0, 20.77,"P48+ZTF","None","None",True
+"2018 Aug 31",2458361.7454,"r", 99.0, 99.0,99.0, 20.24,"P48+ZTF","None","None",True
+"2018 Aug 31",2458361.7889,"r", 99.0, 99.0,99.0, 19.86,"P48+ZTF","None","None",True
+"2018 Sep 01",2458362.6376,"r", 99.0, 99.0,99.0, 20.40,"P48+ZTF","None","None",True
+"2018 Sep 01",2458362.6563,"r", 99.0, 99.0,99.0, 20.77,"P48+ZTF","None","None",True
+"2018 Sep 01",2458362.6572,"r", 99.0, 99.0,99.0, 20.75,"P48+ZTF","None","None",True
+"2018 Sep 01",2458362.6739,"r", 99.0, 99.0,99.0, 20.77,"P48+ZTF","None","None",True
+"2018 Sep 01",2458362.7012,"g", 99.0, 99.0,99.0, 20.85,"P48+ZTF","None","None",True
+"2018 Sep 01",2458362.7021,"g", 99.0, 99.0,99.0, 20.82,"P48+ZTF","None","None",True
+"2018 Sep 01",2458362.7139,"g", 99.0, 99.0,99.0, 20.39,"P48+ZTF","None","None",True
+"2018 Sep 01",2458362.7357,"g", 99.0, 99.0,99.0, 20.45,"P48+ZTF","None","None",True
+"2018 Sep 02",2458363.6703,"g", 99.0, 99.0,99.0, 20.23,"P48+ZTF","None","None",True
+"2018 Sep 02",2458363.7045,"g", 99.0, 99.0,99.0, 20.52,"P48+ZTF","None","None",True
+"2018 Sep 02",2458363.7188,"r", 99.0, 99.0,99.0, 20.25,"P48+ZTF","None","None",True
+"2018 Sep 02",2458363.7389,"r", 99.0, 99.0,99.0, 19.66,"P48+ZTF","None","None",True
+"2018 Sep 02",2458363.7567,"r", 99.0, 99.0,99.0, 19.98,"P48+ZTF","None","None",True
+"2018 Sep 03",2458364.6421,"r", 99.0, 99.0,99.0, 20.55,"P48+ZTF","None","None",True
+"2018 Sep 03",2458364.6580,"r", 99.0, 99.0,99.0, 20.78,"P48+ZTF","None","None",True
+"2018 Sep 03",2458364.6741,"r", 99.0, 99.0,99.0, 20.77,"P48+ZTF","None","None",True
+"2018 Sep 03",2458364.7015,"g", 99.0, 99.0,99.0, 20.80,"P48+ZTF","None","None",True
+"2018 Sep 03",2458364.7160,"g", 99.0, 99.0,99.0, 20.82,"P48+ZTF","None","None",True
+"2018 Sep 03",2458364.7373,"g", 99.0, 99.0,99.0, 20.74,"P48+ZTF","None","None",True
+"2018 Sep 04",2458365.6352,"r", 99.0, 99.0,99.0, 20.52,"P48+ZTF","None","None",True
+"2018 Sep 04",2458365.6579,"r", 99.0, 99.0,99.0, 20.75,"P48+ZTF","None","None",True
+"2018 Sep 04",2458365.6588,"r", 99.0, 99.0,99.0, 20.73,"P48+ZTF","None","None",True
+"2018 Sep 04",2458365.6777,"r", 99.0, 99.0,99.0, 20.67,"P48+ZTF","None","None",True
+"2018 Sep 04",2458365.7212,"g", 99.0, 99.0,99.0, 20.77,"P48+ZTF","None","None",True
+"2018 Sep 04",2458365.7231,"g", 99.0, 99.0,99.0, 20.71,"P48+ZTF","None","None",True
+"2018 Sep 04",2458365.7334,"g", 99.0, 99.0,99.0, 20.70,"P48+ZTF","None","None",True
+"2018 Sep 04",2458365.7573,"g", 99.0, 99.0,99.0, 20.54,"P48+ZTF","None","None",True
+"2018 Sep 05",2458366.6983,"g", 99.0, 99.0,99.0, 20.90,"P48+ZTF","None","None",True
+"2018 Sep 05",2458366.7131,"g", 99.0, 99.0,99.0, 20.88,"P48+ZTF","None","None",True
+"2018 Sep 05",2458366.7357,"g", 99.0, 99.0,99.0, 20.78,"P48+ZTF","None","None",True
+"2018 Sep 06",2458367.6494,"r", 99.0, 99.0,99.0, 20.66,"P48+ZTF","None","None",True
+"2018 Sep 06",2458367.6762,"r", 99.0, 99.0,99.0, 20.46,"P48+ZTF","None","None",True
+"2018 Sep 06",2458367.7062,"r", 99.0, 99.0,99.0, 20.32,"P48+ZTF","None","None",True
+"2018 Sep 06",2458367.7173,"g", 99.0, 99.0,99.0, 20.66,"P48+ZTF","None","None",True
+"2018 Sep 06",2458367.7439,"g", 99.0, 99.0,99.0, 20.45,"P48+ZTF","None","None",True
+"2018 Sep 06",2458367.7617,"g", 99.0, 99.0,99.0, 20.23,"P48+ZTF","None","None",True
+"2018 Sep 07",2458368.6362,"r", 99.0, 99.0,99.0, 20.68,"P48+ZTF","None","None",True
+"2018 Sep 07",2458368.6512,"r", 99.0, 99.0,99.0, 20.65,"P48+ZTF","None","None",True
+"2018 Sep 07",2458368.6619,"r", 99.0, 99.0,99.0, 20.71,"P48+ZTF","None","None",True
+"2018 Sep 07",2458368.6751,"r", 99.0, 99.0,99.0, 20.58,"P48+ZTF","None","None",True
+"2018 Sep 07",2458368.6972,"g", 99.0, 99.0,99.0, 20.74,"P48+ZTF","None","None",True
+"2018 Sep 07",2458368.7240,"g", 99.0, 99.0,99.0, 20.63,"P48+ZTF","None","None",True
+"2018 Sep 07",2458368.7263,"g", 99.0, 99.0,99.0, 20.63,"P48+ZTF","None","None",True
+"2018 Sep 07",2458368.7350,"g", 99.0, 99.0,99.0, 20.62,"P48+ZTF","None","None",True
+"2018 Sep 08",2458369.6411,"r", 99.0, 99.0,99.0, 20.70,"P48+ZTF","None","None",True
+"2018 Sep 08",2458369.6491,"r", 99.0, 99.0,99.0, 20.67,"P48+ZTF","None","None",True
+"2018 Sep 08",2458369.6759,"r", 99.0, 99.0,99.0, 20.63,"P48+ZTF","None","None",True
+"2018 Sep 08",2458369.7188,"g", 99.0, 99.0,99.0, 20.65,"P48+ZTF","None","None",True
+"2018 Sep 08",2458369.7448,"g", 99.0, 99.0,99.0, 20.47,"P48+ZTF","None","None",True
+"2018 Sep 08",2458369.7541,"g", 99.0, 99.0,99.0, 20.39,"P48+ZTF","None","None",True
+"2018 Sep 09",2458370.6408,"r", 99.0, 99.0,99.0, 20.47,"P48+ZTF","None","None",True
+"2018 Sep 09",2458370.6634,"r", -15.27, 20.48,0.26, 20.53,"P48+ZTF","None","None",True
+"2018 Sep 09",2458370.6856,"g", -16.05, 19.70,0.14, 20.79,"P48+ZTF","None","None",True
+"2018 Sep 09",2458370.6994,"g", -16.40, 19.34,0.11, 20.63,"P48+ZTF","None","None",True
+"2018 Sep 09",2458370.7153,"g", -16.95, 18.80,0.08, 20.57,"P48+ZTF","None","None",True
+"2018 Sep 09",2458370.7612,"r", -17.39, 18.36,0.08, 19.85,"P48+ZTF","None","None",True
+"2018 Sep 09",2458371.0893,"UVW1", -19.90, 15.84,0.05, 20.87,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.0907,"u", -19.38, 16.37,0.06, 20.40,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.0917,"B", -19.07, 16.68,0.06, 19.83,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.0940,"UVW2", -20.25, 15.49,0.06, 21.76,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.0964,"V", -18.75, 16.99,0.11, 19.08,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.1012,"UVM2", -20.02, 15.73,0.05, 22.20,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.1576,"UVW1", -20.02, 15.73,0.05, 20.97,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.1591,"u", -19.54, 16.21,0.06, 20.52,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.1600,"B", -19.16, 16.59,0.06, 19.94,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.1624,"UVW2", -20.38, 15.37,0.06, 21.73,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.1648,"V", -19.14, 16.61,0.09, 19.09,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.1668,"UVM2", -20.15, 15.60,0.05, 21.36,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 09",2458371.3779,"i", -18.53, 17.22,0.10, 22.00,"LT+IOO","Perley","SDSS",False
+"2018 Sep 09",2458371.3786,"r", -18.86, 16.89,0.10, 22.00,"LT+IOO","Perley","SDSS",False
+"2018 Sep 09",2458371.3793,"g", -19.20, 16.55,0.10, 22.00,"LT+IOO","Perley","SDSS",False
+"2018 Sep 09",2458371.3801,"u", -19.73, 16.02,0.10, 22.00,"LT+IOO","Perley","SDSS",False
+"2018 Sep 10",2458371.6295,"r", -18.97, 16.78,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 10",2458371.6323,"g", -19.36, 16.39,0.02, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 10",2458371.6351,"i", -18.74, 17.01,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 10",2458371.6369,"r", -18.91, 16.83,0.03, 20.77,"P48+ZTF","None","None",True
+"2018 Sep 10",2458371.6378,"r", -18.94, 16.81,0.04, 20.77,"P48+ZTF","None","None",True
+"2018 Sep 10",2458371.6392,"u", -19.77, 15.98,0.02, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 10",2458371.6420,"r", -18.98, 16.77,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 10",2458371.6448,"g", -19.38, 16.37,0.02, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 10",2458371.6476,"i", -18.78, 16.97,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 10",2458371.6514,"r", -18.95, 16.80,0.03, 20.74,"P48+ZTF","None","None",True
+"2018 Sep 10",2458371.6517,"u", -19.77, 15.98,0.02, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 10",2458371.6838,"r", -18.96, 16.78,0.04, 20.71,"P48+ZTF","None","None",True
+"2018 Sep 10",2458371.6959,"g", -19.44, 16.31,0.02, 20.80,"P48+ZTF","None","None",True
+"2018 Sep 10",2458371.6968,"g", -19.45, 16.29,0.03, 20.83,"P48+ZTF","None","None",True
+"2018 Sep 10",2458371.7138,"g", -19.46, 16.29,0.03, 20.78,"P48+ZTF","None","None",True
+"2018 Sep 10",2458371.7359,"g", -19.46, 16.28,0.03, 20.54,"P48+ZTF","None","None",True
+"2018 Sep 10",2458372.3539,"i", -18.94, 16.81,0.10, 22.00,"LT+IOO","None","None",False
+"2018 Sep 10",2458372.3546,"r", -19.29, 16.46,0.10, 22.00,"LT+IOO","None","None",False
+"2018 Sep 10",2458372.3553,"g", -19.58, 16.17,0.10, 22.00,"LT+IOO","None","None",False
+"2018 Sep 10",2458372.3560,"u", -20.05, 15.70,0.10, 22.00,"LT+IOO","None","None",False
+"2018 Sep 11",2458372.6396,"r", -19.27, 16.48,0.04, 20.70,"P48+ZTF","None","None",True
+"2018 Sep 11",2458372.6586,"r", -19.26, 16.49,0.06, 20.64,"P48+ZTF","None","None",True
+"2018 Sep 11",2458372.6861,"r", -19.28, 16.47,0.04, 20.55,"P48+ZTF","None","None",True
+"2018 Sep 11",2458372.7134,"g", -19.75, 15.99,0.03, 20.74,"P48+ZTF","None","None",True
+"2018 Sep 11",2458372.7371,"g", -19.76, 15.99,0.02, 20.38,"P48+ZTF","None","None",True
+"2018 Sep 11",2458373.3943,"u", -19.99, 15.76,0.10, 22.00,"LT+IOO","Perley","SDSS",False
+"2018 Sep 11",2458373.3950,"g", -19.72, 16.03,0.10, 22.00,"LT+IOO","Perley","SDSS",False
+"2018 Sep 11",2458373.3957,"r", -19.44, 16.31,0.10, 22.00,"LT+IOO","Perley","SDSS",False
+"2018 Sep 11",2458373.3964,"i", -19.10, 16.65,0.10, 22.00,"LT+IOO","Perley","SDSS",False
+"2018 Sep 11",2458373.3971,"z", -18.92, 16.83,0.10, 22.00,"LT+IOO","Perley","SDSS",False
+"2018 Sep 12",2458373.6276,"r", -19.39, 16.36,0.03, 20.31,"P48+ZTF","None","None",True
+"2018 Sep 12",2458373.6447,"r", -19.43, 16.32,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 12",2458373.6464,"g", -19.76, 15.99,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 12",2458373.6481,"i", -19.20, 16.55,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 12",2458373.6498,"u", -19.85, 15.90,0.02, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 12",2458373.6627,"r", -19.40, 16.35,0.03, 20.65,"P48+ZTF","None","None",True
+"2018 Sep 12",2458373.6850,"r", -19.41, 16.34,0.03, 20.47,"P48+ZTF","None","None",True
+"2018 Sep 12",2458373.6984,"g", -19.83, 15.91,0.02, 20.56,"P48+ZTF","None","None",True
+"2018 Sep 12",2458373.7189,"g", -19.85, 15.90,0.03, 20.53,"P48+ZTF","None","None",True
+"2018 Sep 12",2458373.7360,"g", -19.84, 15.91,0.02, 20.33,"P48+ZTF","None","None",True
+"2018 Sep 12",2458373.8829,"UVW1", -20.45, 15.30,0.06, 20.14,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458373.8834,"u", -20.02, 15.73,0.07, 19.47,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458373.8837,"B", -19.91, 15.83,0.08, 18.93,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458373.8844,"UVW2", -20.15, 15.60,0.07, 20.77,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458373.8852,"V", -19.62, 16.13,0.14, 18.00,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458373.8864,"UVM2", -20.56, 15.19,0.05, 20.98,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.0819,"UVW1", -20.52, 15.23,0.06, 20.15,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.0824,"u", -20.09, 15.66,0.07, 19.45,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.0827,"B", -19.92, 15.83,0.08, 18.91,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.0835,"UVW2", -20.09, 15.66,0.07, 20.82,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.0842,"V", -19.72, 16.03,0.13, 17.98,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.0855,"UVM2", -20.57, 15.18,0.05, 21.10,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.4800,"UVW1", -20.35, 15.40,0.06, 20.24,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.4809,"B", -19.90, 15.85,0.08, 19.02,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.4809,"u", -20.00, 15.74,0.07, 19.57,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.4819,"UVW2", -19.89, 15.86,0.07, 20.90,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.4829,"V", -19.76, 15.99,0.12, 18.10,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 12",2458374.4839,"UVM2", -20.36, 15.39,0.05, 21.09,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 13",2458374.6316,"r", -19.45, 16.30,0.04, 20.62,"P48+ZTF","None","None",True
+"2018 Sep 13",2458374.6429,"r", -19.42, 16.32,0.03, 20.66,"P48+ZTF","None","None",True
+"2018 Sep 13",2458374.6495,"r", -19.45, 16.30,0.03, 20.63,"P48+ZTF","None","None",True
+"2018 Sep 13",2458374.6551,"r", -19.46, 16.29,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 13",2458374.6569,"g", -19.72, 16.03,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 13",2458374.6586,"i", -19.30, 16.45,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 13",2458374.6603,"u", -19.83, 15.92,0.03, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 13",2458374.6845,"r", -19.45, 16.29,0.04, 20.56,"P48+ZTF","None","None",True
+"2018 Sep 13",2458374.6994,"g", -19.83, 15.91,0.03, 20.50,"P48+ZTF","None","None",True
+"2018 Sep 13",2458374.7041,"g", -19.82, 15.93,0.02, 20.60,"P48+ZTF","None","None",True
+"2018 Sep 13",2458374.7264,"g", -19.83, 15.92,0.03, 20.44,"P48+ZTF","None","None",True
+"2018 Sep 13",2458374.7428,"g", -19.83, 15.91,0.03, 20.30,"P48+ZTF","None","None",True
+"2018 Sep 13",2458375.3400,"UVW1", -20.04, 15.71,0.06, 20.67,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 13",2458375.3409,"u", -20.04, 15.70,0.06, 19.88,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 13",2458375.3419,"B", -19.74, 16.01,0.07, 19.31,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 13",2458375.3429,"UVW2", -19.41, 16.34,0.07, 21.39,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 13",2458375.3439,"V", -19.64, 16.11,0.10, 18.51,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 13",2458375.3469,"UVM2", -19.89, 15.86,0.05, 21.53,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 14",2458375.6247,"r", -19.43, 16.31,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 14",2458375.6265,"g", -19.68, 16.07,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 14",2458375.6282,"i", -19.32, 16.43,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 14",2458375.6299,"u", -19.77, 15.98,0.03, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 14",2458375.6757,"r", -19.42, 16.33,0.04, 20.47,"P48+ZTF","None","None",True
+"2018 Sep 14",2458375.7144,"g", -19.78, 15.97,0.04, 20.58,"P48+ZTF","None","None",True
+"2018 Sep 14",2458375.7381,"g", -19.76, 15.99,0.03, 20.50,"P48+ZTF","None","None",True
+"2018 Sep 14",2458376.4783,"UVW1", -19.34, 16.41,0.06, 20.84,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 14",2458376.4793,"u", -19.82, 15.93,0.06, 20.14,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 14",2458376.4800,"B", -19.80, 15.95,0.06, 19.53,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 14",2458376.4814,"UVW2", -18.72, 17.03,0.07, 21.50,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 14",2458376.4829,"V", -19.78, 15.97,0.09, 18.58,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 14",2458376.4853,"UVM2", -19.14, 16.61,0.06, 21.64,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 15",2458376.5978,"UVW1", -19.28, 16.47,0.07, 20.43,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 15",2458376.5986,"u", -19.94, 15.81,0.07, 19.43,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 15",2458376.5990,"B", -19.58, 16.17,0.08, 18.84,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 15",2458376.6001,"UVW2", -18.53, 17.22,0.08, 21.18,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 15",2458376.6012,"V", -19.81, 15.93,0.11, 18.17,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 15",2458376.6031,"UVM2", -18.99, 16.76,0.06, 21.44,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 15",2458376.6200,"r", -19.37, 16.37,0.04, 19.97,"P48+ZTF","None","None",True
+"2018 Sep 15",2458376.6623,"r", -19.38, 16.37,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 15",2458376.6626,"r", -19.38, 16.37,0.04, 20.42,"P48+ZTF","None","None",True
+"2018 Sep 15",2458376.6640,"g", -19.58, 16.16,0.02, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 15",2458376.6657,"i", -19.30, 16.44,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 15",2458376.6674,"u", -19.66, 16.09,0.03, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 15",2458376.6739,"r", -19.39, 16.36,0.04, 20.46,"P48+ZTF","None","None",True
+"2018 Sep 15",2458376.7272,"g", -19.64, 16.10,0.03, 20.37,"P48+ZTF","None","None",True
+"2018 Sep 15",2458376.7423,"g", -19.66, 16.09,0.03, 20.30,"P48+ZTF","None","None",True
+"2018 Sep 16",2458377.6186,"r", -19.34, 16.40,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 16",2458377.6204,"g", -19.48, 16.27,0.02, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 16",2458377.6221,"i", -19.24, 16.51,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 16",2458377.6238,"u", -19.46, 16.29,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 16",2458377.6301,"r", -19.34, 16.41,0.03, 20.32,"P48+ZTF","None","None",True
+"2018 Sep 16",2458377.6513,"r", -19.33, 16.41,0.03, 20.48,"P48+ZTF","None","None",True
+"2018 Sep 16",2458377.6639,"r", -19.35, 16.40,0.03, 20.42,"P48+ZTF","None","None",True
+"2018 Sep 16",2458377.6761,"r", -19.34, 16.41,0.03, 20.39,"P48+ZTF","None","None",True
+"2018 Sep 16",2458377.6935,"g", -19.54, 16.21,0.03, 20.31,"P48+ZTF","None","None",True
+"2018 Sep 16",2458377.7038,"g", -19.55, 16.20,0.03, 20.33,"P48+ZTF","None","None",True
+"2018 Sep 16",2458377.7165,"g", -19.54, 16.20,0.04, 20.31,"P48+ZTF","None","None",True
+"2018 Sep 16",2458377.7458,"g", -19.53, 16.22,0.03, 20.14,"P48+ZTF","None","None",True
+"2018 Sep 17",2458378.6164,"r", -19.30, 16.45,0.04, 19.98,"P48+ZTF","None","None",True
+"2018 Sep 17",2458378.6437,"r", -19.29, 16.46,0.05, 20.49,"P48+ZTF","None","None",True
+"2018 Sep 17",2458378.6650,"g", -19.42, 16.33,0.03, 20.41,"P48+ZTF","None","None",True
+"2018 Sep 17",2458378.6844,"g", -19.42, 16.32,0.03, 20.42,"P48+ZTF","None","None",True
+"2018 Sep 17",2458378.6930,"r", -19.34, 16.41,0.01, 99.00,"P60+SEDM","Fremling Automated Pipeline","SDSS",True
+"2018 Sep 17",2458378.7039,"g", -19.42, 16.32,0.03, 20.29,"P48+ZTF","None","None",True
+"2018 Sep 17",2458378.7158,"r", -19.28, 16.47,0.03, 20.24,"P48+ZTF","None","None",True
+"2018 Sep 17",2458379.2559,"UVW1", -17.94, 17.81,0.09, 20.76,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 17",2458379.2569,"B", -19.36, 16.39,0.07, 19.34,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 17",2458379.2569,"u", -19.15, 16.60,0.07, 19.96,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 17",2458379.2589,"UVW2", -16.63, 19.12,0.12, 21.54,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 17",2458379.2609,"V", -19.46, 16.28,0.10, 18.61,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 17",2458379.2629,"UVM2", -16.57, 19.18,0.11, 21.67,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458379.6623,"g", -19.31, 16.44,0.04, 20.27,"P48+ZTF","None","None",True
+"2018 Sep 18",2458379.6823,"g", -19.31, 16.43,0.03, 20.24,"P48+ZTF","None","None",True
+"2018 Sep 18",2458379.6977,"g", -19.31, 16.44,0.03, 20.20,"P48+ZTF","None","None",True
+"2018 Sep 18",2458379.7176,"r", -19.24, 16.51,0.04, 20.26,"P48+ZTF","None","None",True
+"2018 Sep 18",2458379.7409,"r", -19.23, 16.52,0.04, 20.10,"P48+ZTF","None","None",True
+"2018 Sep 18",2458379.7577,"r", -19.23, 16.52,0.03, 19.95,"P48+ZTF","None","None",True
+"2018 Sep 18",2458380.1829,"UVW1", -17.31, 18.44,0.13, 20.46,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1829,"UVW1", -17.31, 18.44,0.13, 20.46,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1839,"B", -19.33, 16.42,0.09, 18.84,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1839,"B", -19.33, 16.42,0.09, 18.84,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1839,"u", -18.63, 17.12,0.10, 19.51,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1839,"U", -18.63, 17.12,0.10, 19.51,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1850,"UVW2", -16.34, 19.41,0.15, 21.21,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1850,"UVW2", -16.34, 19.41,0.15, 21.21,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1859,"V", -19.47, 16.28,0.12, 18.22,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1859,"V", -19.47, 16.28,0.12, 18.22,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1879,"UVM2", -16.41, 19.34,0.14, 21.36,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.1879,"UVM2", -16.41, 19.34,0.14, 21.36,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3159,"UVW1", -17.00, 18.74,0.15, 20.43,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3159,"UVW1", -17.00, 18.74,0.15, 20.43,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3169,"B", -19.15, 16.60,0.10, 18.86,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3169,"B", -19.15, 16.60,0.10, 18.86,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3169,"u", -18.56, 17.19,0.10, 19.49,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3169,"U", -18.56, 17.19,0.10, 19.49,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3179,"UVW2", -16.23, 19.52,0.16, 21.13,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3179,"UVW2", -16.23, 19.52,0.16, 21.13,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3189,"V", -19.28, 16.47,0.14, 18.11,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3189,"V", -19.28, 16.47,0.14, 18.11,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3209,"UVM2", -16.33, 19.42,0.15, 21.23,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3209,"UVM2", -16.33, 19.42,0.15, 21.23,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 18",2458380.3577,"z", -19.02, 16.73,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 18",2458380.3584,"i", -19.03, 16.72,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 18",2458380.3592,"r", -19.25, 16.50,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 18",2458380.3599,"g", -19.18, 16.57,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 18",2458380.3606,"u", -18.68, 17.07,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 19",2458380.6214,"g", -19.12, 16.63,0.04, 19.70,"P48+ZTF","None","None",True
+"2018 Sep 19",2458380.6251,"g", -19.09, 16.66,0.04, 19.87,"P48+ZTF","None","None",True
+"2018 Sep 19",2458380.6778,"g", -19.18, 16.56,0.03, 20.19,"P48+ZTF","None","None",True
+"2018 Sep 19",2458380.7850,"UVW1", -17.18, 18.56,0.10, 20.99,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7850,"UVW1", -17.18, 18.56,0.10, 20.99,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7869,"B", -19.05, 16.70,0.07, 19.69,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7869,"B", -19.05, 16.70,0.07, 19.69,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7869,"u", -18.50, 17.25,0.08, 20.35,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7869,"U", -18.50, 17.25,0.08, 20.35,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7889,"UVW2", -16.21, 19.53,0.12, 21.81,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7889,"UVW2", -16.21, 19.53,0.12, 21.81,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7909,"V", -19.28, 16.46,0.10, 18.82,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7909,"V", -19.28, 16.46,0.10, 18.82,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7939,"UVM2", -15.99, 19.76,0.12, 21.90,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458380.7939,"UVM2", -15.99, 19.76,0.12, 21.90,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 19",2458381.3374,"z", -19.01, 16.74,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 19",2458381.3381,"i", -19.01, 16.74,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 19",2458381.3388,"r", -19.20, 16.55,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 19",2458381.3395,"g", -19.06, 16.69,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 19",2458381.3403,"u", -18.29, 17.46,0.10, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 20",2458381.6439,"u", -18.16, 17.59,0.13, 19.38,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6439,"U", -18.16, 17.59,0.13, 19.38,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6439,"UVW1", -17.00, 18.74,0.16, 20.28,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6439,"UVW1", -17.00, 18.74,0.16, 20.28,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6450,"B", -18.60, 17.15,0.13, 18.74,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6450,"B", -18.60, 17.15,0.13, 18.74,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6459,"UVW2", -16.28, 19.47,0.17, 21.00,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6459,"UVW2", -16.28, 19.47,0.17, 21.00,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6469,"V", -19.29, 16.46,0.15, 18.02,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6469,"V", -19.29, 16.46,0.15, 18.02,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6479,"UVM2", -16.04, 19.70,0.17, 21.20,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.6479,"UVM2", -16.04, 19.70,0.17, 21.20,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7122,"g", -19.04, 16.71,0.04, 19.75,"P48+ZTF","None","None",True
+"2018 Sep 20",2458381.7759,"UVW1", -16.78, 18.97,0.19, 20.15,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7759,"UVW1", -16.78, 18.97,0.19, 20.15,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7769,"B", -19.05, 16.70,0.11, 18.68,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7769,"B", -19.05, 16.70,0.11, 18.68,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7769,"u", -17.97, 17.77,0.14, 19.34,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7769,"U", -17.97, 17.77,0.14, 19.34,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7779,"UVW2", -16.01, 19.74,0.20, 20.86,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7779,"UVW2", -16.01, 19.74,0.20, 20.86,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7789,"V", -19.21, 16.54,0.16, 17.96,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7789,"V", -19.21, 16.54,0.16, 17.96,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7809,"UVM2", -16.21, 19.54,0.16, 21.21,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.7809,"UVM2", -16.21, 19.54,0.16, 21.21,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8429,"UVW1", -16.41, 19.34,0.22, 20.28,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8429,"UVW1", -16.41, 19.34,0.22, 20.28,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8439,"B", -18.90, 16.84,0.12, 18.67,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8439,"B", -18.90, 16.84,0.12, 18.67,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8439,"u", -17.88, 17.87,0.15, 19.35,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8439,"U", -17.88, 17.87,0.15, 19.35,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8450,"UVW2", -15.81, 19.94,0.22, 20.95,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8450,"UVW2", -15.81, 19.94,0.22, 20.95,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8459,"V", -19.38, 16.37,0.15, 17.82,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8459,"V", -19.38, 16.37,0.15, 17.82,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8469,"UVM2", -15.89, 19.86,0.17, 21.32,"Swift+UVOT","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458381.8469,"UVM2", -15.89, 19.86,0.17, 21.32,"SALT+Spectrograph","Steve Schulze","UVOT ZPs; AB; no ext corr, aperture photometry, significant host contamination, extraction aperture reduced to 3''",False
+"2018 Sep 20",2458382.3416,"z", -19.02, 16.73,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 20",2458382.3423,"i", -18.94, 16.81,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 20",2458382.3431,"r", -19.16, 16.59,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 20",2458382.3438,"g", -18.90, 16.85,0.05, 22.00,"LT+IOO","Perley","None",False
+"2018 Sep 20",2458382.3445,"u", -17.91, 17.84,0.05, 22.00,"LT+IOO","Perley","None",False
