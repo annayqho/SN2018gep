@@ -62,7 +62,17 @@ choose = np.logical_and(det, band)
 ax.errorbar(
         dt[choose], mag[choose], emag[choose], fmt='s', ms=6,
         mec='k', mfc='white', label='z', c='k', zorder=1)
-# 
+
+ax2 = ax.twinx()
+ax2.set_ylabel(
+        "Absolute Magnitude",
+        fontsize=12, rotation=270, labelpad=15.0)
+y_f = lambda y_i: y_i-Planck15.distmod(z=0.033)
+ymin, ymax = ax.get_ylim()
+ax2.set_ylim((y_f(ymin), y_f(ymax)))
+ax2.plot([],[])
+ax2.set_yscale('log')
+ax2.tick_params(axis='both', labelsize=14)
 
 ax.set_ylabel("Apparent Magnitude", fontsize=16)
 ax.set_xlabel("Days since JD 2458370.6634 (2018 Sept 09 UT)", fontsize=16)
