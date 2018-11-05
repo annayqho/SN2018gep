@@ -73,7 +73,7 @@ ax2.plot([],[])
 ax2.tick_params(axis='both', labelsize=14)
 
 ax.set_ylabel("Apparent Magnitude", fontsize=16)
-ax.set_xlabel("Days since JD 2458370.6634 (2018 Sept 09 UT)", fontsize=16)
+ax.set_xlabel("Days since JD 2458370.6473 (UT 2018 Sept 09.15)", fontsize=16)
 ax.yaxis.set_tick_params(labelsize=14)
 ax.xaxis.set_tick_params(labelsize=14)
 ax.legend(loc='upper right', fontsize=12)
