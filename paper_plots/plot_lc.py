@@ -23,8 +23,7 @@ mag = dat[:,3].astype(float)
 emag = dat[:,4].astype(float)
 
 det = np.logical_and(mag<99, ~np.isnan(mag))
-zp = mjd[det][0]
-print(zp)
+zp = 2458370.6473
 dt = mjd-zp
 
 rcol = 'k'
@@ -66,12 +65,11 @@ ax.errorbar(
 ax2 = ax.twinx()
 ax2.set_ylabel(
         "Absolute Magnitude",
-        fontsize=12, rotation=270, labelpad=15.0)
-y_f = lambda y_i: y_i-Planck15.distmod(z=0.033)
+        fontsize=14, rotation=270, labelpad=15.0)
+y_f = lambda y_i: y_i-Planck15.distmod(z=0.033).value
 ymin, ymax = ax.get_ylim()
 ax2.set_ylim((y_f(ymin), y_f(ymax)))
 ax2.plot([],[])
-ax2.set_yscale('log')
 ax2.tick_params(axis='both', labelsize=14)
 
 ax.set_ylabel("Apparent Magnitude", fontsize=16)
@@ -80,5 +78,9 @@ ax.yaxis.set_tick_params(labelsize=14)
 ax.xaxis.set_tick_params(labelsize=14)
 ax.legend(loc='upper right', fontsize=12)
 #ax.set_xscale('log')
-plt.gca().invert_yaxis()
-plt.show()
+ax.invert_yaxis()
+ax2.invert_yaxis()
+
+plt.tight_layout()
+plt.savefig("lc.png")
+#plt.show()
