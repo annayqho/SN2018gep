@@ -356,15 +356,32 @@ def sn1998bw(ax, col, legend):
     f = np.array([39])
     lum = plot_line(ax[0], d, t, nu*f, 'SN1998bw', 'Rel. SN', col, legend)
     nu = 2.3E9
-    t = np.array([11.7, 14.6, 15.7, 16.5, 17.8, 19.7, 21.6, 23.6, 25.9, 26.8, 28.8, 30.0, 32.9, 34.7, 36.8, 38.8, 40.0, 45.7, 51.7, 57.7, 64.7, 67.7, 80.5])
-    f = np.array([19.7, 22.3, 23.5, 23.9, 25.1, 25.3, 20.9, 22.9, 28.0, 28.7, 31.1, 31.3, 27.3, 33.5, 31.8, 31, 31.3, 26.8, 23.1, 18.5, 15.6, 15.6, 9.6])
+    t = np.array(
+            [11.7, 14.6, 15.7, 16.5, 17.8, 19.7, 21.6, 23.6, 25.9, 26.8, 
+             28.8, 30.0, 32.9, 34.7, 36.8, 38.8, 40.0, 45.7, 51.7, 57.7, 
+             64.7, 67.7, 80.5])
+    f = np.array(
+            [19.7, 22.3, 23.5, 23.9, 25.1, 25.3, 20.9, 22.9, 28.0, 28.7, 
+            31.1, 31.3, 27.3, 33.5, 31.8, 31, 31.3, 26.8, 23.1, 18.5, 
+            15.6, 15.6, 9.6])
     ax[0].text(t[0], lum[0]/2, '1998bw', fontsize=11,
             verticalalignment='top',
             horizontalalignment='center')
     lum = plot_line(ax[1], d, t, nu*f, 'SN1998bw', 'Rel. SN', col, legend)
     ax[1].text(t[0]/1.05, lum[0], '1998bw', fontsize=11,
-            verticalalignment='center',
+            verticalalignment='bottom',
             horizontalalignment='right')
+
+
+def sn2010bh(ax, col, legend):
+    d = Planck15.luminosity_distance(z=0.0593).cgs.value
+    nu = 5.4E9
+    t = np.array([18.93, 29.87, 36.97, 69.87])
+    f = np.array([90, 128, 68, 50])*1E-3
+    lum = plot_line(ax[1], d, t, nu*f, 'SN2010bh', 'Rel. SN', col, legend)
+    ax[1].text(t[-1], lum[-1]/1.3, 'SN2010bh', fontsize=11,
+            verticalalignment='top',
+            horizontalalignment='center')
 
 
 def at2018gep(ax, col, legend):
@@ -413,6 +430,31 @@ def iptf16asu(ax, col, legend):
             horizontalalignment='left', verticalalignment='center')
 
 
+def iptf17cw(ax, col, legend):
+    d = Planck15.luminosity_distance(z=0.093).cgs.value
+    nu = 6.2E9
+    t = np.array([12.6, 15.7, 21.6, 30.7, 41.6])
+    f = np.array([38.1, 30.4, 19.9, 22.4, 19])*1E-3
+    lum = plot_line(ax[1], d, t, nu*f, 'iPTF17cw', 'Rel. SN', col, legend)
+    ax[1].text(t[0]/1.05, lum[0], 'iPTF17cw', fontsize=11,
+            verticalalignment='center',
+            horizontalalignment='right')
+
+
+def sn2006aj(ax, col, legend):
+    d = 145*3.086E24
+    nu = 8.46E9
+    t = np.array([1.87, 3, 3.83, 4.85, 6.97, 7.94, 9.95, 12.88,
+        16.74, 19.86, 21.96, 24.91, 30.71, 34.81, 41.74, 50.70, 104.52])
+    f = np.array([453, 381, 269, 280, 164, 30, 39, 15, 75, 48, 87, 20, 32, 15,
+        22, 25, 17])*1E-3
+    lum = plot_line(ax[1], d, t, nu*f, 'SN2006aj', 'Rel. SN', col, legend)
+    ax[1].text(t[0]/1.05, lum[0], 'SN2006aj', fontsize=11,
+            verticalalignment='center',
+            horizontalalignment='right')
+
+
+
 if __name__=="__main__":
     fig, axarr = plt.subplots(1, 2, figsize=(10,7), sharex=True, sharey=True)
     props = dict(boxstyle='round', facecolor='white')
@@ -425,6 +467,10 @@ if __name__=="__main__":
 
     sn2009bb(axarr, '#bc3754', legend=True)
     sn1998bw(axarr, '#bc3754', None)
+    iptf17cw(axarr, '#bc3754', None)
+    sn2010bh(axarr, '#bc3754', None)
+    sn2006aj(axarr, '#bc3754', None)
+
 
     axarr[0].set_ylabel(
             r"Luminosity $\nu L_{\nu}$ [erg\,s$^{-1}$]", 
@@ -441,5 +487,5 @@ if __name__=="__main__":
     axarr[1].legend(fontsize=12, loc='upper right')
 
     plt.subplots_adjust(wspace=0.05)
-    #plt.show()
-    plt.savefig("lum_evolution.png")
+    plt.show()
+    #plt.savefig("radio_lc.png")
