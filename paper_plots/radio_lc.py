@@ -387,15 +387,6 @@ def sn2010bh(ax, col, legend):
 
 def at2018gep(ax, col, legend):
     d = Planck15.luminosity_distance(z=0.033).cgs.value
-    nu = 230E9
-    t = np.array([4, 6])
-    f = np.array([3500, 590])
-    lum = plot_line(
-            ax, d, t, nu*f, 'AT2018gep', 
-            label='AT2018gep', col=col, legend=False)
-    ax.text(t[0]*1.5, lum[0]/1.2, 'AT2018gep', fontsize=11,
-            verticalalignment='top')
-
     t = np.array([4, 5, 15, 16])
     nu = np.array([15, 10, 15, 9]) *1E9
     fnu = np.array([35, 34, 43, 24.4])
