@@ -396,11 +396,9 @@ def at2018gep(ax, col, legend):
     fs = 11
     nsize = 10 # normal size for points
     ax.scatter(
-            t[islim], lum[islim], facecolor='k', edgecolor='k',
-            marker='v', s=70, zorder=10)
-    ax.scatter(
             t[~islim], lum[~islim], facecolor='k', edgecolor='k',
             marker='*', s=70, zorder=10)
+    ax.plot(t[~islim], lum[~islim], c='k')
     ax.text(t[-1], lum[-1]/2, 'AT2018gep', fontsize=11,
             horizontalalignment='right',
             verticalalignment='top')
@@ -412,12 +410,12 @@ def iptf16asu(ax, col, legend):
     f = np.array([1E38, 1E38])
     fs = 11
     nsize = 10 # normal size for points
-    ax[1].scatter(
+    ax.scatter(
             t, f, facecolor=col, edgecolor=col,
             marker='v', s=70, zorder=10)
-    ax[1].plot(
+    ax.plot(
             t, f, c=col, ls='--')
-    ax[1].text(
+    ax.text(
             t[-1]*1.4, f[-1], 'iPTF16asu', fontsize=11,
             horizontalalignment='left', verticalalignment='center')
 
@@ -452,7 +450,7 @@ if __name__=="__main__":
     props = dict(boxstyle='round', facecolor='white')
 
     at2018gep(ax, 'black', None)
-    #iptf16asu(axarr, '#bc3754', None)
+    iptf16asu(ax, '#bc3754', None)
 
     #grb030329(axarr, 'lightblue', legend=True)
     #grb130427A(axarr, 'lightblue', None)
