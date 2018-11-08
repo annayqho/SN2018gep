@@ -1,5 +1,6 @@
 """ 
-Plot of radio luminosity over time
+Plot of low-frequency radio luminosity over time
+Ideally as close to 8 GHz as possible, but also as well-sampled as possible
 """
 
 
@@ -390,9 +391,9 @@ def at2018gep(ax, col, legend):
     t = np.array([4, 6])
     f = np.array([3500, 590])
     lum = plot_line(
-            ax[0], d, t, nu*f, 'AT2018gep', 
+            ax, d, t, nu*f, 'AT2018gep', 
             label='AT2018gep', col=col, legend=False)
-    ax[0].text(t[0]*1.5, lum[0]/1.2, 'AT2018gep', fontsize=11,
+    ax.text(t[0]*1.5, lum[0]/1.2, 'AT2018gep', fontsize=11,
             verticalalignment='top')
 
     t = np.array([4, 5, 15, 16])
@@ -403,13 +404,13 @@ def at2018gep(ax, col, legend):
     lum = nufnu * 1e-23 * 1e-6 * 4 * np.pi * d**2
     fs = 11
     nsize = 10 # normal size for points
-    ax[1].scatter(
+    ax.scatter(
             t[islim], lum[islim], facecolor='k', edgecolor='k',
             marker='v', s=70, zorder=10)
-    ax[1].scatter(
+    ax.scatter(
             t[~islim], lum[~islim], facecolor='k', edgecolor='k',
             marker='*', s=70, zorder=10)
-    ax[1].text(t[-1], lum[-1]/2, 'AT2018gep', fontsize=11,
+    ax.text(t[-1], lum[-1]/2, 'AT2018gep', fontsize=11,
             horizontalalignment='right',
             verticalalignment='top')
 
@@ -456,35 +457,32 @@ def sn2006aj(ax, col, legend):
 
 
 if __name__=="__main__":
-    fig, axarr = plt.subplots(1, 2, figsize=(10,7), sharex=True, sharey=True)
+    fig, ax = plt.subplots(1, 1, figsize=(8,6), sharex=True, sharey=True)
     props = dict(boxstyle='round', facecolor='white')
 
-    at2018gep(axarr, 'black', None)
-    iptf16asu(axarr, '#bc3754', None)
+    at2018gep(ax, 'black', None)
+    #iptf16asu(axarr, '#bc3754', None)
 
-    grb030329(axarr, 'lightblue', legend=True)
-    grb130427A(axarr, 'lightblue', None)
+    #grb030329(axarr, 'lightblue', legend=True)
+    #grb130427A(axarr, 'lightblue', None)
 
-    sn2009bb(axarr, '#bc3754', legend=True)
-    sn1998bw(axarr, '#bc3754', None)
-    iptf17cw(axarr, '#bc3754', None)
-    sn2010bh(axarr, '#bc3754', None)
-    sn2006aj(axarr, '#bc3754', None)
+    #sn2009bb(ax, '#bc3754', legend=True)
+    #sn1998bw(axarr, '#bc3754', None)
+    #iptf17cw(ax, '#bc3754', None)
+    #sn2010bh(ax, '#bc3754', None)
+    #sn2006aj(ax, '#bc3754', None)
 
 
-    axarr[0].set_ylabel(
+    ax.set_ylabel(
             r"Luminosity $\nu L_{\nu}$ [erg\,s$^{-1}$]", 
             fontsize=16)
-    axarr[0].set_title(r"$\boldsymbol{\nu > 90\,\mathrm{GHz}}$", fontsize=16)
-    axarr[1].set_title(r"$\boldsymbol{\nu < 10\,\mathrm{GHz}}$", fontsize=16)
-    for ax in axarr:
-        ax.tick_params(axis='both', labelsize=14)
-        ax.set_xlim(0.3, 2000) 
-        ax.set_ylim(1E34, 1E44)
-        ax.set_xscale('log')
-        ax.set_yscale('log')
-        ax.set_xlabel(r"Time [days; rest frame]", fontsize=16)
-    axarr[1].legend(fontsize=12, loc='upper right')
+    ax.tick_params(axis='both', labelsize=14)
+    ax.set_xlim(0.3, 2000) 
+    ax.set_ylim(1E34, 1E44)
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.set_xlabel(r"Time [days; rest frame]", fontsize=16)
+    ax.legend(fontsize=12, loc='upper right')
 
     plt.subplots_adjust(wspace=0.05)
     plt.show()
