@@ -54,7 +54,7 @@ def plot_line(ax, d, t, nufnu, name, label, col, legend=False, zorder=1):
             marker='o'
             fcol = 'white' # unfilled
             s=nsize
-        elif label=='Rel. SN':
+        elif label=='SN Ic-BL':
             marker='s'
             fcol = col 
             s=nsize
@@ -217,17 +217,6 @@ def grb030329(ax, col, legend):
     z = 0.1686
     d = Planck15.luminosity_distance(z=z).cgs.value
 
-    # HIGH FREQUENCY
-
-    # Sheth
-    freq = 250E9
-    t = np.array([1, 4, 6, 7, 8, 16, 22]) / (1+z)
-    f = np.array([49.2, 45.7, 41.6, 32, 25.5, 9.3, 5.2])
-    lum = plot_line(ax[0], d, t, freq*f, 'GRB030329', 'GRB', col, legend)
-    ax[0].text(t[-1]*1.05, lum[-1], ' GRB 030329', fontsize=11,
-            verticalalignment='center',
-            horizontalalignment='left')
-
     # LOW FREQUENCY
 
     # Berger: this is the best frequency to pick from this paper
@@ -247,33 +236,23 @@ def grb030329(ax, col, legend):
     f = np.append(
             f, np.array([1613, 1389, 871, 933, 707, 543, 504, 318]) * 1E-3)
     nu = np.append(nu, np.array([2.3E9]*8))
-    lum = plot_line(ax[1], d, t, freq*f, 'GRB030329', 'GRB', col, legend)
-    ax[1].text(t[0]/1.05, lum[0]*1.1, 'GRB030329', fontsize=11,
+    lum = plot_line(ax, d, t, nu*f, 'GRB030329', 'GRB', col, legend)
+    ax.text(t[-8]*1.05, lum[-8]/1.1, 'GRB030329', fontsize=11,
             verticalalignment='bottom',
             horizontalalignment='left')
     
 
 def grb130427A(ax, col, legend):
     """ Perley et al
-    They have data from CARMA/PdBI at 90 GHz (3mm)
-    But by the time they caught it, it was fading
     """
     z = 0.340
     d = Planck15.luminosity_distance(z=z).cgs.value
 
-    freq = 93E9
-    t = np.array([0.77, 1, 1.91, 2.8]) / (1+z)
-    flux = np.array([3416, 2470, 1189, 807]) * 1E-3
-    lum = plot_line(ax[0], d, t, freq*flux, 'GRB130427A', 'GRB', col, legend)
-    ax[0].text(t[-1]*1.05, lum[-1], 'GRB130427A', fontsize=11,
-            verticalalignment='center',
-            horizontalalignment='left')
-
     freq = 5.10E9
     t = np.array([0.677, 2.04, 4.75, 9.71, 17.95, 63.78, 128.34]) / (1+z)
     f = np.array([1290, 1760, 648, 454, 263, 151, 86]) * 1E-3
-    lum = plot_line(ax[1], d, t, freq*f, 'GRB130427A', 'GRB', col, legend)
-    ax[1].text(t[0]*1.05, lum[0], 'GRB130427A', fontsize=11,
+    lum = plot_line(ax, d, t, freq*f, 'GRB130427A', 'GRB', col, legend)
+    ax.text(t[0], lum[0]*1.1, 'GRB130427A', fontsize=11,
             verticalalignment='bottom',
             horizontalalignment='left')
 
@@ -338,8 +317,8 @@ def sn2009bb(ax, col, legend):
     flux = np.array([24.681, 17.568, 16.349, 13.812, 8.881,
         7.714, 8.482, 6.824, 6.327, 3.294, 4.204, 3.203, 2.392,
         1.903, 1.032, 1.084])
-    lum = plot_line(ax[1], d, t, nu*flux, 'SN2009bb', 'Rel. SN', col, legend)
-    ax[1].text(t[0]/1.05, lum[0], '2009bb', fontsize=11,
+    lum = plot_line(ax, d, t, nu*flux, 'SN2009bb', 'SN Ic-BL', col, legend)
+    ax.text(t[0]/1.05, lum[0], '2009bb', fontsize=11,
             verticalalignment='center',
             horizontalalignment='right')
 
@@ -352,10 +331,6 @@ def sn1998bw(ax, col, legend):
     with two clear distinct peaks...
     """
     d = 1.17E26 # cm
-    nu = 150E9
-    t = np.array([12.4])
-    f = np.array([39])
-    lum = plot_line(ax[0], d, t, nu*f, 'SN1998bw', 'Rel. SN', col, legend)
     nu = 2.3E9
     t = np.array(
             [11.7, 14.6, 15.7, 16.5, 17.8, 19.7, 21.6, 23.6, 25.9, 26.8, 
@@ -365,11 +340,8 @@ def sn1998bw(ax, col, legend):
             [19.7, 22.3, 23.5, 23.9, 25.1, 25.3, 20.9, 22.9, 28.0, 28.7, 
             31.1, 31.3, 27.3, 33.5, 31.8, 31, 31.3, 26.8, 23.1, 18.5, 
             15.6, 15.6, 9.6])
-    ax[0].text(t[0], lum[0]/2, '1998bw', fontsize=11,
-            verticalalignment='top',
-            horizontalalignment='center')
-    lum = plot_line(ax[1], d, t, nu*f, 'SN1998bw', 'Rel. SN', col, legend)
-    ax[1].text(t[0]/1.05, lum[0], '1998bw', fontsize=11,
+    lum = plot_line(ax, d, t, nu*f, 'SN1998bw', 'SN Ic-BL', col, legend)
+    ax.text(t[0]/1.05, lum[0], '1998bw', fontsize=11,
             verticalalignment='bottom',
             horizontalalignment='right')
 
@@ -379,8 +351,8 @@ def sn2010bh(ax, col, legend):
     nu = 5.4E9
     t = np.array([18.93, 29.87, 36.97, 69.87])
     f = np.array([90, 128, 68, 50])*1E-3
-    lum = plot_line(ax[1], d, t, nu*f, 'SN2010bh', 'Rel. SN', col, legend)
-    ax[1].text(t[-1], lum[-1]/1.3, 'SN2010bh', fontsize=11,
+    lum = plot_line(ax, d, t, nu*f, 'SN2010bh', 'SN Ic-BL', col, legend)
+    ax.text(t[-1], lum[-1]/1.3, 'SN2010bh', fontsize=11,
             verticalalignment='top',
             horizontalalignment='center')
 
@@ -397,7 +369,7 @@ def at2018gep(ax, col, legend):
     nsize = 10 # normal size for points
     ax.scatter(
             t[~islim], lum[~islim], facecolor='k', edgecolor='k',
-            marker='*', s=70, zorder=10)
+            marker='*', s=100, zorder=10)
     ax.plot(t[~islim], lum[~islim], c='k')
     ax.text(t[-1], lum[-1]/2, 'AT2018gep', fontsize=11,
             horizontalalignment='right',
@@ -411,7 +383,7 @@ def iptf16asu(ax, col, legend):
     fs = 11
     nsize = 10 # normal size for points
     ax.scatter(
-            t, f, facecolor=col, edgecolor=col,
+            t, f, facecolor=col, edgecolor='k',
             marker='v', s=70, zorder=10)
     ax.plot(
             t, f, c=col, ls='--')
@@ -425,8 +397,8 @@ def iptf17cw(ax, col, legend):
     nu = 6.2E9
     t = np.array([12.6, 15.7, 21.6, 30.7, 41.6])
     f = np.array([38.1, 30.4, 19.9, 22.4, 19])*1E-3
-    lum = plot_line(ax[1], d, t, nu*f, 'iPTF17cw', 'Rel. SN', col, legend)
-    ax[1].text(t[0]/1.05, lum[0], 'iPTF17cw', fontsize=11,
+    lum = plot_line(ax, d, t, nu*f, 'iPTF17cw', 'SN Ic-BL', col, legend)
+    ax.text(t[0]/1.05, lum[0], 'iPTF17cw', fontsize=11,
             verticalalignment='center',
             horizontalalignment='right')
 
@@ -438,8 +410,8 @@ def sn2006aj(ax, col, legend):
         16.74, 19.86, 21.96, 24.91, 30.71, 34.81, 41.74, 50.70, 104.52])
     f = np.array([453, 381, 269, 280, 164, 30, 39, 15, 75, 48, 87, 20, 32, 15,
         22, 25, 17])*1E-3
-    lum = plot_line(ax[1], d, t, nu*f, 'SN2006aj', 'Rel. SN', col, legend)
-    ax[1].text(t[0]/1.05, lum[0], 'SN2006aj', fontsize=11,
+    lum = plot_line(ax, d, t, nu*f, 'SN2006aj', 'SN Ic-BL', col, legend)
+    ax.text(t[0]/1.05, lum[0], 'SN2006aj', fontsize=11,
             verticalalignment='center',
             horizontalalignment='right')
 
@@ -449,30 +421,32 @@ if __name__=="__main__":
     fig, ax = plt.subplots(1, 1, figsize=(8,6), sharex=True, sharey=True)
     props = dict(boxstyle='round', facecolor='white')
 
+    sncol = '#f98e09' # yellow
+    grbcol = '#57106e' # purple
+
     at2018gep(ax, 'black', None)
-    iptf16asu(ax, '#bc3754', None)
 
-    #grb030329(axarr, 'lightblue', legend=True)
-    #grb130427A(axarr, 'lightblue', None)
+    grb030329(ax, grbcol, legend=True)
+    grb130427A(ax, grbcol, None)
 
-    #sn2009bb(ax, '#bc3754', legend=True)
-    #sn1998bw(axarr, '#bc3754', None)
-    #iptf17cw(ax, '#bc3754', None)
-    #sn2010bh(ax, '#bc3754', None)
-    #sn2006aj(ax, '#bc3754', None)
-
+    iptf16asu(ax, sncol, None)
+    sn2009bb(ax, sncol, legend=True)
+    sn1998bw(ax, sncol, None)
+    iptf17cw(ax, sncol, None)
+    sn2010bh(ax, sncol, None)
+    sn2006aj(ax, sncol, None)
 
     ax.set_ylabel(
             r"Luminosity $\nu L_{\nu}$ [erg\,s$^{-1}$]", 
             fontsize=16)
     ax.tick_params(axis='both', labelsize=14)
     ax.set_xlim(0.3, 2000) 
-    ax.set_ylim(1E34, 1E44)
+    ax.set_ylim(1E34, 1E42)
     ax.set_xscale('log')
     ax.set_yscale('log')
     ax.set_xlabel(r"Time [days; rest frame]", fontsize=16)
     ax.legend(fontsize=12, loc='upper right')
 
     plt.subplots_adjust(wspace=0.05)
-    plt.show()
-    #plt.savefig("radio_lc.png")
+    #plt.show()
+    plt.savefig("radio_lc.png")
