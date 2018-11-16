@@ -13,7 +13,14 @@ DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
 
 
 def plot_18gep():
-    """ Temporary values from Ragnhild """
+    # From Avishay
+    dt = np.array([2.07, 4.25])
+    vel = np.array([35000, 25000]) / 1E3
+    plt.scatter(
+            dt, vel, marker='s', facecolor='white', 
+            edgecolor='k', s=100, lw=2)
+
+    # From Ragnhild
     dt = np.array([4, 9, 11.5, 16.5, 22])
     vel = np.array([30000, 23000, 24000, 22000, 22000])/1E3
     evel = np.array([1000, 4000, 2000, 1000, 2000])/1E3

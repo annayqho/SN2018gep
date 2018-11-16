@@ -40,6 +40,8 @@ if __name__=="__main__":
 
     # Functional form:
     # -2.63E14 * x**2 + 6.12E14 * x + 3.21E14
+    ax.axhline(y=3.21E14, ls='--', c='k')
+    ax.text(6, 3.5E14, r"$R_0 = 3.2 \times 10^{14}\,\mathrm{cm}$", fontsize=12)
 
     ax.set_ylabel("Photospheric Radius (cm)", fontsize=16)
     ax.set_xlabel(

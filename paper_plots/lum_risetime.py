@@ -14,13 +14,13 @@ fig,ax = plt.subplots(1,1,figsize=(6,5))
 # let's say 3 days for now, but this is a placeholder until we get the
 # bolometric light curve
 # the luminosity is a placeholder as well!
-trise = 3
+trise = 1391.0399966526045 / 86400 # convert from seconds to days
 plum = 3E44
 ax.scatter(
         trise, plum, marker='*', s=300, 
         facecolors='black', edgecolors='black')
 ax.text(
-        trise, plum, "AT2018gep", fontsize=12, 
+        trise*1.1, plum, "AT2018gep", fontsize=14, 
         verticalalignment='bottom', 
         horizontalalignment='left')
 
@@ -54,9 +54,21 @@ ax.text(
         verticalalignment='bottom', 
         horizontalalignment='left')
 
+# KN (AT2017gfo)
+plum = 1E42
+trise = 0.5
+ax.scatter(
+        trise, plum, 
+        marker='o', s=100, facecolor='black', edgecolor='black')
+ax.text(
+        trise, plum, "AT2017gfo", fontsize=12, 
+        verticalalignment='bottom', 
+        horizontalalignment='left')
+
+
 
 ax.set_ylim(1E41, 1E45)
-ax.set_xlim(0.4, 100)
+ax.set_xlim(0.01, 100)
 ax.set_yscale('log')
 ax.set_xscale('log')
 ax.set_ylabel("Peak Bolometric Luminosity $L_\mathrm{bol}$", fontsize=16)
