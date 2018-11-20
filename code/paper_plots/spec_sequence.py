@@ -11,13 +11,9 @@ from astropy.cosmology import Planck15
 from astropy.time import Time
 import glob
 
-# We have to apply offsets, because the spectra are too close to each other
-
-fig,ax = plt.subplots(1,1,figsize=(8,10))
-
 files = glob.glob(
 "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec/ZTF18abukavn/*.ascii")
-files = np.array(files[0:3])
+files = np.array(files[12:])
 dt = np.zeros(len(files))
 cols = np.array([""]*len(dt), dtype='U10')
 
@@ -72,10 +68,14 @@ order = np.argsort(dt)
 files_sorted = files[order]
 dt_sorted = dt[order]
 cols = cols[order]
-print(cols)
+
+nfiles = len(files_sorted)
+
+fig,axarr = plt.subplots(nfiles,1,figsize=(8,10), sharex=True)
 
 # Loop through the sorted files, and plot the spectra
-for ii,f in enumerate(files_sorted):
+for ii,ax in enumerate(axarr):
+    f = files_sorted[ii]
     # In Dan's 18cow paper, he interpolates over host narrow features
     tel = f.split("_")[2]
     dat = np.loadtxt(f)
@@ -84,8 +84,8 @@ for ii,f in enumerate(files_sorted):
 
     # Plot the spectrum
     x = wl
-    y = flux / flux[-1] - ii*3
-    ax.plot(x, y, c=cols[ii], alpha=0.7, drawstyle='steps-mid', lw=0.5)
+    y = flux 
+    ax.plot(x, y, c='k', drawstyle='steps-mid', lw=0.5)
     
     # Label the dt
     #t_raw = f.split("_")[1]
@@ -93,22 +93,28 @@ for ii,f in enumerate(files_sorted):
     #dt = t-t0
     dt_str = r"$\Delta t$=%s d" %str(np.round(dt_sorted[ii], 1))
     ax.text(
-            x[-1], y[-1], s=dt_str, 
-            horizontalalignment='left', verticalalignment='center', 
-            fontsize=14)
-
-ax.set_ylabel(
-    r"Flux $f_{\lambda}$ (arbitrary units)", fontsize=16)
+            0.98, 0.9, s=dt_str, 
+            horizontalalignment='right', verticalalignment='center', 
+            fontsize=14, transform=ax.transAxes)
+    ax.text(
+            0.98, 0.7, s=tel, 
+            horizontalalignment='right', verticalalignment='center', 
+            fontsize=14, transform=ax.transAxes)
+    ax.set_ylabel(
+        r"Flux $f_{\lambda}$", fontsize=16)
+    ax.yaxis.set_ticks([])
+    if tel == 'NOT':
+        ax.set_ylim(min(y)/15, max(y)/2) # get rid of noisy end
 
 ax.set_xlabel(
         r"Observed Wavelength (\AA)", fontsize=16)
-ax.yaxis.set_ticks([])
 ax.xaxis.set_tick_params(labelsize=14)
-ax.set_xlim(3000,12000)
-ax.set_ylim(-25, 50)
+ax.set_xlim(3000,10500)
+#ax.set_ylim(-25, 50)
+plt.subplots_adjust(hspace=0)
 #ax.legend(loc='upper right', fontsize=12)
 #ax.set_xscale('log')
 
-#plt.tight_layout()
-#plt.savefig("lc.png")
-plt.show()
+plt.tight_layout()
+plt.savefig("spec_third_third.png")
+#plt.show()
