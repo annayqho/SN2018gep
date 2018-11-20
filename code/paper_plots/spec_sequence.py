@@ -17,8 +17,9 @@ fig,ax = plt.subplots(1,1,figsize=(8,10))
 
 files = glob.glob(
 "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec/ZTF18abukavn/*.ascii")
-files = np.array(files)
+files = np.array(files[0:3])
 dt = np.zeros(len(files))
+cols = np.array([""]*len(dt), dtype='U10')
 
 # Read in all of the files, pull out the corresponding dates, and sort by date
 t0 = 2458370.6634 # in JD
@@ -31,6 +32,7 @@ for ii,f in enumerate(files):
                 obsdate = line[13:36]
                 t = Time(obsdate, format='isot').jd
                 dt[ii] = t-t0
+        cols[ii] = 'magenta'
     elif tel == 'P200':
         for line in alldat:
             if 'UT shutter open' in line:
@@ -38,32 +40,39 @@ for ii,f in enumerate(files):
                 print(obsdate)
                 t = Time(obsdate, format='isot').jd
                 dt[ii] = t-t0
+        cols[ii] = 'lightblue'
     elif tel == 'Keck1':
         for line in alldat:
             if 'DATE_BEG' in line:
                 obsdate = line[13:32]
                 t = Time(obsdate, format='isot').jd
                 dt[ii] = t-t0
+        cols[ii] = 'red'
     elif tel == 'DCT':
         obsdate = '2018-09-14T00:00:00' # temporary
         t = Time(obsdate, format='isot').jd
         dt[ii] = t-t0
+        cols[ii] = 'yellow'
     elif tel == 'NOT':
         obsdate = '2018-09-17T00:00:00' # temporary
         t = Time(obsdate, format='isot').jd
         dt[ii] = t-t0
+        cols[ii] = 'green'
     elif tel == 'P60':
         for line in alldat:
             if 'MJD_OBS' in line:
                 obsdate = float(line[11:25])
                 t = Time(obsdate, format='mjd').jd
                 dt[ii] = t-t0
+        cols[ii] = 'black'
     else:
         print("couldn't find telescope")
         print(tel)
 order = np.argsort(dt)
 files_sorted = files[order]
 dt_sorted = dt[order]
+cols = cols[order]
+print(cols)
 
 # Loop through the sorted files, and plot the spectra
 for ii,f in enumerate(files_sorted):
@@ -76,7 +85,7 @@ for ii,f in enumerate(files_sorted):
     # Plot the spectrum
     x = wl
     y = flux / flux[-1] - ii*3
-    ax.plot(x, y, c='k', alpha=0.7, drawstyle='steps-mid', lw=0.5)
+    ax.plot(x, y, c=cols[ii], alpha=0.7, drawstyle='steps-mid', lw=0.5)
     
     # Label the dt
     #t_raw = f.split("_")[1]
@@ -96,7 +105,7 @@ ax.set_xlabel(
 ax.yaxis.set_ticks([])
 ax.xaxis.set_tick_params(labelsize=14)
 ax.set_xlim(3000,12000)
-ax.set_ylim(-60, 20)
+ax.set_ylim(-25, 50)
 #ax.legend(loc='upper right', fontsize=12)
 #ax.set_xscale('log')
 
