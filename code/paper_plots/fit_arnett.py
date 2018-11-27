@@ -51,8 +51,7 @@ def lph(dt, mni, tdiff):
 def load_lc():
     DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
     dat = np.loadtxt("%s/physevol.dat" %DATA_DIR, dtype=str)
-    mjd = dat[:,0].astype(float)
-    dt = mjd-58370.6473
+    dt = dat[:,1].astype(float)
     lum = dat[:,8].astype(float) * 3.839E33 # original units L_sun
     llum = dat[:,9].astype(float) / dat[:,8].astype(float)
     ulum = dat[:,10].astype(float)  / dat[:,8].astype(float)

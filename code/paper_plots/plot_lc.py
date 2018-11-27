@@ -19,7 +19,7 @@ fig,ax = plt.subplots(1,1,figsize=(8,5))
 f = DATA_DIR + "/ZTF18abukavn_opt_phot.dat"
 dat = np.loadtxt(f, dtype=str, delimiter=' ')
 instr = dat[:,0]
-mjd = dat[:,1].astype(float)
+jd = dat[:,1].astype(float)
 filt = dat[:,2]
 mag = dat[:,3].astype(float)
 emag = dat[:,4].astype(float)
@@ -27,7 +27,7 @@ emag = dat[:,4].astype(float)
 det = np.logical_and(mag<99, ~np.isnan(mag))
 nondet = np.logical_or(mag==99, np.isnan(mag))
 zp = 2458370.6473
-dt = mjd-zp
+dt = jd-zp
 
 rcol = 'k'
 ucol = '#f98e09'

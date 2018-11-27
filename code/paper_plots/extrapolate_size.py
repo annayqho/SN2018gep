@@ -12,8 +12,7 @@ from astropy.table import Table
 def load_radius():
     DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
     dat = np.loadtxt("%s/physevol.dat" %DATA_DIR, dtype=str)
-    mjd = dat[:,0].astype(float)
-    dt = mjd-58370.6473
+    dt = dat[:,1].astype(float)
     Rsun = 6.955E10
     AU = 1.496e+13
     rad = dat[:,2].astype(float) * AU # original units AU
