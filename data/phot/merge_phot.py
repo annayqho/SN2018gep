@@ -17,7 +17,7 @@ instr_all = dat[:,7].astype(str)
 choose = np.logical_or(instr_all=='"P48+ZTF"', instr_all=='"P60+SEDM"')
 
 instr = instr_all[choose]
-mjd = dat[:,1][choose]
+jd = dat[:,1][choose]
 filt = dat[:,2][choose]
 m = dat[:,4][choose]
 e_m = dat[:,5][choose]
@@ -32,20 +32,20 @@ for f in filts:
             dtype=str, delimiter=',')
     nvals = len(dat[:,1])
     instr = np.append(instr, ['LT']*nvals)
-    mjd = np.append(mjd, dat[:,0])
+    jd = np.append(jd, dat[:,0])
     filt = np.append(filt, ['%s' %f]*nvals)
     m = np.append(m, dat[:,1])
     e_m = np.append(e_m, dat[:,2])
 
 # formatting
 instr = np.char.strip(instr, '"')
-mjd = mjd.astype(float)
+jd = jd.astype(float)
 filt = np.char.strip(filt, '"')
 m = m.astype(float)
 e_m = e_m.astype(float)
 
 ascii.write(
-        [instr, mjd, filt, m, e_m], 
+        [instr, jd, filt, m, e_m], 
         'ZTF18abukavn_opt_phot.dat',
-        names=['Instrument', 'MJD', 'Filter', 'Mag', 'eMag'],
+        names=['Instrument', 'JD', 'Filter', 'Mag', 'eMag'],
         overwrite=True)
