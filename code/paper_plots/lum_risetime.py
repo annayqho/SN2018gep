@@ -7,36 +7,38 @@ import numpy as np
 from astropy.cosmology import Planck15
 
 
+def at2018gep():
+    trise = 1391.0399966526045 / 86400 # convert from seconds to days
+    plum = 3E44
+    ax.scatter(
+            trise, plum, marker='*', s=300, 
+            facecolors='black', edgecolors='black')
+    ax.text(
+            trise*1.1, plum, "AT2018gep", fontsize=14, 
+            verticalalignment='bottom', 
+            horizontalalignment='left')
+    ax.arrow(
+            trise, plum, -0.006, 0, length_includes_head=True,
+            head_width=plum/5, head_length=0.001, fc='k')
+
+
+def at2018cow():
+    # peak bol from Margutti 2018
+    # rise time from Perley 2018: 2-3 days
+    trise = 2.5
+    plum = 4E44
+    ax.errorbar(
+            trise, plum, xerr=0.5, fmt='o', ms=10, 
+            mfc='black', mec='black', c='k')
+    ax.text(
+            trise, plum, "AT2018cow", fontsize=12, 
+            verticalalignment='bottom', 
+            horizontalalignment='left')
+
 fig,ax = plt.subplots(1,1,figsize=(6,5))
 
-# AT2018gep: NEED TO UPDATE!
-# This source: rise time to peak bolometric luminosity
-# let's say 3 days for now, but this is a placeholder until we get the
-# bolometric light curve
-# the luminosity is a placeholder as well!
-trise = 1391.0399966526045 / 86400 # convert from seconds to days
-plum = 3E44
-ax.scatter(
-        trise, plum, marker='*', s=300, 
-        facecolors='black', edgecolors='black')
-ax.text(
-        trise*1.1, plum, "AT2018gep", fontsize=14, 
-        verticalalignment='bottom', 
-        horizontalalignment='left')
-
-# AT2018cow
-# peak bol from Margutti 2018
-# rise time from Perley 2018: 2-3 days
-trise = 2.5
-plum = 4E44
-ax.errorbar(
-        trise, plum, xerr=0.5, fmt='o', ms=10, 
-        mfc='black', mec='black', c='k')
-ax.text(
-        trise, plum, "AT2018cow", fontsize=12, 
-        verticalalignment='bottom', 
-        horizontalalignment='left')
-
+at2018gep()
+at2018cow()
 
 # iPTF16asu
 # peak bol from Whitesides 2017
@@ -68,7 +70,7 @@ ax.text(
 
 
 ax.set_ylim(1E41, 1E45)
-ax.set_xlim(0.01, 100)
+ax.set_xlim(0.005, 100)
 ax.set_yscale('log')
 ax.set_xscale('log')
 ax.set_ylabel("Peak Bolometric Luminosity $L_\mathrm{bol}$", fontsize=16)
@@ -79,5 +81,5 @@ ax.xaxis.set_tick_params(labelsize=14)
 ax.legend(loc='upper right', fontsize=12)
 
 plt.tight_layout()
-plt.savefig("lum_rise.png")
-#plt.show()
+#plt.savefig("lum_rise.png")
+plt.show()

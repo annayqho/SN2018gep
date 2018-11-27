@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
 import sys
-sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn")
+sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
 from fit_arnett import load_lc
 from extrapolate_size import load_radius
 from load_temp import load_temp
@@ -36,10 +36,11 @@ axarr[0].text(1E-1, 1E44, '$t^{-0.17}$',
 
 choose = dt > 2.5
 m,b = np.polyfit(np.log10(dt[choose]), np.log10(lum[choose]), deg=1)
+m = -5/3
 xfit = np.linspace(min(dt[choose]), max(dt[choose]))
 yfit = 10**(m*np.log10(xfit)+b)
 axarr[0].plot(xfit, yfit, ls='--', c='grey')
-axarr[0].text(10, 2E43, '$t^{-1.7}$',
+axarr[0].text(10, 2E43, '$t^{-5/3}$',
         horizontalalignment='left', verticalalignment='center', fontsize=14)
 
 # Radius panel
