@@ -12,8 +12,9 @@ from load_radius import load_radius
 from load_temp import load_temp
 
 m = -5/3 # accretion onto a compact object
-#m = -1.3 # heating due to r-process material
-mstr = '-5/3'
+m = -2 # magnetar spin-down
+#m = -1.3 # heating due to r-process material; doesn't work
+mstr = '-2'
 
 
 def powlaw(x, b):
@@ -127,5 +128,5 @@ axarr[2].set_ylabel(r'$T_\mathrm{eff}$ (K)', fontsize=16)
 
 plt.subplots_adjust(hspace=0)
 plt.tight_layout()
-#plt.show()
-plt.savefig("bbfit_log.png")
+plt.show()
+#plt.savefig("bbfit_log.png")
