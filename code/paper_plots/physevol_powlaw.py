@@ -11,7 +11,7 @@ from load_radius import load_radius
 from load_temp import load_temp
 
 # Load the bolometric light curve
-dt, lum, elum = load_lc()
+dt, lum, llum, ulum = load_lc()
 
 # Load the radius
 dt, rad, erad = load_radius()
@@ -25,10 +25,11 @@ fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
 # Plot the data
 
 # Luminosity panel
+axarr[0].errorbar(dt, lum, yerr=[llum,ulum], fmt='.', c='k')
 m,b = np.polyfit(np.log10(dt), np.log10(lum), deg=1)
 m = -5/3
 xfit = np.linspace(min(dt), max(dt))
-yfit = 10**(m*np.log10(xfit)+b)
+yfit = 2.1*10**(m*np.log10(xfit)+b)  # chi by eye
 axarr[0].plot(xfit, yfit, ls='--', c='grey')
 axarr[0].text(10, 2E43, '$t^{-5/3}$',
         horizontalalignment='left', verticalalignment='center', fontsize=14)
@@ -40,10 +41,6 @@ axarr[1].errorbar(dt, rad, yerr=erad, fmt='.', c='k')
 
 # Plot lines of constant velocity
 xvals = np.linspace(1E-3, 1E2, 1000)
-# v = c
-yvals = (3E10) * xvals * 86400
-axarr[1].plot(xvals, yvals, ls='--', c='grey')
-axarr[1].text(1E-1, 8E14, 'v=c', fontsize=12)
 
 # v = 0.1c
 yvals = 0.1 * (3E10) * xvals * 86400
@@ -51,6 +48,7 @@ axarr[1].plot(xvals, yvals, ls='--', c='grey')
 axarr[1].text(1, 2E14, 'v=0.1c', fontsize=12)
 
 # Temperature panel
+axarr[2].errorbar(dt, temp, yerr=etemp, fmt='.', c='k')
 m,b = np.polyfit(np.log10(dt), np.log10(temp), deg=1)
 print(m)
 xfit = np.linspace(min(dt), max(dt))
