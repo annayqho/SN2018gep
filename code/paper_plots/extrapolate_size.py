@@ -9,19 +9,6 @@ from scipy.optimize import curve_fit
 from astropy.table import Table
 
 
-def load_radius():
-    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
-    dat = np.loadtxt("%s/physevol.dat" %DATA_DIR, dtype=str)
-    dt = dat[:,1].astype(float)
-    Rsun = 6.955E10
-    AU = 1.496e+13
-    rad = dat[:,2].astype(float) * AU # original units AU
-    lrad = dat[:,3].astype(float)*AU
-    urad = dat[:,4].astype(float)*AU
-    erad = np.max((np.abs(lrad), np.abs(urad)), axis=0) 
-    return dt, rad, erad # abs uncertainty
-
-
 if __name__=="__main__":
     dt, rad, erad = load_radius()
 
