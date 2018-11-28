@@ -14,10 +14,10 @@ from load_temp import load_temp
 dt, lum, llum, ulum = load_lc()
 
 # Load the radius
-dt, rad, erad = load_radius()
+dt, rad, lrad, urad = load_radius()
 
 # Load the temperature
-dt, temp, etemp = load_temp()
+dt, temp, ltemp, utemp = load_temp()
 
 # Initialize the figure
 fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
@@ -31,13 +31,13 @@ m = -5/3
 xfit = np.linspace(min(dt), max(dt))
 yfit = 2.1*10**(m*np.log10(xfit)+b)  # chi by eye
 axarr[0].plot(xfit, yfit, ls='--', c='grey')
-axarr[0].text(10, 2E43, '$t^{-5/3}$',
+axarr[0].text(7, 1E44, '$t^{-5/3}$',
         horizontalalignment='left', verticalalignment='center', fontsize=14)
 
 # Radius panel
 
 # Radius panel
-axarr[1].errorbar(dt, rad, yerr=erad, fmt='.', c='k')
+axarr[1].errorbar(dt, rad, yerr=[lrad,urad], fmt='.', c='k')
 
 # Plot lines of constant velocity
 xvals = np.linspace(1E-3, 1E2, 1000)
@@ -48,13 +48,14 @@ axarr[1].plot(xvals, yvals, ls='--', c='grey')
 axarr[1].text(1, 2E14, 'v=0.1c', fontsize=12)
 
 # Temperature panel
-axarr[2].errorbar(dt, temp, yerr=etemp, fmt='.', c='k')
-m,b = np.polyfit(np.log10(dt), np.log10(temp), deg=1)
-print(m)
+choose = np.logical_and(dt>1, dt<15)
+axarr[2].errorbar(dt, temp, yerr=[ltemp,utemp], fmt='.', c='k')
+m,b = np.polyfit(np.log10(dt[choose]), np.log10(temp[choose]), deg=1)
 xfit = np.linspace(min(dt), max(dt))
 yfit = 10**(m*np.log10(xfit)+b)
+mstr = str(np.round(m, 2))
 axarr[2].plot(xfit, yfit, ls='--', c='grey')
-axarr[2].text(10, 1E4, '$t^{-0.89}$',
+axarr[2].text(10, 1E4, '$t^{%s}$' %mstr,
         horizontalalignment='left', verticalalignment='center', fontsize=14)
 
 # Formatting
@@ -78,5 +79,5 @@ axarr[2].set_ylabel(r'$T_\mathrm{eff}$ (K)', fontsize=16)
 
 plt.subplots_adjust(hspace=0)
 plt.tight_layout()
-plt.show()
-#plt.savefig("bbfit_log.png")
+#plt.show()
+plt.savefig("bbfit_log.png")
