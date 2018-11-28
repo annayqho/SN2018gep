@@ -2,6 +2,26 @@
 
 import numpy as np
 from astropy.table import Table
+from astropy.coordinates import SkyCoord
+
+
+def todeg(ra, dec):
+    """ convert XX:XX:XX to decimal degrees """
+    radeg = []
+    decdeg = []
+    for ii,raval in enumerate(ra):
+        hh = raval.split(":")[0]
+        mm = raval.split(":")[1]
+        ss = raval.split(":")[2]
+        radegval = hh+"h"+mm+"m"+ss+"s"
+        dd = dec[ii].split(":")[0]
+        mm = dec[ii].split(":")[1]
+        ss = dec[ii].split(":")[2]
+        decdegval = dd+"d"+mm+"m"+ss+"s"
+        c = SkyCoord(radegval, decdegval, frame='icrs')
+        radeg.append(c.ra.deg)
+        decdeg.append(c.dec.deg)
+    return np.array(radeg), np.array(decdeg)
 
 
 def opensn():
@@ -34,9 +54,22 @@ def ptf():
     name = dat['col1']
     ra = dat['col2']
     dec = dat['col3']
+    radeg, decdeg = todeg(ra, dec)
     z = dat['col5']
     choose = z <= 0.1
-    return name[choose], ra[choose], dec[choose], z[choose]
+    return list(name[choose]), list(radeg[choose]), list(decdeg[choose]), list(z[choose])
+
+def ztf():
+    """ The list of Ic-BL discovered in ZTF """
+    dat = Table.read(
+            "ztf.dat", delimiter='&', format='ascii.fast_no_header')
+    name = dat['col1']
+    ra = dat['col2']
+    dec = dat['col3']
+    radeg, decdeg = todeg(ra, dec)
+    z = dat['col4']
+    choose = z <= 0.1
+    return list(name[choose]), list(radeg[choose]), list(decdeg[choose]), list(z[choose])
 
 def sdssII():
     """ the sample from SDSS-II (Taddia et al. 2015)
@@ -46,11 +79,17 @@ def sdssII():
     dat = Table.read(
             "taddia2015.dat", delimiter='&', format='ascii.fast_no_header')
     name = dat['col1']
-    ra = dat['col2']
-    dec = dat['col3']
-    z = dat['col5']
+    ra_raw = dat['col2'].tolist()
+    dec_raw = dat['col3'].tolist()
+    for ii,ra in enumerate(ra_raw):
+        ra_raw[ii] = ra.strip('$')
+        dec_raw[ii] = dec_raw[ii].strip('$')
+    ra = np.array(ra_raw)
+    dec = np.array(dec_raw)
+    z = np.array(dat['col5'])
     choose = z <= 0.1 # only one of them!
-    return name[choose], ra[choose], dec[choose], z[choose]
+    radeg, decdeg = todeg(ra[choose], dec[choose])
+    return name[choose], radeg, decdeg, z[choose]
 
 def cano2013():
     """ The table of GRB/XRF-less Ic-BL SNe,
@@ -66,7 +105,7 @@ def cano2016():
     """ The table of GRB-SNe from Cano et al. 2016 """
     dat = Table.read(
             "cano2016.dat", delimiter='&', format='ascii.fast_no_header')
-    name = dat['col1'].filled()
+    name = dat['col2'].filled() # SN name, not GRB name
     z = dat['col4'].filled()
     choose = z <= 0.1 
     return name[choose], z[choose]
@@ -101,16 +140,78 @@ def modjaz2016():
     choose = z <= 0.1
     return name[choose], z[choose]
 
-def ztf():
-    """ The list of Ic-BL discovered in ZTF """
-    dat = Table.read(
-            "ztf.dat", delimiter='&', format='ascii.fast_no_header')
-    name = dat['col1']
-    ra = dat['col2']
-    dec = dat['col3']
-    z = dat['col4']
-    choose = z <= 0.1
-    return name[choose], ra[choose], dec[choose], z[choose]
-
 if __name__=="__main__":
-    name, z = modjaz2016()
+    # Name, RA, Dec, Redshift (z <= 0.1)
+    name, ra, dec, redshift = ptf()
+
+    # Add the new ZTF sample
+    n,r,d,z = ztf()
+    name.extend(n)
+    ra.extend(r)
+    dec.extend(d)
+    redshift.extend(z)
+
+    # Add the SDSS II sample
+    n,r,d,z = sdssII()
+    # check for duplicates
+    c = SkyCoord(ra, dec, unit='deg')
+    cadd = SkyCoord(r, d, unit='deg')
+    for ii,val in enumerate(cadd):
+        dist = c.separation(val).arcsec
+        if sum(dist <= 2) == 0: 
+            name.append(n[ii])
+            ra.append(r[ii])
+            dec.append(d[ii])
+            redshift.append(z[ii])
+        else:
+            print("%s is a duplicate, not adding" %n[ii])
+
+    # Add the Cano (2013) sample
+    n,z = cano2013() 
+    name.extend(n)
+    redshift.extend(z)
+    ra.extend([0]*len(n))
+    dec.extend([0]*len(n))
+
+    # Add the Cano (2016) sample
+    n,z = cano2016() 
+    name.extend(n)
+    redshift.extend(z)
+    ra.extend([0]*len(n))
+    dec.extend([0]*len(n))
+
+    # Add the Lyman (2016) sample
+    n,z = lyman2016() 
+    for ii,val in enumerate(n):
+        print(val)
+        if val in name:
+            print("%s already in list" %val)
+        else:
+            name.append(val)
+            redshift.append(z[ii])
+            ra.append(0)
+            dec.append(0)
+
+    # Add the Prentice (2016) sample
+    n,z = prentice2016() 
+    for ii,val in enumerate(n):
+        print(val)
+        if val in name:
+            print("%s already in list" %val)
+        else:
+            name.append(val)
+            redshift.append(z[ii])
+            ra.append(0)
+            dec.append(0)
+
+    # Add the Modjaz (2016) sample
+    n,z = modjaz2016() 
+    for ii,val in enumerate(n):
+        print(val)
+        if val in name:
+            print("%s already in list" %val)
+        else:
+            name.append(val)
+            redshift.append(z[ii])
+            ra.append(0)
+            dec.append(0)
