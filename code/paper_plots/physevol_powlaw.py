@@ -47,6 +47,11 @@ yvals = 0.1 * (3E10) * xvals * 86400
 axarr[1].plot(xvals, yvals, ls='--', c='grey')
 axarr[1].text(1, 2E14, 'v=0.1c', fontsize=12)
 
+# v = 0.26c
+yvals = 0.26 * (3E10) * xvals * 86400
+axarr[1].plot(xvals, yvals, ls='--', c='grey')
+axarr[1].text(0.4, 7E14, 'v=0.26c', fontsize=12)
+
 # Temperature panel
 choose = np.logical_and(dt>1, dt<15)
 axarr[2].errorbar(dt, temp, yerr=[ltemp,utemp], fmt='.', c='k')
