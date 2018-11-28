@@ -6,9 +6,34 @@ plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
 import sys
 sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
+from scipy.optimize import curve_fit
 from load_lum import load_lc
 from load_radius import load_radius
 from load_temp import load_temp
+
+m = -5/3 # accretion onto a compact object
+#m = -1.3 # heating due to r-process material
+mstr = '-5/3'
+
+
+def powlaw(x, b):
+    """ Fitting function for self-absorbed part """
+    y = 10**(m*np.log10(x)+b)
+    return y
+
+
+def fit_pow(x, y, y_err=[]):
+    """ If you know the power-law index already (e.g. -5/3)
+    find the best-fit y-intercept """
+    if len(y_err) > 0:
+        popt, pcov = curve_fit(
+                powlaw, x, y,
+                sigma = y_err, absolute_sigma = True, p0=[45])
+    else:       
+        popt, pcov = curve_fit(
+                powlaw, x, y, p0=[45])
+    return popt, pcov
+
 
 # Load the bolometric light curve
 dt, lum, llum, ulum = load_lc()
@@ -22,19 +47,27 @@ dt, temp, ltemp, utemp = load_temp()
 # Initialize the figure
 fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
 
-# Plot the data
-
 # Luminosity panel
 axarr[0].errorbar(dt, lum, yerr=[llum,ulum], fmt='.', c='k')
-m,b = np.polyfit(np.log10(dt), np.log10(lum), deg=1)
-m = -5/3
+# Fit power law to all points after 1 day
+choose = dt > 1
+b,berr = fit_pow(dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose])
 xfit = np.linspace(min(dt), max(dt))
-yfit = 2.1*10**(m*np.log10(xfit)+b)  # chi by eye
+yfit = powlaw(xfit, b)
 axarr[0].plot(xfit, yfit, ls='--', c='grey')
-axarr[0].text(7, 1E44, '$t^{-5/3}$',
+axarr[0].text(7, 1E44, '$t^{%s}$' %mstr,
+        horizontalalignment='left', verticalalignment='center', fontsize=14)
+# Fit a power law to points before 3.5 days
+choose = dt <= 3.5
+m,b = np.polyfit(np.log10(dt[choose]), np.log10(lum[choose]), deg=1)
+xfit = np.linspace(0.3, 5)
+yfit = 10**(m*np.log10(xfit)+b)
+mstr = str(np.round(m, 1))
+axarr[0].plot(xfit, yfit, ls='--', c='grey')
+axarr[0].text(1, 1E44, '$t^{%s}$' %mstr,
         horizontalalignment='left', verticalalignment='center', fontsize=14)
 
-# Radius panel
+# Formatting
 
 # Radius panel
 axarr[1].errorbar(dt, rad, yerr=[lrad,urad], fmt='.', c='k')
@@ -53,15 +86,25 @@ axarr[1].plot(xvals, yvals, ls='--', c='grey')
 axarr[1].text(0.4, 7E14, 'v=0.26c', fontsize=12)
 
 # Temperature panel
-choose = np.logical_and(dt>1, dt<15)
+choose = np.logical_and(dt>1, dt<19)
 axarr[2].errorbar(dt, temp, yerr=[ltemp,utemp], fmt='.', c='k')
 m,b = np.polyfit(np.log10(dt[choose]), np.log10(temp[choose]), deg=1)
 xfit = np.linspace(min(dt), max(dt))
 yfit = 10**(m*np.log10(xfit)+b)
-mstr = str(np.round(m, 2))
+mstr = str(np.round(m, 1))
 axarr[2].plot(xfit, yfit, ls='--', c='grey')
 axarr[2].text(10, 1E4, '$t^{%s}$' %mstr,
         horizontalalignment='left', verticalalignment='center', fontsize=14)
+choose = dt <= 3.5
+m,b = np.polyfit(np.log10(dt[choose]), np.log10(temp[choose]), deg=1)
+xfit = np.linspace(0.3, 5)
+yfit = 10**(m*np.log10(xfit)+b)
+mstr = str(np.round(m, 1))
+axarr[2].plot(xfit, yfit, ls='--', c='grey')
+axarr[2].text(1, 2E4, '$t^{%s}$' %mstr,
+        horizontalalignment='left', verticalalignment='center', fontsize=14)
+
+# Formatting
 
 # Formatting
 axarr[0].xaxis.label.set_visible(False)
