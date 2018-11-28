@@ -9,7 +9,6 @@ def load_radius():
     Rsun = 6.955E10
     AU = 1.496e+13
     rad = dat[:,2].astype(float) * AU # original units AU
-    lrad = dat[:,3].astype(float)*AU
+    lrad = np.abs(dat[:,3].astype(float)*AU)
     urad = dat[:,4].astype(float)*AU
-    erad = np.max((np.abs(lrad), np.abs(urad)), axis=0) 
-    return dt, rad, erad # abs uncertainty
+    return dt, rad, lrad, urad
