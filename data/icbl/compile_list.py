@@ -152,6 +152,7 @@ if __name__=="__main__":
     redshift.extend(z)
 
     # Add the SDSS II sample
+    print("Adding the SDSS II sample")
     n,r,d,z = sdssII()
     # check for duplicates
     c = SkyCoord(ra, dec, unit='deg')
@@ -215,3 +216,8 @@ if __name__=="__main__":
             redshift.append(z[ii])
             ra.append(0)
             dec.append(0)
+
+    name = np.array(name)
+    redshift = np.array(redshift)
+    ra = np.array(ra)
+    dec = np.array(dec)
