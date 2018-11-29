@@ -18,7 +18,7 @@ fig,ax = plt.subplots(1,1, figsize=(8,6), sharex=True)
 
 # Plot the bolometric light curve of ZTF18abukavn
 dt, lum, llum, ulum = load_lc()
-ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='s', c='k')
+ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='s', c='k', zorder=10)
 ax.text(dt[0], lum[0], 'AT2018gep', fontsize=14)
 
 # Next: SN2008D
@@ -73,11 +73,32 @@ ax.text(dt[0], lum[0]/1.1, 'SN2006aj', fontsize=14,
         horizontalalignment='center',
         verticalalignment='top')
 
+# AT2018cow
+lsun = 3.839E33
+dat = Table.read(
+        ddir + "/at2018cow.dat", delimiter='&', format='ascii.fast_no_header')
+mjd = dat['col1']
+jd0 = 58285
+dt = mjd-jd0
+lum_raw = dat['col2']
+lum = lsun * np.array(
+    [val.split('^')[0] for val in lum_raw]).astype(float)
+ulum = lsun*(np.array(
+    [val.split('^')[1].split('_')[0] for val in lum_raw]).astype(float))
+llum = lsun*(np.array(
+    [val.split('^')[1].split('_')[1] for val in lum_raw]).astype(float))
+ax.errorbar(dt, lum, yerr=[llum, ulum], fmt='.', c='cyan')
+ax.plot(dt, lum, c='cyan')
+ax.text(dt[0], lum[0], 'AT2018cow', fontsize=14,
+        horizontalalignment='center',
+        verticalalignment='bottom')
+
 # Formatting
 ax.tick_params(axis='both', labelsize=12)
 ax.set_yscale('log')
 ax.set_xscale('log')
-ax.set_xlim(0.1, 50)
+ax.set_xlim(0.1, 1E2)
+ax.set_ylim(1E41, 1E45)
 ax.set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
 ax.set_xlabel(r'Days since $t_0$', fontsize=16)
 
