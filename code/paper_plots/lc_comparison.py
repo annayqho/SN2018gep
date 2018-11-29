@@ -47,5 +47,5 @@ if __name__=="__main__":
     plt.legend(loc='upper right', fontsize=12)
     plt.tight_layout()
 
-    #plt.show()
-    plt.savefig("lc_comparison.png")
+    plt.show()
+    #plt.savefig("lc_comparison.png")
