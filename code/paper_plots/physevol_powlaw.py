@@ -11,28 +11,22 @@ from load_lum import load_lc
 from load_radius import load_radius
 from load_temp import load_temp
 
-m = -5/3 # accretion onto a compact object
-m = -2 # magnetar spin-down
-#m = -1.3 # heating due to r-process material; doesn't work
-mstr = '-2'
-
-
-def powlaw(x, b):
+def powlaw(x, b, m):
     """ Fitting function for self-absorbed part """
     y = 10**(m*np.log10(x)+b)
     return y
 
 
-def fit_pow(x, y, y_err=[]):
+def fit_pow(x, y, y_err=[], m=-5/3):
     """ If you know the power-law index already (e.g. -5/3)
     find the best-fit y-intercept """
     if len(y_err) > 0:
         popt, pcov = curve_fit(
-                powlaw, x, y,
+                lambda x, b: powlaw(x, b, m), x, y,
                 sigma = y_err, absolute_sigma = True, p0=[45])
     else:       
         popt, pcov = curve_fit(
-                powlaw, x, y, p0=[45])
+                lambda x, b: powlaw(x, b, m), x, y, p0=[45])
     return popt, pcov
 
 
@@ -51,13 +45,29 @@ fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
 # Luminosity panel
 axarr[0].errorbar(dt, lum, yerr=[llum,ulum], fmt='.', c='k')
 # Fit power law to all points after 1 day
+m = -5/3
+mstr = '-5/3'
 choose = dt > 1
-b,berr = fit_pow(dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose])
-xfit = np.linspace(min(dt), max(dt))
-yfit = powlaw(xfit, b)
-axarr[0].plot(xfit, yfit, ls='--', c='grey')
-axarr[0].text(7, 1E44, '$t^{%s}$' %mstr,
+b,berr = fit_pow(
+        dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose], m=m)
+xfit = np.linspace(1, max(dt))
+yfit = powlaw(xfit, b, m)
+axarr[0].plot(xfit, yfit, ls='--', c='#f98e09')
+axarr[0].text(25, 5E42, '$t^{%s}$' %mstr,
         horizontalalignment='left', verticalalignment='center', fontsize=14)
+
+# Fit another power law
+m = -2
+mstr = '-2'
+choose = dt > 1
+b,berr = fit_pow(
+        dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose], m=m)
+xfit = np.linspace(1, max(dt))
+yfit = powlaw(xfit, b, m)
+axarr[0].plot(xfit, yfit, ls='--', c='#57106e')
+axarr[0].text(2, 5E44, '$t^{%s}$' %mstr,
+        horizontalalignment='left', verticalalignment='center', fontsize=14)
+
 # Fit a power law to points before 3.5 days
 choose = dt <= 3.5
 m,b = np.polyfit(np.log10(dt[choose]), np.log10(lum[choose]), deg=1)
@@ -89,11 +99,13 @@ axarr[1].text(0.4, 7E14, 'v=0.26c', fontsize=12)
 # Temperature panel
 choose = np.logical_and(dt>1, dt<19)
 axarr[2].errorbar(dt, temp, yerr=[ltemp,utemp], fmt='.', c='k')
-m,b = np.polyfit(np.log10(dt[choose]), np.log10(temp[choose]), deg=1)
-xfit = np.linspace(min(dt), max(dt))
+m = -0.92
+b,berr = fit_pow(
+        dt[choose], temp[choose], np.min((ltemp, utemp), axis=0)[choose], m=m)
+xfit = np.linspace(1, max(dt))
 yfit = 10**(m*np.log10(xfit)+b)
 mstr = str(np.round(m, 1))
-axarr[2].plot(xfit, yfit, ls='--', c='grey')
+axarr[2].plot(xfit, yfit, ls='--', c='#f98e09')
 axarr[2].text(10, 1E4, '$t^{%s}$' %mstr,
         horizontalalignment='left', verticalalignment='center', fontsize=14)
 choose = dt <= 3.5
@@ -104,8 +116,6 @@ mstr = str(np.round(m, 1))
 axarr[2].plot(xfit, yfit, ls='--', c='grey')
 axarr[2].text(1, 2E4, '$t^{%s}$' %mstr,
         horizontalalignment='left', verticalalignment='center', fontsize=14)
-
-# Formatting
 
 # Formatting
 axarr[0].xaxis.label.set_visible(False)
@@ -128,5 +138,5 @@ axarr[2].set_ylabel(r'$T_\mathrm{eff}$ (K)', fontsize=16)
 
 plt.subplots_adjust(hspace=0)
 plt.tight_layout()
-plt.show()
-#plt.savefig("bbfit_log.png")
+#plt.show()
+plt.savefig("bbfit_log.png")
