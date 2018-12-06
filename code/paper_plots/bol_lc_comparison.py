@@ -94,13 +94,15 @@ ax.text(dt[0], lum[0], 'AT2018cow', fontsize=14,
         verticalalignment='bottom')
 
 # Formatting
-ax.tick_params(axis='both', labelsize=12)
+ax.tick_params(axis='both', labelsize=14)
 ax.set_yscale('log')
-ax.set_xscale('log')
-ax.set_xlim(0.1, 1E2)
-ax.set_ylim(1E41, 1E45)
+#ax.set_xscale('log')
+ax.set_xlim(-5, 40)
+ax.set_ylim(5E41, 1E45)
 ax.set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
 ax.set_xlabel(r'Days since $t_0$', fontsize=16)
+
+plt.tight_layout()
 
 #plt.show()
 plt.savefig("bol_lc_comparison.png")
