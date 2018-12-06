@@ -100,7 +100,7 @@ ax.set_yscale('log')
 ax.set_xlim(-5, 40)
 ax.set_ylim(5E41, 1E45)
 ax.set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
-ax.set_xlabel(r'Days since $t_0$', fontsize=16)
+ax.set_xlabel(r'Days since first light', fontsize=16)
 
 plt.tight_layout()
 
