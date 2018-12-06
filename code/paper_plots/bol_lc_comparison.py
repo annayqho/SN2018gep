@@ -19,7 +19,8 @@ fig,ax = plt.subplots(1,1, figsize=(8,6), sharex=True)
 # Plot the bolometric light curve of ZTF18abukavn
 dt, lum, llum, ulum = load_lc()
 ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='s', c='k', zorder=10)
-ax.text(dt[0], lum[0], 'AT2018gep', fontsize=14)
+ax.text(dt[4]/1.05, lum[4], 'AT2018gep', fontsize=14,
+        horizontalalignment='right', verticalalignment='center')
 
 # Next: SN2008D
 dat = Table.read(
@@ -39,7 +40,9 @@ llum = 10**(np.array(
 ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='.', c='grey')
 ax.plot(dt, lum, c='grey')
 #ax.fill_between(dt, y1=lum-ulum, y2=lum+llum, color='grey')
-ax.text(dt[0], lum[0], 'SN2008D', fontsize=14, horizontalalignment='right',
+ax.text(
+        dt[8], lum[8], 'SN2008D', fontsize=14, 
+        horizontalalignment='left',
         verticalalignment='top')
 
 # SN1998bw
@@ -48,8 +51,9 @@ dt = dat['col1']
 lum = dat['col2']
 ax.scatter(dt, lum, marker='.', c='purple')
 ax.plot(dt, lum, c='purple', ls=':')
-ax.text(dt[0], lum[0], 'SN1998bw', fontsize=14, horizontalalignment='right',
-        verticalalignment='top')
+ax.text(dt[-1]*1.01, lum[-1], 'SN1998bw', fontsize=14, 
+        horizontalalignment='left',
+        verticalalignment='center')
 
 # SN2010bh
 dat = Table.read(ddir + "/sn2010bh.dat", format='ascii.fast_no_header')
@@ -57,7 +61,8 @@ dt = dat['col1']
 lum = dat['col2']
 ax.scatter(dt, lum, marker='.', c='purple')
 ax.plot(dt, lum, c='purple', ls=':')
-ax.text(dt[0], lum[0], 'SN2010bh', fontsize=14, horizontalalignment='right',
+ax.text(dt[8], lum[8]/1.15, 'SN2010bh', fontsize=14, 
+        horizontalalignment='center',
         verticalalignment='top')
 
 # SN 2006aj
@@ -69,16 +74,16 @@ lum = dat['col2'][order]
 
 ax.scatter(dt, lum, marker='.', c='purple')
 ax.plot(dt, lum, c='purple', ls=':')
-ax.text(dt[0], lum[0]/1.1, 'SN2006aj', fontsize=14, 
+ax.text(dt[6], lum[6]*1.02, 'SN2006aj', fontsize=14, 
         horizontalalignment='center',
-        verticalalignment='top')
+        verticalalignment='bottom')
 
 # AT2018cow
 lsun = 3.839E33
 dat = Table.read(
         ddir + "/at2018cow.dat", delimiter='&', format='ascii.fast_no_header')
 mjd = dat['col1']
-jd0 = 58285
+jd0 = 58285.441 # time of optical discovery
 dt = mjd-jd0
 lum_raw = dat['col2']
 lum = lsun * np.array(
@@ -89,9 +94,9 @@ llum = lsun*(np.array(
     [val.split('^')[1].split('_')[1] for val in lum_raw]).astype(float))
 ax.errorbar(dt, lum, yerr=[llum, ulum], fmt='.', c='cyan')
 ax.plot(dt, lum, c='cyan')
-ax.text(dt[0], lum[0], 'AT2018cow', fontsize=14,
-        horizontalalignment='center',
-        verticalalignment='bottom')
+ax.text(dt[4]*1.05, lum[4], 'AT2018cow', fontsize=14,
+        horizontalalignment='left',
+        verticalalignment='center')
 
 # Formatting
 ax.tick_params(axis='both', labelsize=14)
@@ -104,5 +109,5 @@ ax.set_xlabel(r'Days since first light', fontsize=16)
 
 plt.tight_layout()
 
-#plt.show()
-plt.savefig("bol_lc_comparison.png")
+plt.show()
+#plt.savefig("bol_lc_comparison.png")
