@@ -1,4 +1,4 @@
-""" Comparison of bolometric light curves """
+""" Comparison of observed light curves """
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,127 +12,107 @@ from load_lum import load_lc
 
 
 # Where the bolometric light curve compilation lives
-ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/bol_lc"
-
+ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
 
 def at2018gep(ax):
-    """ Bolometric LC of AT2018gep """
-    dt, lum, llum, ulum = load_lc()
-    ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='s', c='k', zorder=10)
-    # ax.text(dt[4]/1.05, lum[4], 'AT2018gep', fontsize=14,
-    #         horizontalalignment='right', verticalalignment='center')
+    """ LC of AT2018gep """
+    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
+    f = DATA_DIR + "/ZTF18abukavn_opt_phot.dat"
+    dat = np.loadtxt(f, dtype=str, delimiter=' ')
+    instr = dat[:,0]
+    jd = dat[:,1].astype(float)
+    zp = 2458370.6473
+    dt = jd-zp
+    filt = dat[:,2]
+    mag = dat[:,3].astype(float)
+    emag = dat[:,4].astype(float)
+    distmod = Planck15.distmod(z=0.033).value
+    choose = np.logical_and(mag<99, filt=='u')
+    order = np.argsort(dt[choose])
+    ax.plot(
+            dt[choose][order], mag[choose][order]-distmod, 
+            ls='--', c='cyan')
+    choose = np.logical_and(mag<99, filt=='g')
+    order = np.argsort(dt[choose])
+    ax.plot(
+            dt[choose][order], mag[choose][order]-distmod, 
+            ls='--', c='g')
+    choose = np.logical_and(mag<99, filt=='r')
+    order = np.argsort(dt[choose])
+    ax.plot(
+            dt[choose][order], mag[choose][order]-distmod, 
+            ls='--', c='r')
+    choose = np.logical_and(mag<99, filt=='i')
+    order = np.argsort(dt[choose])
+    ax.plot(
+            dt[choose][order], mag[choose][order]-distmod, 
+            ls='--', c='pink')
+    choose = np.logical_and(mag<99, filt=='z')
+    order = np.argsort(dt[choose])
+    ax.plot(
+            dt[choose][order], mag[choose][order]-distmod, 
+            ls='--', c='grey')
 
 
-def llgrb(ax):
-    """ Comparison to LLGRB-SNe """
-    col = 'grey'
 
-    # SN1998bw
-    dat = Table.read(ddir + "/sn1998bw.dat", format='ascii.fast_no_header')
-    dt = dat['col1']
-    lum = dat['col2']
-    #ax.scatter(dt, lum, marker='.', c=col)
-    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5)
-    # ax.text(dt[-1]*1.01, lum[-1], 'SN1998bw', fontsize=14, 
-    #         horizontalalignment='left',
-    #         verticalalignment='center')
+def ksn2015k(ax):
+    """ Comparison to KSN2015K """
+    col = 'black'
+    dat = Table.read(ddir + "/ksn2015k.txt", format='ascii.fast_no_header')
+    dt = dat['col1'] + 3
+    mag = dat['col2']
+    ax.plot(dt, mag, c=col, ls='-', lw=3, alpha=1)
 
-    # SN2010bh
-    dat = Table.read(ddir + "/sn2010bh.dat", format='ascii.fast_no_header')
-    dt = dat['col1']
-    lum = dat['col2']
-    #ax.scatter(dt, lum, marker='.', c=col)
-    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5)
-    # ax.text(dt[8], lum[8]/1.15, 'SN2010bh', fontsize=14, 
-    #         horizontalalignment='center',
-    #         verticalalignment='top')
-
-    # SN 2006aj
-    dat = Table.read(ddir + "/sn2006aj.dat", format='ascii.fast_no_header')
-    dt = dat['col1']
-    order = np.argsort(dt)
-    dt = dt[order]
-    lum = dat['col2'][order]
-    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5)
-    # ax.text(dt[6], lum[6]*1.02, 'SN2006aj', fontsize=14, 
-    #         horizontalalignment='center',
-    #         verticalalignment='bottom')
-
-    ax.text(0.9, 0.9, 'LLGRB-SNe', fontsize=14,
+    ax.text(0.9, 0.9, 'KSN2015K', fontsize=14,
             horizontalalignment='right',
             verticalalignment='top', transform=ax.transAxes)
 
 
-def fbot(ax):
-    """ AT2018cow """
-    lsun = 3.839E33
-    dat = Table.read(
-            ddir + "/at2018cow.dat", delimiter='&', format='ascii.fast_no_header')
-    mjd = dat['col1']
-    jd0 = 58285.441 # time of optical discovery
-    dt = mjd-jd0
-    lum_raw = dat['col2']
-    lum = lsun * np.array(
-        [val.split('^')[0] for val in lum_raw]).astype(float)
-    ulum = lsun*(np.array(
-        [val.split('^')[1].split('_')[0] for val in lum_raw]).astype(float))
-    llum = lsun*(np.array(
-        [val.split('^')[1].split('_')[1] for val in lum_raw]).astype(float))
-    ax.plot(dt, lum, c='grey', ls='-', lw=2, alpha=0.5)
-    # ax.text(dt[4]*1.05, lum[4], 'AT2018cow', fontsize=14,
-    #         horizontalalignment='left',
-    #         verticalalignment='center')
+def iptf16asu(ax):
+    """ Comparison to iPTF16asu """
+    dat = np.loadtxt(ddir + "/lc_16asu.txt", delimiter='&', dtype='str')
+    t = dat[:,0].astype(float)
+    dt = t-t[0]
+    band = np.array([val.strip() for val in dat[:,2]])
+    mag_raw = dat[:,3]
+    mag = np.zeros(len(mag_raw))
+    emag = np.zeros(len(mag))
+    for ii,val in enumerate(mag_raw):
+        if '>' not in val:
+            mag[ii] = float(val.split('$pm$')[0])
+            emag[ii] = float(val.split('$pm$')[1])
 
-    ax.text(0.9, 0.9, 'FBOTs', fontsize=14,
+    choose = np.logical_and(mag > 0, band == 'g')
+    Mag = mag[choose]-39.862 # distance modulus
+
+    ax.plot(dt[choose]-11, Mag, c='black', label='iPTF16asu', lw=3)
+    ax.text(0.9, 0.9, 'iPTF16asu', fontsize=14,
             horizontalalignment='right',
             verticalalignment='top', transform=ax.transAxes)
-
-
-def sn2008d():
-    dat = Table.read(
-            ddir + "/sn2008d.dat", delimiter='&', format='ascii.fast_no_header')
-    dt = dat['col1']
-    TBB_raw = dat['col2']
-    TBB = np.array([val.split('+')[0] for val in TBB_raw])
-    uTBB = np.array([val.split('+')[1].split('_')[0] for val in TBB_raw])
-    lTBB = np.array([val.split('+')[1].split('_')[1] for val in TBB_raw])
-    lum_raw = dat['col4']
-    lum = 10**(np.array(
-        [val.split('+')[0] for val in lum_raw]).astype(float))
-    ulum = 10**(np.array(
-        [val.split('+')[1].split('_')[0] for val in lum_raw]).astype(float))
-    llum = 10**(np.array(
-        [val.split('+')[1].split('_')[1] for val in lum_raw]).astype(float))
-    ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='.', c='grey')
-    ax.plot(dt, lum, c='grey')
-    #ax.fill_between(dt, y1=lum-ulum, y2=lum+llum, color='grey')
-    ax.text(
-            dt[8], lum[8], 'SN2008D', fontsize=14, 
-            horizontalalignment='left',
-            verticalalignment='top')
 
 
 if __name__=="__main__":
     # Initialize figure
-    fig,axarr = plt.subplots(1,2, figsize=(9,5), sharex=True, sharey=True)
-    ax = axarr[0]
-    llgrb(ax)
+    fig,axarr = plt.subplots(2,2, figsize=(9,6), sharex=True, sharey=True)
+    ax = axarr[0,0]
     at2018gep(ax)
+    ksn2015k(ax)
+    ax.invert_yaxis()
+    ax.set_ylabel(r'$M$', fontsize=16)
+    ax.tick_params(axis='y', labelsize=14)
 
-    ax = axarr[1]
+    ax = axarr[1,0]
     at2018gep(ax)
-    fbot(ax)
+    iptf16asu(ax)
+    ax.set_ylabel(r'$M$', fontsize=16)
 
     # Formatting
-    for ax in axarr:
+    for ax in axarr[1,:]:
         ax.tick_params(axis='both', labelsize=14)
-        ax.set_yscale('log')
         ax.set_xlim(-5, 40)
-        ax.set_ylim(5E41, 1E45)
         ax.set_xlabel(r'Days since first light', fontsize=16)
-    axarr[0].set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
 
-    plt.subplots_adjust(wspace=0)
+    plt.subplots_adjust(hspace=0, wspace=0)
 
     #plt.show()
-    plt.savefig("bol_lc_comparison.png")
+    plt.savefig("obs_lc_comparison.png")

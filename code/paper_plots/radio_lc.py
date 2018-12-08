@@ -359,11 +359,11 @@ def sn2010bh(ax, col, legend):
 
 def at2018gep(ax, col, legend):
     d = Planck15.luminosity_distance(z=0.033).cgs.value
-    t = np.array([4, 5, 15, 16])
-    nu = np.array([15, 10, 15, 9]) *1E9
-    fnu = np.array([35, 34, 43, 24.4])
+    t = np.array([4, 5, 15, 16, 59])
+    nu = np.array([15, 10, 15, 9, 9]) *1E9
+    fnu = np.array([35, 34, 43, 24.4, 16])
     nufnu = nu*fnu
-    islim = np.array([True, False, True, False])
+    islim = np.array([True, False, True, False, True])
     lum = nufnu * 1e-23 * 1e-6 * 4 * np.pi * d**2
     fs = 11
     nsize = 10 # normal size for points
@@ -374,6 +374,10 @@ def at2018gep(ax, col, legend):
     ax.text(t[-1], lum[-1]/2, 'AT2018gep', fontsize=11,
             horizontalalignment='right',
             verticalalignment='top')
+    ax.scatter(
+            t[islim], lum[islim], facecolor='k', edgecolor='k',
+            marker='v', s=100, zorder=10)
+
 
 
 def iptf16asu(ax, col, legend):
@@ -440,13 +444,13 @@ if __name__=="__main__":
             r"Luminosity $\nu L_{\nu}$ [erg\,s$^{-1}$]", 
             fontsize=16)
     ax.tick_params(axis='both', labelsize=14)
-    ax.set_xlim(0.3, 2000) 
-    ax.set_ylim(1E34, 1E42)
-    ax.set_xscale('log')
+    ax.set_xlim(0, 75) 
+    ax.set_ylim(1E36, 1E42)
+    #ax.set_xscale('log')
     ax.set_yscale('log')
     ax.set_xlabel(r"Time [days; rest frame]", fontsize=16)
     ax.legend(fontsize=12, loc='upper right')
 
     plt.subplots_adjust(wspace=0.05)
-    #plt.show()
-    plt.savefig("radio_lc.png")
+    plt.show()
+    #plt.savefig("radio_lc.png")
