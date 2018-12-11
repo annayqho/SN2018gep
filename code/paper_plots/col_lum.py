@@ -24,7 +24,7 @@ def at2018gep(ax):
     zp = 2458370.6473
     dt = jd-zp
 
-    dt_grid = np.arange(0,30,1)
+    dt_grid = np.arange(0,60,1)
 
     band = filt=='g'
     choose = np.logical_and(det, band)
@@ -76,7 +76,7 @@ def at2018cow(ax):
     zp = 58285
     dt = jd-zp
 
-    dt_grid = np.arange(0,30,1)
+    dt_grid = np.arange(0,60,1)
 
     band = filt=='g'
     choose = band
@@ -124,7 +124,6 @@ def drout(ax):
     names = np.array([val.strip() for val in dat[:,0]])
     unames = np.unique(names)
     for ii,name in enumerate(unames):
-        print(name)
         choose = names == name
         redshift = z[name]
         # only do this if there is a known redshift
@@ -159,8 +158,16 @@ def drout(ax):
             gr = useg-user
             egr = np.sqrt(useeg**2+useer**2)
 
-            ax.scatter(gr[0], useg[0]-distmod, c='grey')
-            ax.scatter(gr[-1], useg[-1]-distmod, c='grey')
+            i = 0
+            ax.errorbar(
+                    gr[i], useg[i]-distmod, 
+                    xerr=egr[i], yerr=useeg[i], c='grey', marker='+',
+                    alpha=0.3)
+            i = -1
+            ax.errorbar(
+                    gr[i], useg[i]-distmod, 
+                    xerr=egr[i], yerr=useeg[i], c='grey', marker='+',
+                    alpha=0.3)
             ax.text(gr[0], useg[0]-distmod, name)
             if ii == 0:
                 ax.plot(gr, useg-distmod, ls='-', c='grey', zorder=0, lw=3, 
@@ -174,28 +181,100 @@ def drout(ax):
             else:
                 ax.plot(gr, useg-distmod, ls='-', c='grey', zorder=0, lw=3, 
                         alpha=0.5)
+
+
+def arcavi(ax):
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
+    inputf = ddir + "/arcavi_info.txt"
+    info = np.loadtxt(inputf,delimiter=';',dtype=str)
+    unames = np.array([val.strip() for val in info[:,0]])
+    z_key = info[:,3].astype(float)
+
+    inputf = ddir + "/arcavi_lc.txt"
+    dat = np.loadtxt(inputf,delimiter=';',dtype=str)
+    names = np.array([val.strip() for val in dat[:,0]])
+    for ii,name in enumerate(unames):
+        choose = names == name
+        redshift = z_key[unames==name]
+        filt = np.array(dat[:,2][choose]).astype(str)
+        mjd = dat[:,3][choose].astype(float)
+        dt = mjd-mjd[0]
+        islim = dat[:,4][choose]
+        mag = dat[:,5][choose].astype(float)
+        emag = dat[:,6][choose].astype(str)
+        distmod = Planck15.distmod(z=redshift).value
+        isdet = np.array([val == " " for val in islim])
+        isfilt = np.array(['g' in val for val in filt])
+        pts = np.logical_and(isdet, isfilt)
+        gdt = dt[pts]
+        g = mag[pts]
+        eg = emag[pts].astype(float)
+        isfilt = np.array(['r' in val for val in filt])
+        pts = np.logical_and(isdet, isfilt)
+        rdt = dt[pts]
+        r = mag[pts]
+        er = emag[pts].astype(float)
+
+        dt_grid = np.sort(np.intersect1d(rdt.astype(int),gdt.astype(int)))
+
+        if len(dt_grid) > 1:
+            print(dt_grid[-1])
+            # only do this if npts > 1
+            keep = np.array(
+                    [np.where(rdt.astype(int)==val)[0][0] for val in dt_grid])
+            user = r[keep]
+            useer = er[keep]
+            keep = np.array(
+                    [np.where(gdt.astype(int)==val)[0][0] for val in dt_grid])
+            useg = g[keep]
+            useeg = eg[keep]
+            gr = useg-user
+            egr = np.sqrt(useeg**2+useer**2)
+
+            col = 'orange'
+            i = 0
+            ax.errorbar(
+                    gr[i], useg[i]-distmod, 
+                    xerr=egr[i], yerr=useeg[i], c=col, marker='+',
+                    alpha=0.3)
+            i = -1
+            ax.errorbar(
+                    gr[i], useg[i]-distmod, 
+                    xerr=egr[i], yerr=useeg[i], c=col, marker='+',
+                    alpha=0.3)
+            ax.text(gr[0], useg[0]-distmod, name)
+            if ii == 2:
+                ax.plot(gr, useg-distmod, ls='-', c=col, zorder=0, lw=3, 
+                        alpha=0.5, label="SNLS (Arcavi+16)")
                 # ax.fill_between(gr, useg-distmod-useeg,
-                #     useg-distmod+useeg, color='grey', alpha=0.3, zorder=0)
+                #     useg-distmod+useeg, color='grey', alpha=0.3, zorder=0,
+                #     label="PS-1 gold (Drout+14)")
                 #ax.fill_betweenx(useg-distmod, gr-egr, gr+egr,
-                #    color='grey', alpha=0.3, zorder=0)
+                #    color='grey', alpha=0.3, zorder=0,
+                #    label="PS-1 gold (Drout+14)")
+            else:
+                ax.plot(gr, useg-distmod, ls='-', c=col, zorder=0, lw=3, 
+                        alpha=0.5)
+
 
 
 if __name__=="__main__":
-    fig,ax = plt.subplots(1,1,figsize=(8,5))
+    fig,ax = plt.subplots(1,1,figsize=(9,7))
     cb = at2018gep(ax)
     cbar = plt.colorbar(cb)
     at2018cow(ax)
     drout(ax)
+    arcavi(ax)
     ax.tick_params(axis='both', labelsize=14)
     cbar.ax.set_ylabel("Days from some $t_0$", fontsize=12)
     cbar.ax.tick_params(labelsize=12)
     ax.set_xlabel("$g-r$, observer frame", fontsize=16)
     ax.set_ylabel("Absolute $g$-band mag, observer frame", fontsize=16)
-    plt.xlim(-1, 1.2)
-    plt.ylim(-15.3, -21)
+    plt.xlim(-1, 1.5)
+    plt.ylim(-12.5, -21)
     plt.legend(prop={'size':12})
 
     plt.tight_layout()
 
     plt.show()
-    #plt.savefig("g_gr.png")
+    plt.savefig("g_gr.png")
