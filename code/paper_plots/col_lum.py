@@ -132,32 +132,52 @@ def drout(ax):
         dt = dat[:,2][choose].astype(float)
         islim = dat[:,3][choose]
         mag = dat[:,4][choose].astype(float)
+        emag = dat[:,5][choose].astype(str)
         distmod = Planck15.distmod(z=redshift).value
         isdet = np.array([val == " " for val in islim])
         isfilt = np.array(['g' in val for val in filt])
         pts = np.logical_and(isdet, isfilt)
         gdt = dt[pts]
         g = mag[pts]
+        eg = emag[pts].astype(float)
         isfilt = np.array(['r' in val for val in filt])
         pts = np.logical_and(isdet, isfilt)
         rdt = dt[pts]
         r = mag[pts]
+        er = emag[pts].astype(float)
 
-        dt_grid = np.intersect1d(rdt,gdt)
-        keep = np.array([val in dt_grid for val in rdt])
-        user = r[keep]
-        keep = np.array([val in dt_grid for val in gdt])
-        useg = g[keep]
-        gr = useg-user
+        dt_grid = np.sort(np.intersect1d(rdt,gdt))
 
-        ax.scatter(gr[0], useg[0]-distmod, c='grey')
-        ax.scatter(gr[-1], useg[-1]-distmod, c='grey')
-        if ii == 0:
-            ax.plot(gr, useg-distmod, ls='-', c='grey', zorder=0, lw=3, 
-                    alpha=0.5, label="PS-1 (Drout+14)")
-        else:
-            ax.plot(gr, useg-distmod, ls='-', c='grey', zorder=0, lw=3, 
-                    alpha=0.5)
+        if len(dt_grid) > 1:
+            # only do this if npts > 1
+            keep = np.array([np.where(rdt==val)[0][0] for val in dt_grid])
+            user = r[keep]
+            useer = er[keep]
+            keep = np.array([np.where(gdt==val)[0][0] for val in dt_grid])
+            useg = g[keep]
+            useeg = eg[keep]
+            gr = useg-user
+            egr = np.sqrt(useeg**2+useer**2)
+
+            ax.scatter(gr[0], useg[0]-distmod, c='grey')
+            ax.scatter(gr[-1], useg[-1]-distmod, c='grey')
+            ax.text(gr[0], useg[0]-distmod, name)
+            if ii == 0:
+                ax.plot(gr, useg-distmod, ls='-', c='grey', zorder=0, lw=3, 
+                        alpha=0.5, label="PS-1 gold (Drout+14)")
+                # ax.fill_between(gr, useg-distmod-useeg,
+                #     useg-distmod+useeg, color='grey', alpha=0.3, zorder=0,
+                #     label="PS-1 gold (Drout+14)")
+                #ax.fill_betweenx(useg-distmod, gr-egr, gr+egr,
+                #    color='grey', alpha=0.3, zorder=0,
+                #    label="PS-1 gold (Drout+14)")
+            else:
+                ax.plot(gr, useg-distmod, ls='-', c='grey', zorder=0, lw=3, 
+                        alpha=0.5)
+                # ax.fill_between(gr, useg-distmod-useeg,
+                #     useg-distmod+useeg, color='grey', alpha=0.3, zorder=0)
+                #ax.fill_betweenx(useg-distmod, gr-egr, gr+egr,
+                #    color='grey', alpha=0.3, zorder=0)
 
 
 if __name__=="__main__":
@@ -172,7 +192,7 @@ if __name__=="__main__":
     ax.set_xlabel("$g-r$, observer frame", fontsize=16)
     ax.set_ylabel("Absolute $g$-band mag, observer frame", fontsize=16)
     plt.xlim(-1, 1.2)
-    plt.ylim(-15.3, -20.3)
+    plt.ylim(-15.3, -21)
     plt.legend(prop={'size':12})
 
     plt.tight_layout()
