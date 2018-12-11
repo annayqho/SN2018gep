@@ -18,7 +18,8 @@ ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/bol_lc"
 def at2018gep(ax):
     """ Bolometric LC of AT2018gep """
     dt, lum, llum, ulum = load_lc()
-    ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='s', c='k', zorder=10)
+    ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='s', c='k', zorder=10,
+            label="ZTF18abukavn (AT2018gep)")
     # ax.text(dt[4]/1.05, lum[4], 'AT2018gep', fontsize=14,
     #         horizontalalignment='right', verticalalignment='center')
 
@@ -32,7 +33,7 @@ def llgrb(ax):
     dt = dat['col1']
     lum = dat['col2']
     #ax.scatter(dt, lum, marker='.', c=col)
-    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5)
+    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5, label="LLGRB-SNe")
     # ax.text(dt[-1]*1.01, lum[-1], 'SN1998bw', fontsize=14, 
     #         horizontalalignment='left',
     #         verticalalignment='center')
@@ -42,7 +43,7 @@ def llgrb(ax):
     dt = dat['col1']
     lum = dat['col2']
     #ax.scatter(dt, lum, marker='.', c=col)
-    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5)
+    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5, label='_nolegend_')
     # ax.text(dt[8], lum[8]/1.15, 'SN2010bh', fontsize=14, 
     #         horizontalalignment='center',
     #         verticalalignment='top')
@@ -53,14 +54,14 @@ def llgrb(ax):
     order = np.argsort(dt)
     dt = dt[order]
     lum = dat['col2'][order]
-    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5)
+    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5, label='_nolegend_')
     # ax.text(dt[6], lum[6]*1.02, 'SN2006aj', fontsize=14, 
     #         horizontalalignment='center',
     #         verticalalignment='bottom')
 
-    ax.text(0.9, 0.9, 'LLGRB-SNe', fontsize=14,
-            horizontalalignment='right',
-            verticalalignment='top', transform=ax.transAxes)
+    # ax.text(0.9, 0.9, 'LLGRB-SNe', fontsize=14,
+    #         horizontalalignment='right',
+    #         verticalalignment='top', transform=ax.transAxes)
 
 
 def fbot(ax):
@@ -78,14 +79,14 @@ def fbot(ax):
         [val.split('^')[1].split('_')[0] for val in lum_raw]).astype(float))
     llum = lsun*(np.array(
         [val.split('^')[1].split('_')[1] for val in lum_raw]).astype(float))
-    ax.plot(dt, lum, c='grey', ls='-', lw=2, alpha=0.5)
+    ax.plot(dt, lum, c='grey', ls='-', lw=2, alpha=0.5, label="FBOTs")
     # ax.text(dt[4]*1.05, lum[4], 'AT2018cow', fontsize=14,
     #         horizontalalignment='left',
     #         verticalalignment='center')
 
-    ax.text(0.9, 0.9, 'FBOTs', fontsize=14,
-            horizontalalignment='right',
-            verticalalignment='top', transform=ax.transAxes)
+    # ax.text(0.9, 0.9, 'FBOTs', fontsize=14,
+    #         horizontalalignment='right',
+    #         verticalalignment='top', transform=ax.transAxes)
 
 
 def sn2008d():
@@ -118,10 +119,12 @@ if __name__=="__main__":
     ax = axarr[0]
     llgrb(ax)
     at2018gep(ax)
+    ax.legend(fontsize=12)
 
     ax = axarr[1]
     at2018gep(ax)
     fbot(ax)
+    ax.legend(fontsize=12)
 
     # Formatting
     for ax in axarr:
