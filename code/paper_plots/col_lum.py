@@ -302,7 +302,6 @@ def asu(ax):
         if '>' not in val:
             mag[ii] = float(val.split('$pm$')[0])
             emag[ii] = float(val.split('$pm$')[1])
-
     choose = np.logical_and(mag > 0, band == 'g')
     g = mag[choose]
     gdt = dt[choose]
@@ -317,13 +316,43 @@ def asu(ax):
     ax.plot(
             gr, gplt-39.862, c='grey', 
             lw=3, alpha=0.3, label="iPTF16asu")
-    ax.errorbar(
+
+
+def sn2009bb(ax):
+    """ got this from the open SN catalog """
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
+    dat = np.loadtxt(ddir + "/sn2009bb.txt", delimiter=',', dtype='str')
+    mjd = dat[:,1].astype(float)
+    mag = dat[:,2].astype(float)
+    #emag = dat[:,3].astype(float)
+    band = dat[:,5]
+
+    dt = mjd-mjd[0]
+    choose = band == 'g'
+    g = mag[choose]
+    gdt = dt[choose]
+
+    choose = np.logical_or(band == 'r', band == 'R')
+    r = mag[choose]
+    rdt = dt[choose]
+      
+    distmod = Planck15.distmod(z=0.0104).value
+    dt_grid = np.arange(0, 50, 1)
+    gplt = np.interp(dt_grid, gdt, g) 
+    rplt = np.interp(dt_grid, rdt, r)
+    gr = gplt-rplt
+    ax.plot(
+            gr, gplt-distmod, c='orange', 
+            lw=3, alpha=0.3, label="SN2009bb")
+
+
 
 
 if __name__=="__main__":
     fig,ax = plt.subplots(1,1,figsize=(9,7))
     cb = at2018gep(ax)
     asu(ax)
+    sn2009bb(ax)
 
     # Formatting
     cbar = plt.colorbar(cb)
@@ -332,12 +361,12 @@ if __name__=="__main__":
     cbar.ax.tick_params(labelsize=12)
     ax.set_xlabel("$g-r$, observer frame", fontsize=16)
     ax.set_ylabel("Absolute $g$-band mag, observer frame", fontsize=16)
-    plt.xlim(-1, 1.5)
+    plt.xlim(-1, 1.6)
     plt.ylim(-12.5, -21)
     plt.legend(prop={'size':12})
 
     plt.tight_layout()
 
-    plt.show()
-    #plt.savefig("icbl_g_gr.png")
+    #plt.show()
+    plt.savefig("icbl_g_gr.png")
 
