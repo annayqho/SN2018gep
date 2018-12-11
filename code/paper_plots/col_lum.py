@@ -245,7 +245,7 @@ def arcavi(ax):
             ax.text(gr[0], useg[0]-distmod, name)
             if ii == 2:
                 ax.plot(gr, useg-distmod, ls='-', c=col, zorder=0, lw=3, 
-                        alpha=0.5, label="SNLS (Arcavi+16)")
+                        alpha=0.3, label="SNLS (Arcavi+16)")
                 # ax.fill_between(gr, useg-distmod-useeg,
                 #     useg-distmod+useeg, color='grey', alpha=0.3, zorder=0,
                 #     label="PS-1 gold (Drout+14)")
@@ -254,8 +254,17 @@ def arcavi(ax):
                 #    label="PS-1 gold (Drout+14)")
             else:
                 ax.plot(gr, useg-distmod, ls='-', c=col, zorder=0, lw=3, 
-                        alpha=0.5)
+                        alpha=0.3)
 
+
+def sn2002bj(ax):
+    distmod = Planck15.distmod(z=0.012108).value
+    dt = np.array([1, 3, 4, 5, 9, 11, 15])
+    B = np.array([14.79, 14.97, 15.03, 15.15, 15.75, 16.27, 17.92])
+    V = np.array([14.91, 15.03, 15.10, 15.20, 15.71, 16.04, 17.93])
+    R = np.array([14.97, 15.06, 15.08, 15.21, 15.65, 16.06, 17.32])
+    ax.plot(B-R, B-distmod, ls='-', c='purple', zorder=0, lw=3, 
+            alpha=0.3, label="SN2002bj")
 
 
 if __name__=="__main__":
@@ -265,6 +274,7 @@ if __name__=="__main__":
     at2018cow(ax)
     drout(ax)
     arcavi(ax)
+    #sn2002bj(ax) # it's a spec. classified SN, not an FBOT
     ax.tick_params(axis='both', labelsize=14)
     cbar.ax.set_ylabel("Days from some $t_0$", fontsize=12)
     cbar.ax.tick_params(labelsize=12)
@@ -276,5 +286,5 @@ if __name__=="__main__":
 
     plt.tight_layout()
 
-    plt.show()
+    #plt.show()
     plt.savefig("g_gr.png")
