@@ -59,7 +59,7 @@ def at2018gep(ax):
     cb = ax.scatter(
             gr, g-distmod, c=dt_grid, cmap='inferno', marker='o', zorder=5)
     ax.scatter(
-            0, 0, marker='o', c='k', label="AT2018gep")
+            0, 0, marker='o', c='k', label="ZTF18abukavn (AT2018gep)")
     return cb
 
 
@@ -267,7 +267,7 @@ def sn2002bj(ax):
             alpha=0.3, label="SN2002bj")
 
 
-if __name__=="__main__":
+def fbot():
     fig,ax = plt.subplots(1,1,figsize=(9,7))
     cb = at2018gep(ax)
     cbar = plt.colorbar(cb)
@@ -285,6 +285,59 @@ if __name__=="__main__":
     plt.legend(prop={'size':12})
 
     plt.tight_layout()
-
     #plt.show()
-    plt.savefig("g_gr.png")
+    plt.savefig("fbot_g_gr.png")
+
+
+def asu(ax):
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
+    dat = np.loadtxt(ddir + "/lc_16asu.txt", delimiter='&', dtype='str')
+    t = dat[:,0].astype(float)
+    dt = t-t[0]
+    band = np.array([val.strip() for val in dat[:,2]])
+    mag_raw = dat[:,3]
+    mag = np.zeros(len(mag_raw))
+    emag = np.zeros(len(mag))
+    for ii,val in enumerate(mag_raw):
+        if '>' not in val:
+            mag[ii] = float(val.split('$pm$')[0])
+            emag[ii] = float(val.split('$pm$')[1])
+
+    choose = np.logical_and(mag > 0, band == 'g')
+    g = mag[choose]
+    gdt = dt[choose]
+    choose = np.logical_and(mag > 0, band == 'r')
+    r = mag[choose]
+    rdt = dt[choose]
+      
+    dt_grid = np.arange(20, 36, 1)
+    gplt = np.interp(dt_grid, gdt, g) 
+    rplt = np.interp(dt_grid, rdt, r)
+    gr = gplt-rplt
+    ax.plot(
+            gr, gplt-39.862, c='grey', 
+            lw=3, alpha=0.3, label="iPTF16asu")
+    ax.errorbar(
+
+
+if __name__=="__main__":
+    fig,ax = plt.subplots(1,1,figsize=(9,7))
+    cb = at2018gep(ax)
+    asu(ax)
+
+    # Formatting
+    cbar = plt.colorbar(cb)
+    ax.tick_params(axis='both', labelsize=14)
+    cbar.ax.set_ylabel("Days from some $t_0$", fontsize=12)
+    cbar.ax.tick_params(labelsize=12)
+    ax.set_xlabel("$g-r$, observer frame", fontsize=16)
+    ax.set_ylabel("Absolute $g$-band mag, observer frame", fontsize=16)
+    plt.xlim(-1, 1.5)
+    plt.ylim(-12.5, -21)
+    plt.legend(prop={'size':12})
+
+    plt.tight_layout()
+
+    plt.show()
+    #plt.savefig("icbl_g_gr.png")
+
