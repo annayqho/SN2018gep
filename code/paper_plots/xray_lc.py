@@ -78,22 +78,6 @@ plt.text(
     horizontalalignment='center',
     verticalalignment='bottom', fontsize=12)
 
-# Need 2008D
-f = data_dir + "/2008D.txt"
-dat = np.loadtxt(f, dtype=str, delimiter='&', skiprows=1)
-dt_sec = np.array(
-        [string.replace('\xa0', '') for string in dat[:,0]]).astype(float)
-dt_day = dt_sec/86400
-lum = 1E42*np.array(
-        [string.replace('\xa0', '') for string in dat[:,2]]).astype(float)
-elum = 1E42*np.array(
-        [string.replace('\xa0', '') for string in dat[:,3]]).astype(float)
-plt.plot(dt_day, lum, c='grey', lw=2, zorder=1)
-plt.text(
-    3E-3, 2E43, '2008D',
-    horizontalalignment='left',
-    verticalalignment='center', fontsize=12)
-
 # 2009bb
 # Soderberg 2009
 # detection from Chandra
