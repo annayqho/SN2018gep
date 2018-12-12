@@ -308,14 +308,14 @@ def asu(ax):
     choose = np.logical_and(mag > 0, band == 'r')
     r = mag[choose]
     rdt = dt[choose]
-      
     dt_grid = np.arange(20, 36, 1)
     gplt = np.interp(dt_grid, gdt, g) 
     rplt = np.interp(dt_grid, rdt, r)
     gr = gplt-rplt
     ax.plot(
-            gr, gplt-39.862, c='grey', 
-            lw=3, alpha=0.3, label="iPTF16asu")
+            gr, gplt-39.862, c='black', 
+            lw=3, alpha=0.3, label="No radio, no GRB")
+    ax.text(gr[0], gplt[0]-39.862, "iPTF16asu")
 
 
 def sn2009bb(ax):
@@ -326,7 +326,6 @@ def sn2009bb(ax):
     mag = dat[:,2].astype(float)
     #emag = dat[:,3].astype(float)
     band = dat[:,5]
-
     dt = mjd-mjd[0]
     choose = band == 'g'
     g = mag[choose]
@@ -343,7 +342,163 @@ def sn2009bb(ax):
     gr = gplt-rplt
     ax.plot(
             gr, gplt-distmod, c='orange', 
-            lw=3, alpha=0.3, label="SN2009bb")
+            lw=3, alpha=0.3, label="Radio, no GRB")
+    ax.text(gr[0], gplt[0]-distmod, "SN2009bb")
+
+
+def sn2012ap(ax):
+    """ got this from the open SN catalog """
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
+    dat = np.loadtxt(ddir + "/sn2012ap.txt", delimiter=',', dtype='str')
+    mjd = dat[:,1].astype(float)
+    mag = dat[:,2].astype(float)
+    band = dat[:,5]
+    dt = mjd-mjd[0]
+
+    choose = band == 'B'
+    g = mag[choose]
+    gdt = dt[choose]
+
+    choose = band == 'R'
+    r = mag[choose]
+    rdt = dt[choose]
+      
+    distmod = Planck15.distmod(z=0.01224).value
+    dt_grid = np.arange(0, 18, 1)
+    gplt = np.interp(dt_grid, gdt, g) 
+    rplt = np.interp(dt_grid, rdt, r)
+    gr = gplt-rplt
+    ax.plot(
+            gr, gplt-distmod, c='orange', 
+            lw=3, alpha=0.3)
+    ax.text(gr[0], gplt[0]-distmod, "SN2012ap")
+
+
+def iptf17cw(ax):
+    # R-band 
+    g = np.array([19.041, 19.235, 19.294, 20.93])
+    r = np.array([18.703, 18.721, 18.793, 19.998])
+    distmod = Planck15.distmod(z=0.093).value
+    gr = g-r
+    ax.plot(
+            gr, g-distmod, c='orange', 
+            lw=3, alpha=0.3)
+    ax.text(gr[0], g[0]-distmod, "iPTF17cw")
+
+
+def sn2006aj(ax):
+    """ got this from the open SN catalog """
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
+    dat = np.loadtxt(ddir + "/sn2006aj.txt", delimiter=',', dtype='str')
+    mjd = dat[:,1].astype(float)
+    mag = dat[:,2].astype(float)
+    band = dat[:,5]
+    dt = mjd-mjd[0]
+
+    choose = np.logical_or(band == 'g', band == 'V')
+    g = mag[choose]
+    gdt = dt[choose]
+
+    choose = np.logical_or(band == 'R', band == "r'")
+    r = mag[choose]
+    rdt = dt[choose]
+      
+    distmod = Planck15.distmod(z=0.033023).value
+    dt_grid = np.arange(4, 35, 1)
+    gplt = np.interp(dt_grid, gdt, g) 
+    rplt = np.interp(dt_grid, rdt, r)
+    gr = gplt-rplt
+    ax.plot(
+            gr, gplt-distmod, c='purple', 
+            lw=3, alpha=0.3, label="LLGRB-SNe")
+    ax.text(gr[0], gplt[0]-distmod, "SN2006aj")
+
+
+def sn1998bw(ax):
+    """ got this from the open SN catalog """
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
+    dat = np.loadtxt(ddir + "/sn1998bw.txt", delimiter=',', dtype='str')
+    mjd = dat[:,1].astype(float)
+    mag = dat[:,2].astype(float)
+    band = dat[:,5]
+    dt = mjd-mjd[0]
+
+    choose = band == 'V'
+    g = mag[choose]
+    gdt = dt[choose]
+
+    choose = np.logical_or(band == 'R', band == "r'")
+    r = mag[choose]
+    rdt = dt[choose]
+      
+    distmod = Planck15.distmod(z=0.0085).value
+    dt_grid = np.arange(0, 50, 1)
+    gplt = np.interp(dt_grid, gdt, g) 
+    rplt = np.interp(dt_grid, rdt, r)
+    gr = gplt-rplt
+    ax.plot(
+            gr, gplt-distmod, c='purple', 
+            lw=3, alpha=0.3)
+    ax.text(gr[1], gplt[1]-distmod, "SN1998bw",
+            horizontalalignment='right')
+
+
+def sn2010bh(ax):
+    """ got this from the open SN catalog """
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
+    dat = np.loadtxt(ddir + "/sn2010bh.txt", delimiter=',', dtype='str')
+    mjd = dat[:,1].astype(float)
+    mag = dat[:,2].astype(float)
+    band = dat[:,5]
+    dt = mjd-mjd[0]
+
+    choose = band == 'V'
+    g = mag[choose]
+    gdt = dt[choose]
+
+    choose = np.logical_or(band == 'R_c', band == "r'")
+    r = mag[choose]
+    rdt = dt[choose]
+      
+    distmod = Planck15.distmod(z=0.0593).value
+    dt_grid = np.arange(5, 34, 1)
+    gplt = np.interp(dt_grid, gdt, g) 
+    rplt = np.interp(dt_grid, rdt, r)
+    gr = gplt-rplt
+    ax.plot(
+            gr, gplt-distmod, c='purple', 
+            lw=3, alpha=0.3)
+    ax.text(gr[1], gplt[1]-distmod, "SN2010bh",
+            horizontalalignment='right')
+
+
+def sn2007ru(ax):
+    """ got this from the open SN catalog """
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
+    dat = np.loadtxt(ddir + "/sn2007ru.txt", delimiter=',', dtype='str')
+    mjd = dat[:,1].astype(float)
+    mag = dat[:,2].astype(float)
+    band = dat[:,5]
+    dt = mjd-mjd[0]
+
+    choose = band == 'V'
+    g = mag[choose]
+    gdt = dt[choose]
+
+    choose = np.logical_or(band == 'R_c', band == "r'")
+    r = mag[choose]
+    rdt = dt[choose]
+      
+    distmod = Planck15.distmod(z=0.0593).value
+    dt_grid = np.arange(5, 34, 1)
+    gplt = np.interp(dt_grid, gdt, g) 
+    rplt = np.interp(dt_grid, rdt, r)
+    gr = gplt-rplt
+    ax.plot(
+            gr, gplt-distmod, c='purple', 
+            lw=3, alpha=0.3)
+    ax.text(gr[1], gplt[1]-distmod, "SN2010bh",
+            horizontalalignment='right')
 
 
 
@@ -353,6 +508,12 @@ if __name__=="__main__":
     cb = at2018gep(ax)
     asu(ax)
     sn2009bb(ax)
+    sn2012ap(ax)
+    iptf17cw(ax)
+    sn2006aj(ax)
+    sn1998bw(ax)
+    sn2010bh(ax)
+    ptficbl(ax)
 
     # Formatting
     cbar = plt.colorbar(cb)
@@ -361,12 +522,12 @@ if __name__=="__main__":
     cbar.ax.tick_params(labelsize=12)
     ax.set_xlabel("$g-r$, observer frame", fontsize=16)
     ax.set_ylabel("Absolute $g$-band mag, observer frame", fontsize=16)
-    plt.xlim(-1, 1.6)
+    plt.xlim(-1, 2.2)
     plt.ylim(-12.5, -21)
     plt.legend(prop={'size':12})
 
     plt.tight_layout()
 
-    #plt.show()
-    plt.savefig("icbl_g_gr.png")
+    plt.show()
+    #plt.savefig("icbl_g_gr.png")
 
