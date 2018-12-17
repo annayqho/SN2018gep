@@ -379,7 +379,6 @@ def at2018gep(ax, col, legend):
             marker='v', s=100, zorder=10)
 
 
-
 def iptf16asu(ax, col, legend):
     nu = 10E9
     t = np.array([30, 200])

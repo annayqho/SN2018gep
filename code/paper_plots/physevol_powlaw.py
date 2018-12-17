@@ -40,10 +40,10 @@ dt, rad, lrad, urad = load_radius()
 dt, temp, ltemp, utemp = load_temp()
 
 # Initialize the figure
-fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
+fig,axarr = plt.subplots(3,1, figsize=(8,10), sharex=True)
 
 # Luminosity panel
-axarr[0].errorbar(dt, lum, yerr=[llum,ulum], fmt='.', c='k')
+axarr[0].errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k')
 # Fit power law to all points after 1 day
 m = -5/3
 mstr = '-5/3'
@@ -81,7 +81,7 @@ axarr[0].text(1, 1E44, '$t^{%s}$' %mstr,
 # Formatting
 
 # Radius panel
-axarr[1].errorbar(dt, rad, yerr=[lrad,urad], fmt='.', c='k')
+axarr[1].errorbar(dt, rad, yerr=[lrad,urad], fmt='o', c='k')
 
 # Plot lines of constant velocity
 xvals = np.linspace(1E-3, 1E2, 1000)
@@ -89,16 +89,16 @@ xvals = np.linspace(1E-3, 1E2, 1000)
 # v = 0.1c
 yvals = 0.1 * (3E10) * xvals * 86400
 axarr[1].plot(xvals, yvals, ls='--', c='grey')
-axarr[1].text(1, 2E14, 'v=0.1c', fontsize=12)
+axarr[1].text(1, 2E14, 'v=0.1c', fontsize=14)
 
 # v = 0.26c
 yvals = 0.26 * (3E10) * xvals * 86400
 axarr[1].plot(xvals, yvals, ls='--', c='grey')
-axarr[1].text(0.4, 7E14, 'v=0.26c', fontsize=12)
+axarr[1].text(0.4, 7E14, 'v=0.26c', fontsize=14)
 
 # Temperature panel
 choose = np.logical_and(dt>1, dt<19)
-axarr[2].errorbar(dt, temp, yerr=[ltemp,utemp], fmt='.', c='k')
+axarr[2].errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k')
 m = -0.92
 b,berr = fit_pow(
         dt[choose], temp[choose], np.min((ltemp, utemp), axis=0)[choose], m=m)
@@ -121,9 +121,9 @@ axarr[2].text(1, 2E4, '$t^{%s}$' %mstr,
 axarr[0].xaxis.label.set_visible(False)
 axarr[1].xaxis.label.set_visible(False)
 
-axarr[2].tick_params(axis='both', labelsize=12)
-axarr[0].tick_params(axis='y', labelsize=12)
-axarr[1].tick_params(axis='y', labelsize=12)
+axarr[2].tick_params(axis='both', labelsize=16)
+axarr[0].tick_params(axis='y', labelsize=16)
+axarr[1].tick_params(axis='y', labelsize=16)
 
 for ii in np.arange(0,3):
     axarr[ii].set_yscale('log')

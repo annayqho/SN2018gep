@@ -33,16 +33,19 @@ xrtlc = Table.read(
     format='ascii')
 # Brad's zero-point is: MJD=58370.588137 = 2018 Sep 09 at 14:06:55.064 UT.
 # Our zero-point is 2458370.6473
-# So the difference is 58370.6473-58370.588137 = 0.059163
-dt_sec = xrtlc['col1']+0.059163
+# so the difference is 0.44 days, or 38088.31681399606 sec
+dt_sec = xrtlc['col1']+38088.31681399606
 ct = xrtlc['col4']
 lum = ct * ratio * 4 * np.pi * d**2 
 dt_day = dt_sec/86400
 plt.scatter(dt_day, lum, marker='v', c='k', zorder=5)
+print(dt_day)
 plt.text(dt_day[0], lum[0]*1.2, 'AT2018gep', fontsize=14,
         horizontalalignment='center', verticalalignment='bottom')
 # Chandra
 plt.scatter(16, 3E-15*4*np.pi*d**2, marker='v', c='k', zorder=5)
+print(3E-15*4*np.pi*d**2)
+plt.scatter(70, 3E-15*4*np.pi*d**2, marker='v', c='k', zorder=5)
 
 
 # All the GRBs
@@ -129,17 +132,16 @@ plt.text(
         horizontalalignment='right', fontsize=12)
 
 # Formatting
-plt.xlim(1E-3,1E2)
 plt.xlabel(r"$\Delta t$ [days]", fontsize=14)
 plt.ylabel(
 r"X-ray luminosity [0.3-10 keV, erg\,s${}^{-1}$]", fontsize=14)
 plt.yscale('log')
-plt.xscale('log')
+#plt.xscale('log')
 plt.ylim(1E39, 1E47)
-plt.xlim(1E-3, 6E1)
+plt.xlim(-5, 46)
 plt.tick_params(axis='both', labelsize=14)
 
 
 plt.tight_layout()
-#plt.show()
-plt.savefig("xray_lc.png")
+plt.show()
+#plt.savefig("xray_lc.png")

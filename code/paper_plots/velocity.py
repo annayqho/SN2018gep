@@ -40,17 +40,195 @@ def plot_16asu():
     # dt between May 10.53 and May 31.99 (inclusive) = 21.47
     dt = np.array(
             [24.97-10.53, 27.36-10.53, 21.47+4.39, 21.47+7.36, 21.47+10.42])
-    print(dt)
     vel = np.array(
             [28.3, 29.5, 25.7, 21.6, 22.0])*1000/1E3
-    print(vel)
     evel = np.array(
             [1.3, 1.4, 0.3, 0.4, 1.3])*1000/1E3
-    plt.scatter(dt, vel, marker='o', c='grey')
-    plt.plot(dt, vel, c='grey', label='Rel SN, no GRB')
+    plt.errorbar(dt, vel, yerr=evel, marker='.', c='purple', fmt='--')
     plt.text(dt[0]/1.03, vel[0], 'iPTF16asu',
             horizontalalignment='right', fontsize=12,
             verticalalignment='center')
+
+
+
+def plot_grbsne():
+    """ Modjaz et al. 2016 """
+    dat = np.loadtxt(DATA_DIR + "/modjaz_vel.txt", dtype=str, delimiter=';')
+    n = np.array(['sn1998bw', 'sn2006aj', 'sn2003lw', 'sn2010bh'])
+
+    names = np.array([val.strip() for val in dat[:,0]])
+    is_grbsn = np.array([val in n for val in names])
+
+    name = names[is_grbsn]
+    phase = dat[:,1][is_grbsn].astype(float)
+    dt = np.zeros(len(phase))
+
+    # correct phase to dt from GRB
+    choose = name == 'sn1998bw'
+    # explosion epoch: 2450929.41
+    # epoch of max light: May 12.2 for V-band (Galama 1998)
+    offset = 2450945.7-2450929.41
+    dt[choose] = phase[choose] + offset
+
+    choose = name == 'sn2006aj'
+    # epoch of max: 2453794.7 (Modjaz 2014)
+    # epoch of explosion: 2453784.649 (Campana 2006)
+    offset = 2453794.7-2453784.649
+    dt[choose] = phase[choose] + offset
+
+    choose = name == 'sn2010bh' # 100316D
+    # epoch of burst: March 16 2010
+    # epoch of max: 8 days post-explosion (Bufano 2012)
+    offset = 8
+    dt[choose] = phase[choose] + offset
+
+    choose = name == 'sn2003lw' # 030329
+    # epoch of burst: 2452977.41769 (Malesani 2004)
+    # epoch of V-band max:  16 days (not sure about this number)
+    offset = 16
+    dt[choose] = phase[choose] + offset
+
+    vel = dat[:,2][is_grbsn].astype(float)*-1
+    evel = dat[:,3][is_grbsn].astype(float)
+
+    # To calculate the rolling mean, leave out 100316D
+    tofit = name != 'sn2010bh'
+    tfit = dt[tofit]
+    vfit = vel[tofit]
+    evfit = evel[tofit]
+
+    dt_mean = np.arange(0,30,1)
+    vel_mean = np.zeros(len(dt_mean))
+    evel_mean = np.zeros(len(dt_mean))
+    for ii,t in enumerate(dt_mean):
+        choose = np.abs(tfit-t) <= 5
+        if sum(choose) >= 3:
+            w = 1/(evfit[choose])**2
+            mean,wsum = np.average(
+                    vfit[choose], weights=w, returned=True)
+            emean = np.sqrt(1/np.sum(w))
+            vel_mean[ii] = mean
+            evel_mean[ii] = emean
+        else:
+            vel_mean[ii] = -100
+            evel_mean[ii] = 1
+
+    plt.fill_between(
+            dt_mean, (vel_mean-evel_mean)/1E3, (vel_mean+evel_mean)/1E3,
+            color='grey', alpha=0.5, label="LLGRB-SNe")
+
+
+def plot_icbl():
+    """ Modjaz et al. 2016 """
+    dat = np.loadtxt(
+            DATA_DIR + "/modjaz_vel.txt", dtype=str, delimiter=';')
+    n = np.array(
+            ['sn1997ef', 'sn2002ap', 'sn2003jd', 'sn2007D', 'sn2007bg', 
+             'sn2007ru', 'sn2010ay', 'PTF10bzf', 'PTF10qts', 'PTF10vgv'])
+
+    names = np.array([val.strip() for val in dat[:,0]])
+    is_icbl = np.array([val in n for val in names])
+
+    name = names[is_icbl]
+    phase = dat[:,1][is_icbl].astype(float)
+    vel = dat[:,2][is_icbl].astype(float)*-1
+    evel = dat[:,3][is_icbl].astype(float)
+
+    # for the dt, use the fact that Ic usually reach V-band max in 12-20 days
+    # to add a sort of uncertainty to the dt, so offset would be 16 +/- 4 days
+    dt = phase+16
+    edt = 4
+
+    dt_mean = np.arange(0,30,1)
+    vel_mean = np.zeros(len(dt_mean))
+    evel_mean = np.zeros(len(dt_mean))
+    for ii,t in enumerate(dt_mean):
+        choose = np.abs(dt-t) <= 5
+        if sum(choose) >= 3:
+            w = 1/(evel[choose])**2
+            mean,wsum = np.average(
+                    vel[choose], weights=w, returned=True)
+            emean = np.sqrt(1/np.sum(w))
+            vel_mean[ii] = mean
+            evel_mean[ii] = emean
+        else:
+            vel_mean[ii] = -100
+            evel_mean[ii] = 1
+
+    plt.fill_between(
+            dt_mean, (vel_mean-evel_mean)/1E3, (vel_mean+evel_mean)/1E3,
+            color='purple', alpha=0.5, label="Ic-BL SNe")
+
+
+def plot_ic():
+    """ Modjaz et al. 2016 """
+    dat = np.loadtxt(
+            DATA_DIR + "/modjaz_vel.txt", dtype=str, delimiter=';')
+    n = np.array(
+            ['sn1983V', 'sn1990B', 'sn1992ar', 'sn1994I', 'sn2004dn',
+             'sn2004fe', 'sn2004ge', 'sn2004gt', 'sn2005az', 'sn2004aw',
+             'sn2005kl', 'sn2005mf', 'sn2007cl', 'sn2007gr', 'sn2011bm',
+             'sn2013dk'])
+
+    names = np.array([val.strip() for val in dat[:,0]])
+    is_ic = np.array([val in n for val in names])
+
+    name = names[is_ic]
+    phase = dat[:,1][is_ic].astype(float)
+    vel = dat[:,2][is_ic].astype(float)*-1
+    evel = dat[:,4][is_ic].astype(float)
+
+    # for the dt, use the fact that Ic usually reach V-band max in 12-20 days
+    # to add a sort of uncertainty to the dt, so offset would be 16 +/- 4 days
+    dt = phase+16
+    edt = 4
+
+    dt_mean = np.arange(0,30,1)
+    vel_mean = np.zeros(len(dt_mean))
+    evel_mean = np.zeros(len(dt_mean))
+    for ii,t in enumerate(dt_mean):
+        choose = np.abs(dt-t) <= 5
+        if sum(choose) >= 3:
+            w = 1/(evel[choose])**2
+            mean,wsum = np.average(
+                    vel[choose], weights=w, returned=True)
+            emean = np.sqrt(1/np.sum(w))
+            vel_mean[ii] = mean
+            evel_mean[ii] = emean
+        else:
+            vel_mean[ii] = -100
+            evel_mean[ii] = 1
+
+    plt.fill_between(
+            dt_mean[vel_mean>0], 
+            (vel_mean[vel_mean>0]-evel_mean[vel_mean>0])/1E3, 
+            (vel_mean[vel_mean>0]+evel_mean[vel_mean>0])/1E3,
+            color='orange', alpha=0.5, label="Ic SNe")
+
+
+def plot_12gzk():
+    """ Modjaz et al. 2016 """
+    dat = np.loadtxt(
+            DATA_DIR + "/modjaz_vel.txt", dtype=str, delimiter=';')
+    n = 'PTF12gzk'
+
+    names = np.array([val.strip() for val in dat[:,0]])
+    choose = np.where(names==n)[0]
+
+    name = names[choose]
+    phase = dat[:,1][choose].astype(float)
+    vel = dat[:,2][choose].astype(float)*-1
+    evel = dat[:,4][choose].astype(float)
+
+    # for the dt, use the fact that Ic usually reach V-band max in 12-20 days
+    # to add a sort of uncertainty to the dt, so offset would be 16 +/- 4 days
+    dt = phase+16
+    plt.errorbar(
+            dt, vel/1E3, yerr=evel/1E3, fmt='.', ls='--', c='orange')
+    plt.text(dt[0]/1.03, vel[0]/1E3, 'PTF12gzk',
+            horizontalalignment='right', fontsize=12,
+            verticalalignment='center')
+
 
 
 def plot_population():
@@ -61,63 +239,6 @@ def plot_population():
     names = dat['SN']
     phase = dat['Phase']
     vel = -1*dat['vabs']/1E3
-
-    # Rel SN, LLGRB
-    name = 'sn2006aj'
-    # epoch of max: 2453794.7 (Modjaz 2014)
-    # epoch of explosion: 2453784.649 (Campana 2006)
-    offset = 2453794.7-2453784.649
-    choose = names == name
-    dt = phase[choose]+offset
-    v = vel[choose]
-    plt.plot(dt, v, c='#f98e09', label="LLGRB-SN")
-    plt.scatter(dt, v, c='#f98e09')
-    plt.text(dt[1]/1.03, v[1], 'SN2006aj',
-            horizontalalignment='right', fontsize=12,
-            verticalalignment='top')
-
-    name = 'sn2010bh'
-    # epoch of burst: March 16 2010
-    # epoch of max: 8 days post-explosion (Bufano 2012)
-    offset = 8
-    choose = names == name
-    dt = phase[choose]+offset
-    v = vel[choose]
-    plt.plot(dt, v, c='#f98e09')
-    plt.scatter(dt, v, c='#f98e09')
-    plt.text(dt[8]/1.03, v[8], 'SN2010bh',
-            horizontalalignment='right', fontsize=12,
-            verticalalignment='center')
-     
-
-    name = 'sn1998bw'
-    # explosion epoch: 2450929.41
-    # epoch of max light: May 12.2 for V-band (Galama 1998)
-    offset = 2450945.7-2450929.41
-    choose = names == name
-    dt = phase[choose] + offset
-    v = vel[choose]
-    plt.plot(dt, v, c='#f98e09')
-    plt.scatter(dt, v, c='#f98e09')
-    plt.text(dt[0], v[0], 'SN1998bw',
-            horizontalalignment='center', fontsize=12,
-            verticalalignment='bottom')
-
-    name = 'sn2003dh'
-    # this is GRB 030329
-    # burst: March 29
-    # rise time is 14 days according to Matheson 2003
-    offset = 14
-    choose = names == name
-    dt = phase[choose]+offset
-    v = vel[choose]
-    plt.plot(dt, v, c='#f98e09')
-    plt.scatter(dt, v, c='#f98e09')
-    plt.text(dt[0], v[0], 'SN2003dh',
-            horizontalalignment='center', fontsize=12,
-            verticalalignment='bottom', zorder=5)
-
-
 
     # Rel SN, no GRB
     name = 'sn2009bb'
@@ -210,22 +331,25 @@ def plot_population():
 
 
 if __name__=="__main__":
-    fig,ax = plt.subplots(1, 1, figsize=(7,8))
+    fig,ax = plt.subplots(1, 1, figsize=(8,5))
 
     plot_18gep()
+    plot_grbsne()
     plot_16asu()
-    plot_population()
+    plot_icbl()
+    plot_ic()
+    plot_12gzk()
 
     # Formatting
     plt.legend(fontsize=14, loc='lower left', ncol=2)
-    plt.xlabel(r"$\Delta t$ [days]", fontsize=14)
+    plt.xlabel(r"$\Delta t$ [days]", fontsize=16)
     plt.ylabel(
-            r"Fe II Velocity ($10^3$ km/s)", fontsize=14)
+            r"Fe II Velocity ($10^3$ km/s)", fontsize=16)
     #plt.yscale('log')
     #plt.xscale('log')
-    plt.xlim(0, 40)
+    plt.xlim(0, 30)
     plt.ylim(0, 40)
-    plt.tick_params(axis='both', labelsize=14)
+    plt.tick_params(axis='both', labelsize=16)
     plt.tight_layout()
 
     #plt.show()

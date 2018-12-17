@@ -14,12 +14,12 @@ distmod = 35.87616973979363
 fig,ax = plt.subplots(1, 1, figsize=(10,3))
 
 #t,mag,emag,fid = run('ZTF18abukavn')
-dat = Table.read("lc_marshal.txt", format='ascii')
+dat = Table.read("../data/lc_marshal.txt", format='ascii')
 jd = dat['jdobs']
 filt = dat['filter']
 M = dat['absmag']
 inst = dat['instrument']
-t0 = np.min(jd[M<0])
+t0 = 2458370.6473
 
 # Plot the P48 g and r band
 choose = np.logical_and(filt=='g', inst=='P48+ZTF')
@@ -76,5 +76,5 @@ plt.gca().invert_yaxis()
 
 plt.legend(ncol=2, loc='lower center')
 plt.tight_layout()
-#plt.show()
-plt.savefig("lc.png")
+plt.show()
+#plt.savefig("lc.png")

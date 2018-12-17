@@ -86,7 +86,7 @@ for ii,ax in enumerate(axarr):
     x = wl
     y = flux 
     ax.plot(x, y, c='k', drawstyle='steps-mid', lw=0.5)
-    
+
     # Label the dt
     #t_raw = f.split("_")[1]
     #t = Time(t_raw[:4] + "-" + t_raw[4:6] + "-" + t_raw[6:8], format='iso').jd

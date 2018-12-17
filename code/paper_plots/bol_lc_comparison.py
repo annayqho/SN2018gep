@@ -79,7 +79,7 @@ def fbot(ax):
         [val.split('^')[1].split('_')[0] for val in lum_raw]).astype(float))
     llum = lsun*(np.array(
         [val.split('^')[1].split('_')[1] for val in lum_raw]).astype(float))
-    ax.plot(dt, lum, c='grey', ls='-', lw=2, alpha=0.5, label="FBOTs")
+    ax.plot(dt, lum, c='grey', ls='-', lw=2, alpha=0.5, label="FBOT (18cow)")
     # ax.text(dt[4]*1.05, lum[4], 'AT2018cow', fontsize=14,
     #         horizontalalignment='left',
     #         verticalalignment='center')
