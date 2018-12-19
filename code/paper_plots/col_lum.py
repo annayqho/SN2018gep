@@ -530,6 +530,7 @@ if __name__=="__main__":
     cb = at2018gep(ax)
     at2018cow(ax)
     ksn2015k(ax)
+    sn2006aj(ax)
 
     # Formatting
     cbar = plt.colorbar(cb)
@@ -538,7 +539,7 @@ if __name__=="__main__":
     cbar.ax.tick_params(labelsize=12)
     ax.set_xlabel("$g-r$, observer frame", fontsize=16)
     ax.set_ylabel("Absolute $g$-band mag, observer frame", fontsize=16)
-    plt.xlim(-1, 2.2)
+    plt.xlim(-1, 1.5)
     plt.ylim(-12.5, -21)
     plt.legend(prop={'size':12})
 
