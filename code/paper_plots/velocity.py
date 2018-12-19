@@ -28,7 +28,8 @@ def plot_18gep():
 
     plt.errorbar(
             dt[el=='Fe'], vel[el=='Fe'], yerr=evel[el=='Fe'], 
-            fmt='s', c='k', label="AT2018gep", zorder=10, ms=10, lw=2)
+            fmt='s', c='k', label="ZTF18abukavn (AT2018gep)", 
+            zorder=10, ms=10, lw=2)
 
 
 def plot_16asu():
@@ -333,7 +334,7 @@ def plot_population():
 if __name__=="__main__":
     fig,ax = plt.subplots(1, 1, figsize=(8,5))
 
-    plot_18gep()
+    #plot_18gep()
     plot_grbsne()
     plot_16asu()
     plot_icbl()

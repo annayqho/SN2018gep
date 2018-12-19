@@ -47,6 +47,8 @@ xlab = np.linspace(-1,2)
 ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
 plt.plot(xlab, ylab/1E28, c='k', ls='--')
 
+# Plot the last upper limit
+
 ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
 ax.set_xlabel("Days since JD 2458370.6634", fontsize=16)
 ax.yaxis.set_tick_params(labelsize=14)

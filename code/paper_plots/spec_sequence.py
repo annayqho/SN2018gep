@@ -11,87 +11,86 @@ from astropy.cosmology import Planck15
 from astropy.time import Time
 import glob
 
-files = glob.glob(
-"/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec/ZTF18abukavn/*.ascii")
-files = np.array(files[12:])
-dt = np.zeros(len(files))
-cols = np.array([""]*len(dt), dtype='U10')
 
-# Read in all of the files, pull out the corresponding dates, and sort by date
-t0 = 2458370.6634 # in JD
-for ii,f in enumerate(files):
-    tel = f.split("_")[2]
-    alldat = open(f).readlines()
-    if tel == 'LT':
-        for line in alldat:
-            if 'DATE-OBS' in line:
-                obsdate = line[13:36]
-                t = Time(obsdate, format='isot').jd
-                dt[ii] = t-t0
-        cols[ii] = 'magenta'
-    elif tel == 'P200':
-        for line in alldat:
-            if 'UT shutter open' in line:
-                obsdate = line[12:35]
-                print(obsdate)
-                t = Time(obsdate, format='isot').jd
-                dt[ii] = t-t0
-        cols[ii] = 'lightblue'
-    elif tel == 'Keck1':
-        for line in alldat:
-            if 'DATE_BEG' in line:
-                obsdate = line[13:32]
-                t = Time(obsdate, format='isot').jd
-                dt[ii] = t-t0
-        cols[ii] = 'red'
-    elif tel == 'DCT':
-        obsdate = '2018-09-14T00:00:00' # temporary
-        t = Time(obsdate, format='isot').jd
-        dt[ii] = t-t0
-        cols[ii] = 'yellow'
-    elif tel == 'NOT':
-        obsdate = '2018-09-17T00:00:00' # temporary
-        t = Time(obsdate, format='isot').jd
-        dt[ii] = t-t0
-        cols[ii] = 'green'
-    elif tel == 'P60':
-        for line in alldat:
-            if 'MJD_OBS' in line:
-                obsdate = float(line[11:25])
-                t = Time(obsdate, format='mjd').jd
-                dt[ii] = t-t0
-        cols[ii] = 'black'
-    else:
-        print("couldn't find telescope")
-        print(tel)
-order = np.argsort(dt)
-files_sorted = files[order]
-dt_sorted = dt[order]
-cols = cols[order]
+def get_files():
+    files = np.array(glob.glob(
+    "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec/ZTF18abukavn/*.ascii"))
+    dt = np.zeros(len(files))
+    tels = []
+    cols = np.array([""]*len(dt), dtype='U10')
 
-nfiles = len(files_sorted)
+    # Read in all of the files, pull out the corresponding dates, and sort by date
+    t0 = 2458370.6634 # in JD
+    for ii,f in enumerate(files):
+        tel = f.split("_")[2]
+        tels.append(tel)
+        alldat = open(f).readlines()
+        if tel == 'LT':
+            for line in alldat:
+                if 'DATE-OBS' in line:
+                    obsdate = line[13:36]
+                    t = Time(obsdate, format='isot').jd
+                    dt[ii] = t-t0
+            cols[ii] = 'magenta'
+        elif tel == 'P200':
+            for line in alldat:
+                if 'UT shutter open' in line:
+                    obsdate = line[12:35]
+                    print(obsdate)
+                    t = Time(obsdate, format='isot').jd
+                    dt[ii] = t-t0
+            cols[ii] = 'lightblue'
+        elif tel == 'Keck1':
+            for line in alldat:
+                if 'DATE_BEG' in line:
+                    obsdate = line[13:32]
+                    t = Time(obsdate, format='isot').jd
+                    dt[ii] = t-t0
+            cols[ii] = 'red'
+        elif tel == 'DCT':
+            obsdate = '2018-09-14T00:00:00' # temporary
+            t = Time(obsdate, format='isot').jd
+            dt[ii] = t-t0
+            cols[ii] = 'yellow'
+        elif tel == 'NOT':
+            obsdate = '2018-09-17T00:00:00' # temporary
+            t = Time(obsdate, format='isot').jd
+            dt[ii] = t-t0
+            cols[ii] = 'green'
+        elif tel == 'P60':
+            for line in alldat:
+                if 'MJD_OBS' in line:
+                    obsdate = float(line[11:25])
+                    t = Time(obsdate, format='mjd').jd
+                    dt[ii] = t-t0
+            cols[ii] = 'black'
+        else:
+            print("couldn't find telescope")
+            print(tel)
+    order = np.argsort(dt)
+    files_sorted = files[order]
+    dt_sorted = dt[order]
+    tel_sorted = np.array(tels)[order]
+    cols = cols[order]
+    return files_sorted, dt_sorted, tel_sorted
 
-fig,axarr = plt.subplots(nfiles,1,figsize=(8,10), sharex=True)
 
-# Loop through the sorted files, and plot the spectra
-for ii,ax in enumerate(axarr):
-    f = files_sorted[ii]
-    # In Dan's 18cow paper, he interpolates over host narrow features
-    tel = f.split("_")[2]
+def load_spec(f):
+    """ load data from spec file """
     dat = np.loadtxt(f)
     wl = dat[:,0]
     flux = dat[:,1]
+    return wl, flux
 
-    # Plot the spectrum
-    x = wl
-    y = flux 
-    ax.plot(x, y, c='k', drawstyle='steps-mid', lw=0.5)
 
-    # Label the dt
-    #t_raw = f.split("_")[1]
-    #t = Time(t_raw[:4] + "-" + t_raw[4:6] + "-" + t_raw[6:8], format='iso').jd
-    #dt = t-t0
-    dt_str = r"$\Delta t$=%s d" %str(np.round(dt_sorted[ii], 1))
+def plot_spec(ax, x, y, tel, epoch):
+    """ plot the spectrum """
+    choose = y >= 0 
+    plt.plot(x[choose], y[choose], c='k', drawstyle='steps-mid', lw=0.5)
+    plt.ylabel(r"Flux $f_{\lambda}$", fontsize=16)
+    plt.xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    plt.tick_params(labelsize=14)
+    dt_str = r"$\Delta t$=%s d" %str(np.round(epoch, 1))
     ax.text(
             0.98, 0.9, s=dt_str, 
             horizontalalignment='right', verticalalignment='center', 
@@ -100,21 +99,80 @@ for ii,ax in enumerate(axarr):
             0.98, 0.7, s=tel, 
             horizontalalignment='right', verticalalignment='center', 
             fontsize=14, transform=ax.transAxes)
-    ax.set_ylabel(
-        r"Flux $f_{\lambda}$", fontsize=16)
-    ax.yaxis.set_ticks([])
-    if tel == 'NOT':
-        ax.set_ylim(min(y)/15, max(y)/2) # get rid of noisy end
 
-ax.set_xlabel(
-        r"Observed Wavelength (\AA)", fontsize=16)
-ax.xaxis.set_tick_params(labelsize=14)
-ax.set_xlim(3000,10500)
-#ax.set_ylim(-25, 50)
-plt.subplots_adjust(hspace=0)
-#ax.legend(loc='upper right', fontsize=12)
-#ax.set_xscale('log')
 
-plt.tight_layout()
-plt.savefig("spec_third_third.png")
-#plt.show()
+def choose_lines(z, dt):
+    """ choose galaxy emission lines given the epoch """
+    halpha = np.array([6563])
+    hbeta = np.array([4861])
+    hgamma = np.array([4341]) 
+    oiii = np.array([4932.6, 4960.295, 5008.24]) # O III
+    nii = np.array([6549.86])
+    oi = np.array([6302.046, 6365.536])
+    gal_wl = np.hstack((halpha, hbeta, oiii)) * (z+1)
+    return gal_wl
+
+
+def plot_lines(z, tel, dt):
+    """ Plot galaxy emission lines for a particular redshift """
+    if tel == 'LT':
+        res = 18 # Angstrom, res at central wavelength
+    else:
+        res = 18 # temp 
+    #elif tel == 'DBSP':
+    gal_wl = choose_lines(z, dt)
+    for val in gal_wl:
+        plt.axvspan(
+                val-res/2, val+res/2, ls='--', color='grey', lw=0.5, alpha=0.5)
+
+
+def clip_lines(wl, flux, z, tel, dt):
+    if tel == 'LT':
+        res = 18 # Angstrom, res at central wavelength
+        res = 20 # add a couple of Ang?
+    else:
+        res = 20 # placeholder, I don't actually know what it is
+    gal_wl = choose_lines(z, dt)
+    for line in gal_wl:
+        choose = np.logical_and(wl >= line-res/2, wl <= line+res/2)
+        flux[choose] = -99 # mask these out
+    return wl, flux
+
+
+def get_tellurics():
+    start = np.array([7594, 6853])
+    end = np.array([7678, 6950])
+    return start, end
+
+
+def clip_tellurics(wl, flux):
+    start, end = get_tellurics()
+    for ii,beg in enumerate(start):
+        choose = np.logical_and(wl >= beg, wl <= end[ii])
+        flux[choose] = -99 # mask these out
+    return wl, flux
+
+
+def plot_tellurics():
+    col = 'pink'
+    plt.axvspan(7594, 7678, ls='--', color=col, lw=0.5, alpha=0.5)
+    plt.axvspan(6853, 6950, ls='--', color=col, lw=0.5, alpha=0.5)
+
+
+if __name__=="__main__":
+    fig,ax = plt.subplots(1,1,figsize=(9,5))
+    files, epochs, tels = get_files()
+    for ii in np.arange(len(files)):
+        f = files[ii]
+        tel = tels[ii]
+        dt = epochs[ii]
+        z = 0.0322
+        wl, flux = load_spec(f)
+        wl, flux = clip_lines(wl, flux, z, tel, dt)
+        wl, flux = clip_tellurics(wl, flux)
+        plot_spec(ax, wl, flux, tel, dt)
+        #plot_lines(z, tel, dt)
+        plt.tight_layout()
+        #plt.show()
+        plt.savefig("spec_%s.png" %ii)
+        plt.close()
