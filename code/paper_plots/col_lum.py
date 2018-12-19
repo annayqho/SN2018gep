@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
 from astropy.cosmology import Planck15
+from astropy.time import Time
 
 
 def at2018gep(ax):
@@ -409,31 +410,23 @@ def iptf17cw(ax):
 
 
 def sn2006aj(ax):
-    """ got this from the open SN catalog """
-    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
-    dat = np.loadtxt(ddir + "/sn2006aj.txt", delimiter=',', dtype='str')
-    mjd = dat[:,1].astype(float)
-    mag = dat[:,2].astype(float)
-    band = dat[:,5]
-    dt = mjd-mjd[0]
-
-    choose = np.logical_or(band == 'g', band == 'V')
-    g = mag[choose]
-    gdt = dt[choose]
-
-    choose = np.logical_or(band == 'R', band == "r'")
-    r = mag[choose]
-    rdt = dt[choose]
-      
+    t0 = Time('2006-02-18').mjd + 0.149
+    t = np.array(
+            [Time('2006-02-20').mjd + 0.162,
+             Time('2006-02-21').mjd + 0.196,
+             Time('2006-02-23').mjd + 0.196,
+             Time('2006-02-25').mjd + 0.112,
+             Time('2006-02-27').mjd + 0.167,
+             Time('2006-03-04').mjd + 0.097])
+    dt = t-t0
+    V = np.array([17.84, 17.73, 17.30, 17.10, 17.0, 17.09])
+    R = np.array([17.76, 17.22, 17.22, 16.96, 16.84, 16.88])
+    gr = V-R
     distmod = Planck15.distmod(z=0.033023).value
-    dt_grid = np.arange(4, 35, 1)
-    gplt = np.interp(dt_grid, gdt, g) 
-    rplt = np.interp(dt_grid, rdt, r)
-    gr = gplt-rplt
-    ax.plot(
-            gr, gplt-distmod, c='purple', 
-            lw=3, alpha=0.3, label="LLGRB-SNe")
-    ax.text(gr[0], gplt[0]-distmod, "SN2006aj")
+    plt.scatter(
+            gr, V-distmod, marker='o', edgecolor='orange', 
+            facecolor='white', label='Ic-BL')
+    plt.plot(gr, V-distmod, c='orange')
 
 
 def sn1998bw(ax):
@@ -530,7 +523,6 @@ if __name__=="__main__":
     cb = at2018gep(ax)
     at2018cow(ax)
     ksn2015k(ax)
-    sn2006aj(ax)
 
     # Formatting
     cbar = plt.colorbar(cb)
