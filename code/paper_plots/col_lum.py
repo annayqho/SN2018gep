@@ -114,7 +114,7 @@ def at2018cow(ax):
             0, 0, marker='s', c='k', label="AT2018cow")
 
 
-def drout(ax):
+def drout_all(ax):
     ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
     z = {'10ah':0.074, '10bjp':0.113, '11qr':0.324, '12bb':0.101, '12bv':0.405,
          '12brf':0.275, '11bbq': 0.646, 
@@ -181,6 +181,28 @@ def drout(ax):
             else:
                 ax.plot(gr, useg-distmod, ls='-', c='grey', zorder=0, lw=3, 
                         alpha=0.5)
+
+
+def ps1_10ah(ax):
+    """ the only Drout gold transient with z < 0.1 """
+    gr = np.array([0, -0.2, 0.05])
+    phase = np.array([-3, 0, 14])
+    g = np.array([22.18, 19.95, 21.64])
+    distmod = Planck15.distmod(z=0.074).value
+    G = g-distmod
+    ax.plot(gr, G, ls='-', c='grey', zorder=0, lw=3, alpha=0.5)
+    ax.text(gr[0], G[0], 'PS1-10ah', fontsize=12)
+
+
+def ksn2015k(ax):
+    diff = Planck15.distmod(z=0.09).value
+    gr = -0.17
+    G = 20.01-diff
+    ax.errorbar(
+            gr, G, xerr=0.20, yerr=0.12, 
+            fmt='s', c='grey', mfc='white', ms=7, label="FBOT")
+    ax.text(gr, G, "KSN2015K", fontsize=12,
+            horizontalalignment='right', verticalalignment='bottom')
 
 
 def arcavi(ax):
@@ -506,14 +528,8 @@ def sn2007ru(ax):
 if __name__=="__main__":
     fig,ax = plt.subplots(1,1,figsize=(9,7))
     cb = at2018gep(ax)
-    asu(ax)
-    sn2009bb(ax)
-    sn2012ap(ax)
-    iptf17cw(ax)
-    sn2006aj(ax)
-    sn1998bw(ax)
-    sn2010bh(ax)
-    ptficbl(ax)
+    at2018cow(ax)
+    ksn2015k(ax)
 
     # Formatting
     cbar = plt.colorbar(cb)
@@ -529,5 +545,5 @@ if __name__=="__main__":
     plt.tight_layout()
 
     plt.show()
-    #plt.savefig("icbl_g_gr.png")
+    #plt.savefig("g_gr.png")
 
