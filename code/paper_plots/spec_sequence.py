@@ -85,11 +85,14 @@ def load_spec(f):
 
 def plot_spec(ax, x, y, tel, epoch):
     """ plot the spectrum """
-    choose = y >= 0 
-    plt.plot(x[choose], y[choose], c='k', drawstyle='steps-mid', lw=0.5)
-    plt.ylabel(r"Flux $f_{\lambda}$", fontsize=16)
-    plt.xlabel(r"Observed Wavelength (\AA)", fontsize=16)
-    plt.tick_params(labelsize=14)
+    choose_y = y >= 0
+    choose_x = np.logical_and(x >= 3200, x<= 9300)
+    choose = np.logical_and(choose_x, choose_y)
+    ax.plot(x[choose], y[choose], c='k', drawstyle='steps-mid', lw=0.5)
+    ax.set_ylabel(r"Flux $f_{\lambda}$", fontsize=16)
+    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    ax.set_xlim(3000, 10000)
+    ax.tick_params(labelsize=14)
     dt_str = r"$\Delta t$=%s d" %str(np.round(epoch, 1))
     ax.text(
             0.98, 0.9, s=dt_str, 
@@ -99,17 +102,17 @@ def plot_spec(ax, x, y, tel, epoch):
             0.98, 0.7, s=tel, 
             horizontalalignment='right', verticalalignment='center', 
             fontsize=14, transform=ax.transAxes)
+    return ax
 
 
 def choose_lines(z, dt):
     """ choose galaxy emission lines given the epoch """
-    halpha = np.array([6563])
-    hbeta = np.array([4861])
-    hgamma = np.array([4341]) 
-    oiii = np.array([4932.6, 4960.295, 5008.24]) # O III
+    balmer = np.array([6564.61, 4862.68, 4341.68, 4102.89, 3970.072])
+    oiii = np.array([4363, 4932.6, 4960.295, 5008.24]) # O III
+    oii = np.array([3727.092, 3729.875])
     nii = np.array([6549.86])
     oi = np.array([6302.046, 6365.536])
-    gal_wl = np.hstack((halpha, hbeta, oiii)) * (z+1)
+    gal_wl = np.hstack((balmer, oiii, oii)) * (z+1)
     return gal_wl
 
 
@@ -118,7 +121,7 @@ def plot_lines(z, tel, dt):
     if tel == 'LT':
         res = 18 # Angstrom, res at central wavelength
     else:
-        res = 18 # temp 
+        res = 30 # temp 
     #elif tel == 'DBSP':
     gal_wl = choose_lines(z, dt)
     for val in gal_wl:
@@ -129,9 +132,9 @@ def plot_lines(z, tel, dt):
 def clip_lines(wl, flux, z, tel, dt):
     if tel == 'LT':
         res = 18 # Angstrom, res at central wavelength
-        res = 20 # add a couple of Ang?
+        res = 30 # add a couple of Ang?
     else:
-        res = 20 # placeholder, I don't actually know what it is
+        res = 30 # placeholder, I don't actually know what it is
     gal_wl = choose_lines(z, dt)
     for line in gal_wl:
         choose = np.logical_and(wl >= line-res/2, wl <= line+res/2)
@@ -160,10 +163,13 @@ def plot_tellurics():
 
 
 if __name__=="__main__":
-    fig,ax = plt.subplots(1,1,figsize=(9,5))
     files, epochs, tels = get_files()
-    for ii in np.arange(len(files)):
-        f = files[ii]
+    files = files[16:]
+    epochs = epochs[16:]
+    tels = tels[16:]
+    for ii,f in enumerate(files):
+        print(f)
+        fig,ax = plt.subplots(1,1,figsize=(9,5))
         tel = tels[ii]
         dt = epochs[ii]
         z = 0.0322
@@ -171,8 +177,8 @@ if __name__=="__main__":
         wl, flux = clip_lines(wl, flux, z, tel, dt)
         wl, flux = clip_tellurics(wl, flux)
         plot_spec(ax, wl, flux, tel, dt)
-        #plot_lines(z, tel, dt)
+        plot_lines(z, tel, dt)
         plt.tight_layout()
-        #plt.show()
-        plt.savefig("spec_%s.png" %ii)
-        plt.close()
+        plt.show()
+        #plt.savefig("spec_%s.png" %ii)
+        #plt.close()
