@@ -37,5 +37,5 @@ ax.tick_params(axis='both', labelsize=14)
 
 plt.tight_layout()
 
-#plt.show()
-plt.savefig("uv_grism_spec.png")
+plt.show()
+#plt.savefig("uv_grism_spec.png")
