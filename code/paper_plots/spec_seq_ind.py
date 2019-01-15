@@ -13,7 +13,7 @@ import glob
 
 files = glob.glob(
 "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec/ZTF18abukavn/*.ascii")
-files = np.array(files[12:])
+files = np.array(files[0:1])
 dt = np.zeros(len(files))
 cols = np.array([""]*len(dt), dtype='U10')
 
@@ -71,7 +71,7 @@ cols = cols[order]
 
 nfiles = len(files_sorted)
 
-fig,ax = plt.subplots(1,1,figsize=(8,5))
+fig,ax = plt.subplots(1,1,figsize=(8,3))
 
 # Loop through the sorted files, and plot the spectra
 for ii,f in enumerate(files_sorted):
