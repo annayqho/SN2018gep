@@ -10,6 +10,7 @@ from astropy.table import Table
 from astropy.cosmology import Planck15
 from astropy.time import Time
 import glob
+from plot_lc import get_lc
 
 
 def get_files():
@@ -89,10 +90,6 @@ def plot_spec(ax, x, y, tel, epoch):
     choose_x = np.logical_and(x >= 3200, x<= 9300)
     choose = np.logical_and(choose_x, choose_y)
     ax.plot(x[choose], y[choose], c='k', drawstyle='steps-mid', lw=0.5)
-    ax.set_ylabel(r"Flux $f_{\lambda}$", fontsize=16)
-    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
-    ax.set_xlim(3000, 10000)
-    ax.tick_params(labelsize=14)
     dt_str = r"$\Delta t$=%s d" %str(np.round(epoch, 1))
     ax.text(
             0.98, 0.9, s=dt_str, 
@@ -162,23 +159,65 @@ def plot_tellurics():
     plt.axvspan(6853, 6950, ls='--', color=col, lw=0.5, alpha=0.5)
 
 
+def fluxcal(wl, flux, dt_spec):
+    """ Flux-calibrate to R-band light curve """
+    # get r-band LC
+    dt, filt, det, mag, emag = get_lc()
+    choose = np.logical_and(det, filt=='r')
+    # interpolate to this epoch
+    rval = np.interp(dt_spec, dt[choose], mag[choose])
+    # TEMP: r is roughly 658nm +/- 138nm
+    # TEMP: assume AB mag
+    lam = 6580 # in angstroms
+    c = 3E18 # angstrom/s
+    fnu = 1E-23 * 3631 * 10**(rval/(-2.5)) # erg/s/cm2/Hz
+    flam = fnu * (c/lam**2) # should be erg/s/cm2/AA
+    # scale factor
+    flam_meas = np.interp(lam, wl, flux)
+    scale = (flam/flam_meas)/1E-15
+    return wl, flux*scale
+
+
 if __name__=="__main__":
+    z = 0.0322
+
     files, epochs, tels = get_files()
-    files = files[16:]
-    epochs = epochs[16:]
-    tels = tels[16:]
-    for ii,f in enumerate(files):
-        print(f)
-        fig,ax = plt.subplots(1,1,figsize=(9,5))
+    files = files[0:6]
+    epochs = epochs[0:6]
+    tels = tels[0:6]
+
+    nfiles = len(files)
+    fig,axarr = plt.subplots(
+            nfiles, 1, figsize=(8,10), sharex=True, sharey=True)
+
+    # Giant y-axis label
+    ax = fig.add_subplot(111, frameon=False)
+    ax.set_ylabel(
+            r"Flux $f_{\lambda}$ ($10^{-15}$ erg cm$^{-2}$ s$^{-1}$ \AA$^{-1}$)", 
+            fontsize=16)
+    ax.spines['top'].set_color('none')
+    ax.spines['bottom'].set_color('none')
+    ax.spines['left'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.tick_params(labelcolor='w', top='off', bottom='off', left='off', right='off')
+
+    for ii,ax in enumerate(axarr):
+        f = files[ii]
         tel = tels[ii]
         dt = epochs[ii]
-        z = 0.0322
         wl, flux = load_spec(f)
         wl, flux = clip_lines(wl, flux, z, tel, dt)
         wl, flux = clip_tellurics(wl, flux)
+        wl, flux = fluxcal(wl, flux, dt)
+        ax.tick_params(axis='both', labelsize=14)
         plot_spec(ax, wl, flux, tel, dt)
-        plot_lines(z, tel, dt)
-        plt.tight_layout()
-        plt.show()
+        #plot_lines(z, tel, dt)
+    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    ax.set_xlim(3000, 10000)
+    ax.set_ylim(0,4)
+
+
+    plt.tight_layout()
+    plt.show()
         #plt.savefig("spec_%s.png" %ii)
         #plt.close()
