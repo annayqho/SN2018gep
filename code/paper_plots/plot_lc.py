@@ -74,21 +74,24 @@ rcol = 'k'
 ucol = '#f98e09'
 
 band = filt=='u'
+ext = 0.045
 choose = np.logical_and(det, band)
 ax.errorbar(
-        dt[choose], mag[choose], emag[choose], fmt='o', ms=5,
+        dt[choose], mag[choose]-ext, emag[choose], fmt='o', ms=5,
         mec=ucol, mfc=ucol, c=ucol, label='u', zorder=8)
 
 band = filt=='g'
+ext = 0.035
 choose = np.logical_and(det, band)
 ax.errorbar(
-        dt[choose], mag[choose], emag[choose], fmt='o', ms=5,
+        dt[choose], mag[choose]-ext, emag[choose], fmt='o', ms=5,
         mec='#57106e', mfc='white', c='#57106e', label='g')
 
 band = filt=='r'
+ext = 0.024
 choose = np.logical_and(det, band)
 ax.errorbar(
-        dt[choose], mag[choose], emag[choose], fmt='s', ms=6,
+        dt[choose], mag[choose]-ext, emag[choose], fmt='s', ms=6,
         mec=rcol, mfc=rcol, c=rcol, label='r', zorder=9)
 choose = np.logical_and(nondet, band)
 # value of limiting mag: 20.47
@@ -97,15 +100,17 @@ ax.arrow(
         head_width=0.01, head_length=0.1, fc='k', ec='k')
 
 band = filt=='i'
+ext = 0.018
 choose = np.logical_and(det, band)
 ax.errorbar(
-        dt[choose], mag[choose], emag[choose], fmt='v', ms=5,
+        dt[choose], mag[choose]-ext, emag[choose], fmt='v', ms=5,
         c='grey', label='i')
  
 band = filt=='z'
+ext = 0.013
 choose = np.logical_and(det, band)
 ax.errorbar(
-        dt[choose], mag[choose], emag[choose], fmt='s', ms=6,
+        dt[choose], mag[choose]-ext, emag[choose], fmt='s', ms=6,
         mec='k', mfc='white', label='z', c='k', zorder=1)
 
 ax2 = ax.twinx()
@@ -129,6 +134,6 @@ ax.set_xscale('log')
 ax.invert_yaxis()
 ax2.invert_yaxis()
 
-#plt.tight_layout()
+plt.tight_layout()
 plt.savefig("lc.png")
 #plt.show()
