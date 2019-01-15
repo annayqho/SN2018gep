@@ -10,6 +10,7 @@ from astropy.table import Table
 from astropy.cosmology import Planck15
 from astropy.time import Time
 import glob
+from plot_lc import get_lc
 
 files = glob.glob(
 "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec/ZTF18abukavn/*.ascii")
@@ -75,23 +76,41 @@ fig,ax = plt.subplots(1,1,figsize=(8,3))
 
 # Loop through the sorted files, and plot the spectra
 for ii,f in enumerate(files_sorted):
-    # In Dan's 18cow paper, he interpolates over host narrow features
     print(f)
     tel = f.split("_")[2]
     dat = np.loadtxt(f)
     wl = dat[:,0]
     flux = dat[:,1]
+    dt_spec = dt_sorted[ii]
 
-    # Plot the spectrum
+    # FLUX CAL TO R-BAND LIGHT CURVE    
+    # get r-band LC
+    dt, filt, det, mag, emag = get_lc()
+    choose = np.logical_and(det, filt=='r')
+    # interpolate to this epoch
+    rval = np.interp(dt_spec, dt[choose], mag[choose])
+    # TEMP: r is roughly 658nm +/- 138nm
+    # TEMP: assume AB mag
+    lam = 6580 # in angstroms
+    c = 3E18 # angstrom/s
+    fnu = 1E-23 * 3631 * 10**(rval/(-2.5)) # erg/s/cm2/Hz
+    flam = fnu * (c/lam**2) # should be erg/s/cm2/AA
+    print("The flux at this wavelength is:")
+    print(flam)
+    # scale factor
+    flam_meas = np.interp(lam, wl, flux)
+    scale = (flam/flam_meas)/1E-15
+
+    # Plot the spectrum, scaled to this flux value
     x = wl
     y = flux 
-    ax.plot(x, y, c='k', drawstyle='steps-mid', lw=0.5)
+    ax.plot(x, y*scale, c='k', drawstyle='steps-mid', lw=0.5)
 
     # Label the dt
     #t_raw = f.split("_")[1]
     #t = Time(t_raw[:4] + "-" + t_raw[4:6] + "-" + t_raw[6:8], format='iso').jd
     #dt = t-t0
-    dt_str = r"$\Delta t$=%s d" %str(np.round(dt_sorted[ii], 1))
+    dt_str = r"$\Delta t$=%s d" %str(np.round(dt_spec, 1))
     ax.text(
             0.98, 0.9, s=dt_str, 
             horizontalalignment='right', verticalalignment='center', 
@@ -101,14 +120,16 @@ for ii,f in enumerate(files_sorted):
             horizontalalignment='right', verticalalignment='center', 
             fontsize=14, transform=ax.transAxes)
     ax.set_ylabel(
-        r"Flux $f_{\lambda}$", fontsize=16)
-    ax.yaxis.set_ticks([])
+        r"$f_{\lambda}$ ($10^{-15}$ erg cm$^{-2}$ s$^{-1}$ \AA$^{-1}$)", 
+        fontsize=16)
+    #ax.yaxis.set_ticks([])
     if tel == 'NOT':
         ax.set_ylim(min(y)/15, max(y)/2) # get rid of noisy end
 
     ax.set_xlabel(
             r"Observed Wavelength (\AA)", fontsize=16)
     ax.xaxis.set_tick_params(labelsize=14)
+    ax.yaxis.set_tick_params(labelsize=14)
     ax.set_xlim(3000,10500)
     #ax.set_ylim(-25, 50)
     #ax.legend(loc='upper right', fontsize=12)
@@ -116,5 +137,6 @@ for ii,f in enumerate(files_sorted):
 
     plt.tight_layout()
     plt.savefig("spec_%s.png" %ii)
+    #plt.show()
     plt.close()
 #plt.show()
