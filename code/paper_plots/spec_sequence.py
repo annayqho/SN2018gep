@@ -188,7 +188,7 @@ if __name__=="__main__":
 
     nfiles = len(files)
     fig,axarr = plt.subplots(
-            nfiles, 1, figsize=(8,10), sharex=True, sharey=True)
+            nfiles, 1, figsize=(8,10), sharex=True)
 
     # Giant y-axis label
     ax = fig.add_subplot(111, frameon=False)
@@ -214,10 +214,10 @@ if __name__=="__main__":
         #plot_lines(z, tel, dt)
     ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     ax.set_xlim(3000, 10000)
-    ax.set_ylim(0,4)
+    #ax.set_ylim(0,4)
 
 
     plt.tight_layout()
-    plt.show()
-        #plt.savefig("spec_%s.png" %ii)
-        #plt.close()
+    plt.savefig("spec_first_third.png")
+    #plt.show()
+    plt.close()

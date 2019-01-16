@@ -12,13 +12,13 @@ import glob
 
 DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
 
-def plot_band(x, y, ey, filt, f, col, fcol, ext, shape):
+def plot_band(x, y, ey, filt, f, col, fcol, ext, shape, line):
     choose = np.logical_and(filt==f, x < 1)
     ax.errorbar(
             x[choose], y[choose]-ext, ey[choose], fmt=shape, ms=5,
             mec=col, mfc=fcol, c=col, label=f, zorder=8)
     order = np.argsort(x[choose])
-    ax.plot(x[choose][order], y[choose][order]-ext, c=col)
+    ax.plot(x[choose][order], y[choose][order]-ext, c=col, ls=line)
 
 
 fig,ax = plt.subplots(1,1,figsize=(8,5))
@@ -38,16 +38,16 @@ dt = jd-zp
 
 plot_band(
         dt[det], mag[det], emag[det], filts[det], 
-        'u', '#f98e09', '#f98e09', 0.045, 'o')
+        'u', '#f98e09', '#f98e09', 0.045, 'o', '-')
 plot_band(
         dt[det], mag[det], emag[det], filts[det], 
-        'g', '#57106e', '#57106e', 0.035, 'D')
+        'g', '#57106e', '#57106e', 0.035, 'D', '-')
 plot_band(
         dt[det], mag[det], emag[det], filts[det], 
-        'r', 'k', 'k', 0.024, 's')
+        'r', 'k', 'k', 0.024, 's', '-')
 plot_band(
         dt[det], mag[det], emag[det], filts[det], 
-        'i', 'grey', 'grey', 0.018, 'P')
+        'i', 'grey', 'grey', 0.018, 'P', '-')
 # value of limiting mag: 20.47
 ax.arrow(
        2458370.6408-zp, 19.97, 0, 0.5, length_includes_head=True,
@@ -72,22 +72,22 @@ dt = jd-zp
 
 plot_band(
         dt, mab, emab, filts, 
-        'UVM2', 'k', 'white', 0, 's')
+        'UVM2', 'k', 'white', 0, 's', '--')
 plot_band(
         dt, mab, emab, filts, 
-        'UVW2', '#57106e', 'white', 0, 'o')
+        'UVW2', '#57106e', 'white', 0, 'o', '--')
 plot_band(
         dt, mab, emab, filts, 
-        'U', '#f98e09', 'white', 0, 'D')
+        'U', '#f98e09', 'white', 0, 'D', '--')
 plot_band(
         dt, mab, emab, filts, 
-        'UVW1', 'magenta', 'white', 0, '^')
+        'UVW1', 'magenta', 'white', 0, '^', '--')
 plot_band(
         dt, mab, emab, filts, 
-        'B', 'grey', 'white', 0, 'P')
+        'B', 'grey', 'white', 0, 'P', '--')
 plot_band(
         dt, mab, emab, filts, 
-        'V', 'black', 'white', 0, 'x')
+        'V', 'black', 'white', 0, 'x', '--')
 
 ax2 = ax.twinx()
 ax2.set_ylabel(
