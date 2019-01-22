@@ -46,20 +46,21 @@ dat = np.loadtxt(
 delimiter=',', dtype=str)
 date = Time(dat[:,0])
 tel = dat[:,1]
-f = dat[:,2]
-ef = dat[:,3]
+nu = dat[:,2]
+f = dat[:,3]
+ef = dat[:,4]
 nrows = dat.shape[0]
 
 for ii in np.arange(nrows):
     # Print the date as is
     # Convert the date into a dt
     t0 = Time('2018-09-09')
-    dt = ((date[ii]-t0).value).astype(int)
+    dt = int((date[ii]-t0).value)
     # Convert the flux into a fluxstr
     if '<' in f[ii]:
         # if upper limit, print as such
         fval = float(f[ii][1:])
-        fstr = '%s' $f[ii]
+        fstr = '%s' %f[ii]
     else:
         # if not an upper limit, include the uncertainty
         fstr = '$%s \pm %s$' %(f[ii], ef[ii])
@@ -68,7 +69,7 @@ for ii in np.arange(nrows):
     lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2
     lumstr = np.round(lum, 2)
     # Print row
-    row = rowstr %(date[ii], dt, tel[ii], fstr, lumstr, "", "", "")
+    row = rowstr %(date[ii], dt, tel[ii], nu[ii], fstr, lumstr, "", "", "")
     outputf.write(row)
 
 outputf.write("\enddata \n")
