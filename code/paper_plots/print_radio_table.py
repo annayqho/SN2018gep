@@ -74,7 +74,10 @@ for ii in np.arange(nrows):
         fval = float(f[ii])
     # Convert the flux into a luminosity
     lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2 * float(nu[ii]) 
-    lumstr = round_sig(lum, 2)
+    if '<' in f[ii]:
+        lumstr = "<%s" %round_sig(lum,2)
+    else:
+        lumstr = round_sig(lum, 2)
     # Print row
     row = rowstr %(date[ii], dt, tel[ii], nu[ii], fstr, lumstr, "", "", "")
     outputf.write(row)
