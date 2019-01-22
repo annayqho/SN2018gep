@@ -8,7 +8,8 @@ d = Planck15.luminosity_distance(z=0.03154).cgs.value
 
 headings = np.array(
         ['Date (UTC)', '$\Delta t$', 'Instrument', r'$\nu$ (GHz)', 
-         'Flux $\mu$Jy', 'Luminosity (erg\,\psec)', r'$\theta_\mathrm{FWHM}$',
+         'Flux $\mu$Jy', 'Luminosity ($10^27\,\erg\,\psec$)', 
+         r'$\theta_\mathrm{FWHM}$',
          'Int. time (h)', 'Notes'])
 label = "radio-flux"
 caption = "Radio flux density measurements for SN2018gep. \
@@ -66,7 +67,7 @@ for ii in np.arange(nrows):
         fstr = '$%s \pm %s$' %(f[ii], ef[ii])
         fval = float(f[ii])
     # Convert the flux into a luminosity
-    lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2 * nu[ii]
+    lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2 * float(nu[ii]) / 1E27
     lumstr = np.round(lum, 2)
     # Print row
     row = rowstr %(date[ii], dt, tel[ii], nu[ii], fstr, lumstr, "", "", "")
