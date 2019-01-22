@@ -1,6 +1,10 @@
 """ Print table of radio flux measurements """
 
 import numpy as np
+from astropy.time import Time
+from astropy.cosmology import Planck15
+
+d = Planck15.luminosity_distance(z=0.03154).cgs.value
 
 headings = np.array(
         ['Date (UTC)', '$\Delta t$', 'Instrument', r'$\nu$ (GHz)', 
@@ -37,9 +41,35 @@ outputf.write("\\tablehead{ %s } \n" %colheadstr)
 outputf.write("\\tabletypesize{\scriptsize} \n")
 outputf.write("\startdata \n")
 
-fstr = '$%s \pm %s$' %(f[ii], ef[ii])
-row = rowstr %(np.round(t,2), 'ALMA', nu[ii], fstr)
-outputf.write(row)
+dat = np.loadtxt(
+"/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/radio.txt",
+delimiter=',', dtype=str)
+date = Time(dat[:,0])
+tel = dat[:,1]
+f = dat[:,2]
+ef = dat[:,3]
+nrows = dat.shape[0]
+
+for ii in np.arange(nrows):
+    # Print the date as is
+    # Convert the date into a dt
+    t0 = Time('2018-09-09')
+    dt = ((date[ii]-t0).value).astype(int)
+    # Convert the flux into a fluxstr
+    if '<' in f[ii]:
+        # if upper limit, print as such
+        fval = float(f[ii][1:])
+        fstr = '%s' $f[ii]
+    else:
+        # if not an upper limit, include the uncertainty
+        fstr = '$%s \pm %s$' %(f[ii], ef[ii])
+        fval = float(f[ii])
+    # Convert the flux into a luminosity
+    lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2
+    lumstr = np.round(lum, 2)
+    # Print row
+    row = rowstr %(date[ii], dt, tel[ii], fstr, lumstr, "", "", "")
+    outputf.write(row)
 
 outputf.write("\enddata \n")
 outputf.write("\end{deluxetable} \n")
