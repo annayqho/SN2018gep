@@ -4,6 +4,11 @@ import numpy as np
 from astropy.time import Time
 from astropy.cosmology import Planck15
 
+def round_sig(x, sig=2):
+    if x < 0:
+        return -round(-x, sig-int(floor(log10(-x)))-1)
+    return round(x, sig-int(floor(log10(x)))-1)
+
 d = Planck15.luminosity_distance(z=0.03154).cgs.value
 
 headings = np.array(
@@ -68,7 +73,7 @@ for ii in np.arange(nrows):
         fval = float(f[ii])
     # Convert the flux into a luminosity
     lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2 * float(nu[ii]) / 1E27
-    lumstr = np.round(lum, 2)
+    lumstr = np.round_sig(lum, 2)
     # Print row
     row = rowstr %(date[ii], dt, tel[ii], nu[ii], fstr, lumstr, "", "", "")
     outputf.write(row)
