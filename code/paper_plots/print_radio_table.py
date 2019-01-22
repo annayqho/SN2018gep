@@ -60,13 +60,13 @@ for ii in np.arange(nrows):
     if '<' in f[ii]:
         # if upper limit, print as such
         fval = float(f[ii][1:])
-        fstr = '%s' %f[ii]
+        fstr = '$%s$' %f[ii]
     else:
         # if not an upper limit, include the uncertainty
         fstr = '$%s \pm %s$' %(f[ii], ef[ii])
         fval = float(f[ii])
     # Convert the flux into a luminosity
-    lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2
+    lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2 * nu[ii]
     lumstr = np.round(lum, 2)
     # Print row
     row = rowstr %(date[ii], dt, tel[ii], nu[ii], fstr, lumstr, "", "", "")
