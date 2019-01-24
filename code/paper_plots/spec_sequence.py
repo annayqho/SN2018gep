@@ -135,7 +135,7 @@ def clip_lines(wl, flux, z, tel, dt):
     gal_wl = choose_lines(z, dt)
     for line in gal_wl:
         choose = np.logical_and(wl >= line-res/2, wl <= line+res/2)
-        flux[choose] = -99 # mask these out
+        flux = np.interp(wl, wl[~choose], flux[~choose]) # interp over features
     return wl, flux
 
 
@@ -179,7 +179,7 @@ def fluxcal(wl, flux, dt_spec):
 
 
 if __name__=="__main__":
-    z = 0.0322
+    z = 0.03154
 
     files, epochs, tels = get_files()
     files = files[0:6]
