@@ -60,8 +60,8 @@ def print_table():
     outputf.write("\\begin{table}[] \n")
     outputf.write("\centering \n")
     outputf.write(
-            "\caption{Physical evolution of AT2018gep from blackbody fits. 
-            Uncertainties represent the 16-to-84 percentile range from a 
+            "\caption{Physical evolution of AT2018gep from blackbody fits.\
+            Uncertainties represent the 16-to-84 percentile range from a\
             Monte Carlo simulation with 600 trials.} \n")
     outputf.write("\\begin{tabular}{lrrr} \n")
     outputf.write("\hline \n")
@@ -111,7 +111,12 @@ def plot():
     yfit = powlaw(xfit, b, m)
     axarr[0].plot(xfit, yfit, ls='--', c='#f98e09')
     axarr[0].text(25, 5E42, '$t^{%s}$' %mstr,
-            horizontalalignment='left', verticalalignment='center', fontsize=14)
+            horizontalalignment='left', verticalalignment='center', 
+            fontsize=14)
+    axarr[0].axvline(x=0.48, ls='-', c='lightgrey', lw=3, zorder=0)
+    axarr[0].text(
+            0.47, 1E43, "$t_\mathrm{rise}<0.48\,$d", fontsize=12,
+            horizontalalignment='right')
 
     # Fit another power law
     m = -2
@@ -158,13 +163,15 @@ def plot():
     axarr[2].errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k')
     m = -0.92
     b,berr = fit_pow(
-            dt[choose], temp[choose], np.min((ltemp, utemp), axis=0)[choose], m=m)
+            dt[choose], temp[choose], 
+            np.min((ltemp, utemp), axis=0)[choose], m=m)
     xfit = np.linspace(1, max(dt))
     yfit = 10**(m*np.log10(xfit)+b)
     mstr = str(np.round(m, 1))
     axarr[2].plot(xfit, yfit, ls='--', c='#f98e09')
     axarr[2].text(10, 1E4, '$t^{%s}$' %mstr,
-            horizontalalignment='left', verticalalignment='center', fontsize=14)
+            horizontalalignment='left', verticalalignment='center', 
+            fontsize=14)
     choose = dt <= 3.5
     m,b = np.polyfit(np.log10(dt[choose]), np.log10(temp[choose]), deg=1)
     xfit = np.linspace(0.3, 5)
@@ -172,7 +179,8 @@ def plot():
     mstr = str(np.round(m, 1))
     axarr[2].plot(xfit, yfit, ls='--', c='grey')
     axarr[2].text(1, 2E4, '$t^{%s}$' %mstr,
-            horizontalalignment='left', verticalalignment='center', fontsize=14)
+            horizontalalignment='left', verticalalignment='center', 
+            fontsize=14)
 
     # Formatting
     axarr[0].xaxis.label.set_visible(False)
@@ -195,9 +203,9 @@ def plot():
 
     plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    plt.show()
-    #plt.savefig("bbfit_log.png")
+    #plt.show()
+    plt.savefig("bbfit_log.png")
 
 
 if __name__=="__main__":
-    print_table()
+    plot()
