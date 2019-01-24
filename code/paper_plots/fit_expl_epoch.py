@@ -40,7 +40,7 @@ eflux = emag[choose]*flux
 elum = 4 * np.pi * d**2 * eflux
 
 # Plot the light curve
-ax.errorbar(dt, lum/1E28, yerr=elum/1E28, c='k', ms=5, fmt='.')
+ax.errorbar(dt, lum/1E28, yerr=elum/1E28, c='k', ms=10, fmt='.')
 
 # Plot the r-band non-detection
 #ax.scatter(2458370.6408-t0, (10**(-(20.47+48.6)/2.5))/1E28, marker='.', c='r')
@@ -59,7 +59,7 @@ axins.arrow((2458370.6408-t0)*24, 0.2,
 # axins.scatter(
 #         (2458370.6408-t0)*24, (10**(-(20.47+48.6)/2.5))/1E28,
 #         marker='.', c='r')
-axins.errorbar(dt*24, lum/1E28, yerr=elum/1E28, c='k', ms=5, fmt='.')
+axins.errorbar(dt*24, lum/1E28, yerr=elum/1E28, c='k', ms=10, fmt='.')
 axins.set_xlim(-0.05*24,0.05*24)
 axins.set_ylim(-0.1,0.3)
 
