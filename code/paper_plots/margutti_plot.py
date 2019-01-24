@@ -58,5 +58,5 @@ plt.ylim(1E46, 1E51)
 plt.xlabel(r"$L_X$ [0.3-30 keV] (erg s$^{-1}$)", fontsize=16)
 plt.ylabel(r"$E_\mathrm{\gamma,iso}$ [1-$10^4$ keV] (erg)", fontsize=16)
 plt.tight_layout()
-plt.show()
-
+#plt.show()
+plt.savefig("margutti2014.png")
