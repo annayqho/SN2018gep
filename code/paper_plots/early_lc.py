@@ -121,5 +121,5 @@ ax.invert_yaxis()
 ax2.invert_yaxis()
 
 #plt.tight_layout()
-#plt.savefig("early_lc.png")
-plt.show()
+plt.savefig("early_lc.png")
+#plt.show()
