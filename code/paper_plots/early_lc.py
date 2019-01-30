@@ -99,18 +99,27 @@ ax2.set_ylim((y_f(ymin), y_f(ymax)))
 ax2.plot([],[])
 ax2.tick_params(axis='both', labelsize=14)
 
+# Put the legend outside of the plot
+box = ax.get_position()
+ax.set_position([box.x0, box.y0,
+    box.width, box.height * 0.9])
+ax2.set_position([box.x0, box.y0,
+    box.width, box.height * 0.9])
+ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1.00),
+        fancybox=True, ncol=5, fontsize=12)
+
 ax.set_ylabel("Apparent Magnitude", fontsize=16)
 ax.set_xlabel(
     r"Days since $t_0=$JD 2458370.6473 (UT 2018 Sept 09.15)", fontsize=16)
 ax.yaxis.set_tick_params(labelsize=14)
 ax.xaxis.set_tick_params(labelsize=14)
-ax.legend(loc='lower right', fontsize=12, ncol=5)
+#ax.legend(loc='lower right', fontsize=12, ncol=5)
 #ax.set_xscale('log')
 ax.set_xlim(-0.1, 1)
 ax.set_ylim(15, 21)
 ax.invert_yaxis()
 ax2.invert_yaxis()
 
-plt.tight_layout()
-plt.savefig("early_lc.png")
-#plt.show()
+#plt.tight_layout()
+#plt.savefig("early_lc.png")
+plt.show()
