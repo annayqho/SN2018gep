@@ -130,7 +130,7 @@ for ii,f in enumerate(files_sorted):
             r"Observed Wavelength (\AA)", fontsize=16)
     ax.xaxis.set_tick_params(labelsize=14)
     ax.yaxis.set_tick_params(labelsize=14)
-    ax.set_xlim(3000,10500)
+    ax.set_xlim(3800,8100)
     #ax.set_ylim(-25, 50)
     #ax.legend(loc='upper right', fontsize=12)
     #ax.set_xscale('log')
