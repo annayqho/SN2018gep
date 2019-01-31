@@ -51,7 +51,7 @@ ax.text(
         verticalalignment='top')
 
 ax.set_ylim(3E-16, 1E-14)
-ax.set_ylabel(r"Flux (erg cm$^{-2}$ s$^{-1}$ \AA$^{-1}$", fontsize=16)
+ax.set_ylabel(r"Flux (erg cm$^{-2}$ s$^{-1}$ \AA$^{-1}$)", fontsize=16)
 ax.set_yscale('log')
 ax.set_xlabel(r"Rest-Frame Wavelength (\AA)", fontsize=16)
 ax.tick_params(axis='both', labelsize=14)

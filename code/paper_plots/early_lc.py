@@ -110,7 +110,7 @@ ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1.00),
 
 ax.set_ylabel("Apparent Magnitude", fontsize=16)
 ax.set_xlabel(
-    r"Days since $t_0=$JD 2458370.6473 (UT 2018 Sept 09.15)", fontsize=16)
+    r"Time since $t_0$ (Days)", fontsize=16)
 ax.yaxis.set_tick_params(labelsize=14)
 ax.xaxis.set_tick_params(labelsize=14)
 #ax.legend(loc='lower right', fontsize=12, ncol=5)
