@@ -30,7 +30,7 @@ def get_uv_lc():
     wl = np.array([bands[val] for val in filt]) # ang
     nu = 3E18 / wl # Hz
     fnu_mjy = dat[:,2].astype(float)
-    fact = 1E-3 * 1E-23 * 4 * np.pi * d**2 / 1E44
+    fact = 1E-3 * 1E-23 * 4 * np.pi * d**2 
     lnu = fnu_mjy * fact 
     elnu = dat[:,3].astype(float) * fact 
 
