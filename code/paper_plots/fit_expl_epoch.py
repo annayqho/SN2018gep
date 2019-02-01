@@ -25,7 +25,8 @@ emag = dat[:,4].astype(float)
 det = np.logical_and(mag<99, ~np.isnan(mag))
 tofit = np.logical_and(instr=='P48+ZTF', filt=='g')
 choose = np.logical_and(det, tofit)
-t0 = jd[choose][0]
+# JD of first (r-band) detection
+t0 = 2458370.6634
 dt = jd[choose]-t0
 
 # Initialize the figure
@@ -40,13 +41,14 @@ eflux = emag[choose]*flux
 elum = 4 * np.pi * d**2 * eflux
 
 # Plot the light curve
-ax.errorbar(dt, lum/1E28, yerr=elum/1E28, c='k', ms=10, fmt='.')
+ax.errorbar(
+        dt, lum/1E28, yerr=elum/1E28, c='k', ms=10, fmt='.', label="$g$-band")
 
 # Plot the r-band non-detection
 #ax.scatter(2458370.6408-t0, (10**(-(20.47+48.6)/2.5))/1E28, marker='.', c='r')
 ax.arrow((2458370.6408-t0)*24, 0.2,
         0, -0.2, length_includes_head=True,
-        head_width=0.1, head_length=0.03, fc='r', ec='r')
+        head_width=0.1, head_length=0.03, fc='k', ec='k')
 
 # Inset axis
 axins = inset_axes(
@@ -55,11 +57,12 @@ axins = inset_axes(
         bbox_transform=ax.transAxes)
 axins.arrow((2458370.6408-t0)*24, 0.2,
         0, -0.2, length_includes_head=True,
-        head_width=0.1, head_length=0.03, fc='r', ec='r')
+        head_width=0.1, head_length=0.03, fc='k', ec='k')
 # axins.scatter(
 #         (2458370.6408-t0)*24, (10**(-(20.47+48.6)/2.5))/1E28,
 #         marker='.', c='r')
 axins.errorbar(dt*24, lum/1E28, yerr=elum/1E28, c='k', ms=10, fmt='.')
+axins.axhline(y=0, c='k', lw=0.5)
 axins.set_xlim(-0.05*24,0.05*24)
 axins.set_ylim(-0.1,0.3)
 
@@ -73,8 +76,8 @@ ax.plot(xlab, ylab/1E28, c='k', ls='--')
 axins.plot(xlab*24, ylab/1E28, c='k', ls='--')
 
 ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
-ax.set_xlabel("Days since first det.", fontsize=16)
-axins.set_xlabel("Hours since first det.", fontsize=14)
+ax.set_xlabel("Days since first (r-band) detection", fontsize=16)
+axins.set_xlabel("Hours since first $r$-band det.", fontsize=14)
 ax.yaxis.set_tick_params(labelsize=14)
 axins.yaxis.set_tick_params(labelsize=12)
 ax.xaxis.set_tick_params(labelsize=14)
