@@ -38,7 +38,6 @@ def get_files():
             for line in alldat:
                 if 'UT shutter open' in line:
                     obsdate = line[12:35]
-                    print(obsdate)
                     t = Time(obsdate, format='isot').jd
                     dt[ii] = t-t0
             cols[ii] = 'lightblue'
@@ -87,9 +86,8 @@ def load_spec(f):
 
 def plot_spec(ax, x, y, tel, epoch):
     """ plot the spectrum """
-    choose_y = y >= 0
     choose_x = np.logical_and(x >= 3200, x<= 9300)
-    choose = np.logical_and(choose_x, choose_y)
+    choose = choose_x
     ax.plot(
             x[choose], y[choose], c='grey', 
             drawstyle='steps-mid', lw=0.5, alpha=0.6)
@@ -98,12 +96,9 @@ def plot_spec(ax, x, y, tel, epoch):
 
 def plot_smoothed_spec(ax, x, y, tel, epoch):
     """ plot the smoothed spectrum """
-    choose_y = y >= 0
     choose_x = np.logical_and(x >= 3200, x<= 9300)
-    choose = np.logical_and(choose_x, choose_y)
-
+    choose = choose_x 
     smoothed = savgol_filter(y[choose], 45, polyorder=2)
-
     ax.plot(
             x[choose], smoothed, c='black', 
             drawstyle='steps-mid', lw=1.0, alpha=1.0)
@@ -187,8 +182,8 @@ def fluxcal(wl, flux, dt_spec):
     flam = fnu * (c/lam**2) # should be erg/s/cm2/AA
     # scale factor
     flam_meas = np.interp(lam, wl, flux)
-    scale = (flam/flam_meas)/1E-15
-    return wl, flux*scale
+    #scale = (flam/flam_meas)/1E-15
+    return wl, flux
 
 
 if __name__=="__main__":
@@ -198,7 +193,7 @@ if __name__=="__main__":
     nfiles = len(files)
 
     fig,axarr = plt.subplots(
-            1, 2, figsize=(8,10), sharex=True)
+            1, 2, figsize=(10,10), sharex=True)
 
     for ii,f in enumerate(files):
         if ii < nfiles/2:
@@ -208,24 +203,30 @@ if __name__=="__main__":
         tel = tels[ii]
         dt = epochs[ii]
         wl, flux = load_spec(f)
+        wl, flux = fluxcal(wl, flux, dt)
         wl, flux = clip_lines(wl, flux, z, tel, dt)
         wl, flux = clip_tellurics(wl, flux)
         wl, flux = fluxcal(wl, flux, dt)
-        # Normalize spectrum to the continuum value at 4200 Ang
-        scale = flux[wl > 4200][0]
-        plot_spec(ax, wl, flux/scale+nfiles-ii, tel, dt)
-        plot_smoothed_spec(ax, wl, flux/scale+nfiles-ii, tel, dt)
+        if dt < 20:
+            # Normalize spectrum to the continuum value at 4200 Ang
+            scale = flux[wl > 4100][0]
+        else:
+            # Continuum dominated by noise, normalize by 1E-16
+            scale = 2E-16
+        plot_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
+        plot_smoothed_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
         ax.tick_params(axis='both', labelsize=14)
     axarr[0].set_ylabel(
             r"Scaled $F_{\lambda}$ + constant",
             fontsize=16)
-    plt.xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    axarr[0].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    axarr[1].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     axarr[1].get_yaxis().set_ticks([])
-    plt.xlim(3000, 10000)
+    plt.xlim(3000, 11000)
     plt.subplots_adjust(wspace=0)
     #ax.set_ylim(0,4)
 
     #plt.tight_layout()
-    #plt.savefig("spec_first_third.png")
-    plt.show()
-    #plt.close()
+    plt.savefig("spec_sequence.png")
+    #plt.show()
+    plt.close()
