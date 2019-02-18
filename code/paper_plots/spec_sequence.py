@@ -107,11 +107,11 @@ def plot_smoothed_spec(ax, x, y, tel, epoch):
     ax.plot(
             x[choose], smoothed, c='black', 
             drawstyle='steps-mid', lw=1.0, alpha=1.0)
-    dt_str = r"$\Delta t$=%s d" %str(np.round(epoch, 1))
+    dt_str = r"+%s\,d" %str(np.round(epoch, 1))
     ax.text(
-            0.98, 0.9, s=dt_str, 
-            horizontalalignment='right', verticalalignment='center', 
-            fontsize=14, transform=ax.transAxes)
+            x[choose][-1]+100, smoothed[-1],  s=dt_str, 
+            horizontalalignment='left', verticalalignment='center', 
+            fontsize=14)
     return ax
 
 
@@ -195,28 +195,34 @@ if __name__=="__main__":
     z = 0.03154
 
     files, epochs, tels = get_files()
-    files = files[0:1]
+    nfiles = len(files)
 
-    fig,ax = plt.subplots(
-            1, 1, figsize=(8,10), sharex=True)
-
-    # Giant y-axis label
-    plt.ylabel(
-            r"Scaled $F_{\lambda}$ + constant",
-            fontsize=16)
+    fig,axarr = plt.subplots(
+            1, 2, figsize=(8,10), sharex=True)
 
     for ii,f in enumerate(files):
+        if ii < nfiles/2:
+            ax = axarr[0]
+        else:
+            ax = axarr[1]
         tel = tels[ii]
         dt = epochs[ii]
         wl, flux = load_spec(f)
         wl, flux = clip_lines(wl, flux, z, tel, dt)
         wl, flux = clip_tellurics(wl, flux)
         wl, flux = fluxcal(wl, flux, dt)
-        plot_spec(ax, wl, flux, tel, dt)
-        plot_smoothed_spec(ax, wl, flux, tel, dt)
-    plt.tick_params(axis='both', labelsize=14)
+        # Normalize spectrum to the continuum value at 4200 Ang
+        scale = flux[wl > 4200][0]
+        plot_spec(ax, wl, flux/scale+nfiles-ii, tel, dt)
+        plot_smoothed_spec(ax, wl, flux/scale+nfiles-ii, tel, dt)
+        ax.tick_params(axis='both', labelsize=14)
+    axarr[0].set_ylabel(
+            r"Scaled $F_{\lambda}$ + constant",
+            fontsize=16)
     plt.xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    axarr[1].get_yaxis().set_ticks([])
     plt.xlim(3000, 10000)
+    plt.subplots_adjust(wspace=0)
     #ax.set_ylim(0,4)
 
     #plt.tight_layout()
