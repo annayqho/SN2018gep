@@ -216,8 +216,8 @@ if __name__=="__main__":
     ax.set_xlim(3000, 10000)
     #ax.set_ylim(0,4)
 
-
-    plt.tight_layout()
-    plt.savefig("spec_first_third.png")
-    #plt.show()
+    plt.subplots_adjust(hspace=0)
+    #plt.tight_layout()
+    #plt.savefig("spec_first_third.png")
+    plt.show()
     plt.close()

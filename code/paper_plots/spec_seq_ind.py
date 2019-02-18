@@ -14,7 +14,7 @@ from plot_lc import get_lc
 
 files = glob.glob(
 "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec/ZTF18abukavn/*.ascii")
-files = np.array(files[0:1])
+files = np.array(files[0:10])
 dt = np.zeros(len(files))
 cols = np.array([""]*len(dt), dtype='U10')
 
@@ -70,9 +70,15 @@ files_sorted = files[order]
 dt_sorted = dt[order]
 cols = cols[order]
 
+colors = np.array(['lightpink', 'pink', 'r', 
+    'orange', 'darkorange', 'yellow', 'lightgreen', 'green', 
+    'darkgreen', 'lightblue', 'blue', 'darkblue', 'purple', 
+    'black'])
+ncolors = len(colors)
+
 nfiles = len(files_sorted)
 
-fig,ax = plt.subplots(1,1,figsize=(8,3))
+fig,ax = plt.subplots(1,1,figsize=(8,10))
 
 # Loop through the sorted files, and plot the spectra
 for ii,f in enumerate(files_sorted):
@@ -104,7 +110,9 @@ for ii,f in enumerate(files_sorted):
     # Plot the spectrum, scaled to this flux value
     x = wl
     y = flux 
-    ax.plot(x, y*scale, c='k', drawstyle='steps-mid', lw=0.5)
+    ax.plot(
+            x, y*scale+(nfiles-ii), drawstyle='steps-mid', 
+            lw=0.5, c=colors[ii%ncolors])
 
     # Label the dt
     #t_raw = f.split("_")[1]
@@ -112,31 +120,32 @@ for ii,f in enumerate(files_sorted):
     #dt = t-t0
     dt_str = r"$\Delta t$=%s d" %str(np.round(dt_spec, 1))
     ax.text(
-            0.98, 0.9, s=dt_str, 
-            horizontalalignment='right', verticalalignment='center', 
-            fontsize=14, transform=ax.transAxes)
-    ax.text(
-            0.98, 0.7, s=tel, 
-            horizontalalignment='right', verticalalignment='center', 
-            fontsize=14, transform=ax.transAxes)
-    ax.set_ylabel(
-        r"$f_{\lambda}$ ($10^{-15}$ erg cm$^{-2}$ s$^{-1}$ \AA$^{-1}$)", 
-        fontsize=16)
-    #ax.yaxis.set_ticks([])
-    if tel == 'NOT':
-        ax.set_ylim(min(y)/15, max(y)/2) # get rid of noisy end
+            8000, (y*scale+(nfiles-ii))[-1], s=dt_str, 
+            horizontalalignment='right', verticalalignment='bottom', 
+            fontsize=14)#, transform=ax.transAxes)
+    # ax.text(
+    #         0.98, 0.7, s=tel, 
+    #         horizontalalignment='right', verticalalignment='center', 
+    #         fontsize=14, transform=ax.transAxes)
+#ax.set_ylabel(
+#    r"$f_{\lambda}$ ($10^{-15}$ erg cm$^{-2}$ s$^{-1}$ \AA$^{-1}$)", 
+#    fontsize=16)
+ax.set_ylabel("$f_{\lambda}$ + offset", fontsize=16)
+#ax.yaxis.set_ticks([])
+#if tel == 'NOT':
+#    ax.set_ylim(min(y)/15, max(y)/2) # get rid of noisy end
 
-    ax.set_xlabel(
-            r"Observed Wavelength (\AA)", fontsize=16)
-    ax.xaxis.set_tick_params(labelsize=14)
-    ax.yaxis.set_tick_params(labelsize=14)
-    ax.set_xlim(3800,8100)
-    #ax.set_ylim(-25, 50)
-    #ax.legend(loc='upper right', fontsize=12)
-    #ax.set_xscale('log')
+ax.set_xlabel(
+        r"Observed Wavelength (\AA)", fontsize=16)
+ax.xaxis.set_tick_params(labelsize=14)
+ax.yaxis.set_tick_params(labelsize=14)
+ax.set_xlim(3800,8100)
+ax.set_ylim(1, 13)
+#ax.legend(loc='upper right', fontsize=12)
+#ax.set_xscale('log')
 
-    plt.tight_layout()
-    plt.savefig("spec_%s.png" %ii)
-    #plt.show()
-    plt.close()
+plt.tight_layout()
+#plt.savefig("spec_%s.png" %ii)
 #plt.show()
+#plt.close()
+plt.show()
