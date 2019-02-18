@@ -6,6 +6,7 @@ plt.rc("text", usetex=True)
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 import numpy as np
+from scipy.signal import savgol_filter
 from astropy.table import Table
 from astropy.cosmology import Planck15
 from astropy.time import Time
@@ -89,14 +90,26 @@ def plot_spec(ax, x, y, tel, epoch):
     choose_y = y >= 0
     choose_x = np.logical_and(x >= 3200, x<= 9300)
     choose = np.logical_and(choose_x, choose_y)
-    ax.plot(x[choose], y[choose], c='k', drawstyle='steps-mid', lw=0.5)
+    ax.plot(
+            x[choose], y[choose], c='grey', 
+            drawstyle='steps-mid', lw=0.5, alpha=0.6)
+    return ax
+
+
+def plot_smoothed_spec(ax, x, y, tel, epoch):
+    """ plot the smoothed spectrum """
+    choose_y = y >= 0
+    choose_x = np.logical_and(x >= 3200, x<= 9300)
+    choose = np.logical_and(choose_x, choose_y)
+
+    smoothed = savgol_filter(y[choose], 45, polyorder=2)
+
+    ax.plot(
+            x[choose], smoothed, c='black', 
+            drawstyle='steps-mid', lw=1.0, alpha=1.0)
     dt_str = r"$\Delta t$=%s d" %str(np.round(epoch, 1))
     ax.text(
             0.98, 0.9, s=dt_str, 
-            horizontalalignment='right', verticalalignment='center', 
-            fontsize=14, transform=ax.transAxes)
-    ax.text(
-            0.98, 0.7, s=tel, 
             horizontalalignment='right', verticalalignment='center', 
             fontsize=14, transform=ax.transAxes)
     return ax
@@ -149,7 +162,7 @@ def clip_tellurics(wl, flux):
     start, end = get_tellurics()
     for ii,beg in enumerate(start):
         choose = np.logical_and(wl >= beg, wl <= end[ii])
-        flux[choose] = -99 # mask these out
+        flux = np.interp(wl, wl[~choose], flux[~choose])
     return wl, flux
 
 
@@ -182,42 +195,31 @@ if __name__=="__main__":
     z = 0.03154
 
     files, epochs, tels = get_files()
-    files = files[0:6]
-    epochs = epochs[0:6]
-    tels = tels[0:6]
+    files = files[0:1]
 
-    nfiles = len(files)
-    fig,axarr = plt.subplots(
-            nfiles, 1, figsize=(8,10), sharex=True)
+    fig,ax = plt.subplots(
+            1, 1, figsize=(8,10), sharex=True)
 
     # Giant y-axis label
-    ax = fig.add_subplot(111, frameon=False)
-    ax.set_ylabel(
-            r"Flux $f_{\lambda}$ ($10^{-15}$ erg cm$^{-2}$ s$^{-1}$ \AA$^{-1}$)", 
+    plt.ylabel(
+            r"Scaled $F_{\lambda}$ + constant",
             fontsize=16)
-    ax.spines['top'].set_color('none')
-    ax.spines['bottom'].set_color('none')
-    ax.spines['left'].set_color('none')
-    ax.spines['right'].set_color('none')
-    ax.tick_params(labelcolor='w', top='off', bottom='off', left='off', right='off')
 
-    for ii,ax in enumerate(axarr):
-        f = files[ii]
+    for ii,f in enumerate(files):
         tel = tels[ii]
         dt = epochs[ii]
         wl, flux = load_spec(f)
         wl, flux = clip_lines(wl, flux, z, tel, dt)
         wl, flux = clip_tellurics(wl, flux)
         wl, flux = fluxcal(wl, flux, dt)
-        ax.tick_params(axis='both', labelsize=14)
         plot_spec(ax, wl, flux, tel, dt)
-        #plot_lines(z, tel, dt)
-    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
-    ax.set_xlim(3000, 10000)
+        plot_smoothed_spec(ax, wl, flux, tel, dt)
+    plt.tick_params(axis='both', labelsize=14)
+    plt.xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    plt.xlim(3000, 10000)
     #ax.set_ylim(0,4)
 
-    plt.subplots_adjust(hspace=0)
     #plt.tight_layout()
     #plt.savefig("spec_first_third.png")
     plt.show()
-    plt.close()
+    #plt.close()
