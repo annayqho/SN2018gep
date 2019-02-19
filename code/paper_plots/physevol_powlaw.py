@@ -233,4 +233,4 @@ def plot():
 
 
 if __name__=="__main__":
-    print_table()
+    plot()
