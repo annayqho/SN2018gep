@@ -12,6 +12,9 @@ from astropy.cosmology import Planck15
 from astropy.time import Time
 import glob
 from plot_lc import get_lc
+import sys
+sys.path.append("/Users/annaho/Github/Spectra")
+from normalize import smooth_spec
 
 
 def get_files():
@@ -85,12 +88,14 @@ def get_files():
 
 
 def get_res(tel):
+    """ Here, this means the width of a line in pixels """
     if tel == 'LT':
         res = 18 # Angstrom, res at central wavelength
         res = 30 # add a couple of Ang?
     elif tel == 'P200':
         res = 10 # determined by eye from the spectrum
         # basically, width of a galaxy emission line is 10 AA
+        # and each pixel is 1 AA
     else:
         res = 2
     return res
@@ -101,7 +106,9 @@ def load_spec(f):
     dat = np.loadtxt(f)
     wl = dat[:,0]
     flux = dat[:,1]
-    return wl, flux
+    eflux = dat[:,2]
+    ivar = 1/eflux**2
+    return wl, flux, ivar
 
 
 def plot_spec(ax, x, y, tel, epoch):
@@ -114,12 +121,12 @@ def plot_spec(ax, x, y, tel, epoch):
     return ax
 
 
-def plot_smoothed_spec(ax, x, y, tel, epoch):
+def plot_smoothed_spec(ax, x, y, ivar, tel, epoch):
     """ plot the smoothed spectrum """
     res = get_res(tel)
     choose_x = np.logical_and(x >= 3200, x<= 9300)
     choose = choose_x 
-    smoothed = savgol_filter(y[choose], res*2+1, polyorder=2)
+    smoothed = smooth_spec(x, y, ivar, res*2)
     ax.plot(
             x[choose], smoothed, c='black', 
             drawstyle='steps-mid', lw=0.5, alpha=1.0)
@@ -204,7 +211,7 @@ if __name__=="__main__":
 
     files, epochs, tels = get_files()
     start = 0
-    end = 2
+    end = 1
     files = files[start:end]
     epochs = epochs[start:end]
     tels = tels[start:end]
@@ -233,7 +240,7 @@ if __name__=="__main__":
             # Continuum dominated by noise, normalize by 1E-16
             scale = 2E-16
         plot_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
-        #plot_smoothed_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
+        plot_smoothed_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
         ax.tick_params(axis='both', labelsize=14)
     axarr[0].set_ylabel(
             r"Scaled $F_{\lambda}$ + constant",
