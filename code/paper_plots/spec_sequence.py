@@ -65,6 +65,14 @@ def get_files():
                     t = Time(obsdate, format='mjd').jd
                     dt[ii] = t-t0
             cols[ii] = 'black'
+        elif tel == 'omr.ascii':
+            # first Xinglong spectrum
+            t = Time('2018-09-21T11:15:10.0').jd
+            dt[ii] = t-t0
+        elif tel == 'Bfosc.ascii':
+            # second Xinglong spectrum
+            t = Time('2018-09-25T11:16:43.0').jd
+            dt[ii] = t-t0
         else:
             print("couldn't find telescope")
             print(tel)
@@ -227,6 +235,6 @@ if __name__=="__main__":
     #ax.set_ylim(0,4)
 
     #plt.tight_layout()
-    plt.savefig("spec_sequence.png")
-    #plt.show()
+    #plt.savefig("spec_sequence.png")
+    plt.show()
     plt.close()
