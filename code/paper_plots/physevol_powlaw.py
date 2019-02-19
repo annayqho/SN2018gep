@@ -179,9 +179,9 @@ def plot():
     axarr[1].text(1, 2E14, 'v=0.1c', fontsize=14)
 
     # v = 0.26c
-    yvals = 0.26 * (3E10) * xvals * 86400
-    axarr[1].plot(xvals, yvals, ls='--', c='grey')
-    axarr[1].text(0.4, 7E14, 'v=0.26c', fontsize=14)
+    #yvals = 0.26 * (3E10) * xvals * 86400
+    #axarr[1].plot(xvals, yvals, ls='--', c='grey')
+    #axarr[1].text(0.4, 7E14, 'v=0.26c', fontsize=14)
 
     # Temperature panel
     choose = np.logical_and(dt>1, dt<19)
