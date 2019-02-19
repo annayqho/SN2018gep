@@ -101,7 +101,9 @@ def get_res(tel):
         # width of a line is around 7 pixels
         # and each pixel is 2 Angstroms
     elif tel == 'NOT':
-        res = 1
+        # width of a line is around 8 pixels
+        # and each pixel is around 2.63
+        res = 8*2.63
     else:
         res = 2
     return res
