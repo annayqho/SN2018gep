@@ -102,10 +102,14 @@ def get_res(tel):
         # and each pixel is 2 Angstroms
     elif tel == 'NOT':
         # width of a line is around 8 pixels
-        # and each pixel is around 2.63
+        # and each pixel is around 2.63 Ang
         res = 8*2.63
+    elif tel == 'DCT':
+        # width of a line is around 7 pixels
+        # and each pixel is 2.2 Ang
+        res = 7*2.2
     else:
-        res = 2
+        res = 1
     return res
 
 
@@ -222,8 +226,8 @@ if __name__=="__main__":
     z = 0.03154
 
     files, epochs, tels = get_files()
-    start = 9
-    end = 10
+    start = 8
+    end = 9
     files = files[start:end]
     epochs = epochs[start:end]
     tels = tels[start:end]
@@ -262,10 +266,10 @@ if __name__=="__main__":
     axarr[0].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     axarr[1].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     axarr[1].get_yaxis().set_ticks([])
-    #plt.xlim(3000, 11000)
+    plt.xlim(3000, 11000)
     plt.xlim(4950, 5050)
     plt.subplots_adjust(wspace=0)
-    #axarr[0].set_ylim(0,11)
+    axarr[0].set_ylim(0,11)
     axarr[0].set_ylim(0,2)
 
     #plt.tight_layout()
