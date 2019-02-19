@@ -14,6 +14,7 @@ from plot_lc import get_lc
 import sys
 sys.path.append("/Users/annaho/Github/Spectra")
 from normalize import smooth_spec
+from measure_snr import get_snr
 
 
 def get_files():
@@ -87,7 +88,7 @@ def get_files():
 
 
 def get_res(tel):
-    """ Here, this means the width of a line in pixels """
+    """ Here, this means the width of a line in Angstroms """
     if tel == 'LT':
         res = 18 # Angstrom, res at central wavelength
         res = 30 # add a couple of Ang?
@@ -95,6 +96,12 @@ def get_res(tel):
         res = 10 # determined by eye from the spectrum
         # basically, width of a galaxy emission line is 10 AA
         # and each pixel is 1 AA
+    elif tel == 'Keck1':
+        res = 7*2 # determined by eye from spectrum
+        # width of a line is around 7 pixels
+        # and each pixel is 2 Angstroms
+    elif tel == 'NOT':
+        res = 1
     else:
         res = 2
     return res
@@ -109,7 +116,7 @@ def load_spec(f, tel):
         eflux = dat[:,3]
     else:
         # need to estimate uncertainty from scatter
-        eflux = dat[:,2]
+        eflux = np.array([get_snr(wl, flux, 7000, 8000)]*len(wl))
     ivar = 1/eflux**2
     return wl, flux, ivar
 
@@ -213,8 +220,8 @@ if __name__=="__main__":
     z = 0.03154
 
     files, epochs, tels = get_files()
-    start = 7
-    end = 8
+    start = 9
+    end = 10
     files = files[start:end]
     epochs = epochs[start:end]
     tels = tels[start:end]
@@ -230,7 +237,7 @@ if __name__=="__main__":
             ax = axarr[1]
         tel = tels[ii]
         dt = epochs[ii]
-        wl, flux, ivar = load_spec(f)
+        wl, flux, ivar = load_spec(f, tel)
         print(tel)
         wl, flux = fluxcal(wl, flux, dt)
         wl, flux = clip_lines(wl, flux, z, tel, dt)
@@ -253,9 +260,11 @@ if __name__=="__main__":
     axarr[0].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     axarr[1].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     axarr[1].get_yaxis().set_ticks([])
-    plt.xlim(3000, 11000)
+    #plt.xlim(3000, 11000)
+    plt.xlim(4950, 5050)
     plt.subplots_adjust(wspace=0)
-    axarr[0].set_ylim(0,11)
+    #axarr[0].set_ylim(0,11)
+    axarr[0].set_ylim(0,2)
 
     #plt.tight_layout()
     plt.savefig("spec_sequence.png")
