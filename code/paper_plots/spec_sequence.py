@@ -6,7 +6,6 @@ plt.rc("text", usetex=True)
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 import numpy as np
-from scipy.signal import savgol_filter
 from astropy.table import Table
 from astropy.cosmology import Planck15
 from astropy.time import Time
@@ -101,12 +100,16 @@ def get_res(tel):
     return res
 
 
-def load_spec(f):
+def load_spec(f, tel):
     """ load data from spec file """
     dat = np.loadtxt(f)
     wl = dat[:,0]
     flux = dat[:,1]
-    eflux = dat[:,2]
+    if tel == 'Keck':
+        eflux = dat[:,3]
+    else:
+        # need to estimate uncertainty from scatter
+        eflux = dat[:,2]
     ivar = 1/eflux**2
     return wl, flux, ivar
 
@@ -126,9 +129,9 @@ def plot_smoothed_spec(ax, x, y, ivar, tel, epoch):
     res = get_res(tel)
     choose_x = np.logical_and(x >= 3200, x<= 9300)
     choose = choose_x 
-    smoothed = smooth_spec(x, y, ivar, res*2)
+    smoothed = smooth_spec(x, y, ivar, res*3)
     ax.plot(
-            x[choose], smoothed, c='black', 
+            x[choose], smoothed[choose], c='black', 
             drawstyle='steps-mid', lw=0.5, alpha=1.0)
     dt_str = r"+%s\,d" %str(np.round(epoch, 1))
     ax.text(
@@ -210,8 +213,8 @@ if __name__=="__main__":
     z = 0.03154
 
     files, epochs, tels = get_files()
-    start = 0
-    end = 1
+    start = 7
+    end = 8
     files = files[start:end]
     epochs = epochs[start:end]
     tels = tels[start:end]
@@ -227,7 +230,8 @@ if __name__=="__main__":
             ax = axarr[1]
         tel = tels[ii]
         dt = epochs[ii]
-        wl, flux = load_spec(f)
+        wl, flux, ivar = load_spec(f)
+        print(tel)
         wl, flux = fluxcal(wl, flux, dt)
         wl, flux = clip_lines(wl, flux, z, tel, dt)
         #plot_lines(ax, z, tel, dt)
@@ -240,7 +244,8 @@ if __name__=="__main__":
             # Continuum dominated by noise, normalize by 1E-16
             scale = 2E-16
         plot_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
-        plot_smoothed_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
+        plot_smoothed_spec(
+                ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), ivar, tel, dt)
         ax.tick_params(axis='both', labelsize=14)
     axarr[0].set_ylabel(
             r"Scaled $F_{\lambda}$ + constant",
