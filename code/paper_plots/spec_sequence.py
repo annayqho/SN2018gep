@@ -200,14 +200,14 @@ if __name__=="__main__":
     files, epochs, tels = get_files()
     nfiles = len(files)
 
-    fig,axarr = plt.subplots(
-            1, 2, figsize=(10,10), sharex=True)
+    fig,ax = plt.subplots(
+            1, 1, figsize=(8,15), sharex=True)
 
     for ii,f in enumerate(files):
-        if ii < nfiles/2:
-            ax = axarr[0]
-        else:
-            ax = axarr[1]
+        # if ii < nfiles/2:
+        #     ax = axarr[0]
+        # else:
+        #     ax = axarr[1]
         tel = tels[ii]
         dt = epochs[ii]
         wl, flux = load_spec(f)
@@ -221,20 +221,20 @@ if __name__=="__main__":
         else:
             # Continuum dominated by noise, normalize by 1E-16
             scale = 2E-16
-        plot_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
-        plot_smoothed_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
+        plot_spec(ax, wl, flux/scale+nfiles-ii, tel, dt)
+        plot_smoothed_spec(ax, wl, flux/scale+nfiles-ii, tel, dt)
         ax.tick_params(axis='both', labelsize=14)
-    axarr[0].set_ylabel(
+    ax.set_ylabel(
             r"Scaled $F_{\lambda}$ + constant",
             fontsize=16)
-    axarr[0].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
-    axarr[1].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
-    axarr[1].get_yaxis().set_ticks([])
-    plt.xlim(3000, 11000)
+    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    ax.get_yaxis().set_ticks([])
+    plt.xlim(3000, 10000)
     plt.subplots_adjust(wspace=0)
     #ax.set_ylim(0,4)
 
-    #plt.tight_layout()
+    plt.tight_layout()
     #plt.savefig("spec_sequence.png")
     plt.show()
     plt.close()
