@@ -84,6 +84,18 @@ def get_files():
     return files_sorted, dt_sorted, tel_sorted
 
 
+def get_res(tel):
+    if tel == 'LT':
+        res = 18 # Angstrom, res at central wavelength
+        res = 30 # add a couple of Ang?
+    elif tel == 'P200':
+        res = 10 # determined by eye from the spectrum
+        # basically, width of a galaxy emission line is 10 AA
+    else:
+        res = 2
+    return res
+
+
 def load_spec(f):
     """ load data from spec file """
     dat = np.loadtxt(f)
@@ -104,12 +116,13 @@ def plot_spec(ax, x, y, tel, epoch):
 
 def plot_smoothed_spec(ax, x, y, tel, epoch):
     """ plot the smoothed spectrum """
+    res = get_res(tel)
     choose_x = np.logical_and(x >= 3200, x<= 9300)
     choose = choose_x 
-    smoothed = savgol_filter(y[choose], 45, polyorder=2)
+    smoothed = savgol_filter(y[choose], res*2+1, polyorder=2)
     ax.plot(
             x[choose], smoothed, c='black', 
-            drawstyle='steps-mid', lw=1.0, alpha=1.0)
+            drawstyle='steps-mid', lw=0.5, alpha=1.0)
     dt_str = r"+%s\,d" %str(np.round(epoch, 1))
     ax.text(
             x[choose][-1]+100, smoothed[-1],  s=dt_str, 
@@ -129,25 +142,17 @@ def choose_lines(z, dt):
     return gal_wl
 
 
-def plot_lines(z, tel, dt):
+def plot_lines(ax, z, tel, dt):
     """ Plot galaxy emission lines for a particular redshift """
-    if tel == 'LT':
-        res = 18 # Angstrom, res at central wavelength
-    else:
-        res = 30 # temp 
-    #elif tel == 'DBSP':
+    res = get_res(tel)
     gal_wl = choose_lines(z, dt)
     for val in gal_wl:
-        plt.axvspan(
+        ax.axvspan(
                 val-res/2, val+res/2, ls='--', color='grey', lw=0.5, alpha=0.5)
 
 
 def clip_lines(wl, flux, z, tel, dt):
-    if tel == 'LT':
-        res = 18 # Angstrom, res at central wavelength
-        res = 30 # add a couple of Ang?
-    else:
-        res = 30 # placeholder, I don't actually know what it is
+    res = get_res(tel)
     gal_wl = choose_lines(z, dt)
     for line in gal_wl:
         choose = np.logical_and(wl >= line-res/2, wl <= line+res/2)
@@ -198,43 +203,49 @@ if __name__=="__main__":
     z = 0.03154
 
     files, epochs, tels = get_files()
+    start = 0
+    end = 2
+    files = files[start:end]
+    epochs = epochs[start:end]
+    tels = tels[start:end]
     nfiles = len(files)
 
-    fig,ax = plt.subplots(
-            1, 1, figsize=(8,15), sharex=True)
+    fig,axarr = plt.subplots(
+            1, 2, figsize=(10,10), sharex=True)
 
     for ii,f in enumerate(files):
-        # if ii < nfiles/2:
-        #     ax = axarr[0]
-        # else:
-        #     ax = axarr[1]
+        if ii < nfiles/2:
+            ax = axarr[0]
+        else:
+            ax = axarr[1]
         tel = tels[ii]
         dt = epochs[ii]
         wl, flux = load_spec(f)
         wl, flux = fluxcal(wl, flux, dt)
         wl, flux = clip_lines(wl, flux, z, tel, dt)
+        #plot_lines(ax, z, tel, dt)
         wl, flux = clip_tellurics(wl, flux)
         wl, flux = fluxcal(wl, flux, dt)
         if dt < 20:
-            # Normalize spectrum to the continuum value at 4200 Ang
             scale = flux[wl > 4100][0]
         else:
+        #    shift = 1.0
             # Continuum dominated by noise, normalize by 1E-16
             scale = 2E-16
-        plot_spec(ax, wl, flux/scale+nfiles-ii, tel, dt)
-        plot_smoothed_spec(ax, wl, flux/scale+nfiles-ii, tel, dt)
+        plot_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
+        #plot_smoothed_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
         ax.tick_params(axis='both', labelsize=14)
-    ax.set_ylabel(
+    axarr[0].set_ylabel(
             r"Scaled $F_{\lambda}$ + constant",
             fontsize=16)
-    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
-    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
-    ax.get_yaxis().set_ticks([])
-    plt.xlim(3000, 10000)
+    axarr[0].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    axarr[1].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    axarr[1].get_yaxis().set_ticks([])
+    plt.xlim(3000, 11000)
     plt.subplots_adjust(wspace=0)
-    #ax.set_ylim(0,4)
+    axarr[0].set_ylim(0,11)
 
-    plt.tight_layout()
-    #plt.savefig("spec_sequence.png")
+    #plt.tight_layout()
+    plt.savefig("spec_sequence.png")
     plt.show()
-    plt.close()
+    #plt.close()
