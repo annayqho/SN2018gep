@@ -108,6 +108,11 @@ def get_res(tel):
         # width of a line is around 7 pixels
         # and each pixel is 2.2 Ang
         res = 7*2.2
+    elif tel == 'P60':
+        res = 20
+    elif 'ascii' in tel:
+        # Xinglong spectrum
+        res = 26
     else:
         res = 1
     return res
@@ -122,7 +127,7 @@ def load_spec(f, tel):
         eflux = dat[:,3]
     else:
         # need to estimate uncertainty from scatter
-        eflux = np.array([get_snr(wl, flux, 7000, 8000)]*len(wl))
+        eflux = np.array([get_snr(wl, flux, 6000, 6200)]*len(wl))
     ivar = 1/eflux**2
     return wl, flux, ivar
 
@@ -133,7 +138,7 @@ def plot_spec(ax, x, y, tel, epoch):
     choose = choose_x
     ax.plot(
             x[choose], y[choose], c='grey', 
-            drawstyle='steps-mid', lw=0.5, alpha=0.6)
+            drawstyle='steps-mid', lw=0.5, alpha=0.4)
     return ax
 
 
@@ -148,7 +153,7 @@ def plot_smoothed_spec(ax, x, y, ivar, tel, epoch):
             drawstyle='steps-mid', lw=0.5, alpha=1.0)
     dt_str = r"+%s\,d" %str(np.round(epoch, 1))
     ax.text(
-            x[choose][-1]+100, smoothed[-1],  s=dt_str, 
+            x[choose][-1]+100, smoothed[choose][-1],  s=dt_str, 
             horizontalalignment='left', verticalalignment='center', 
             fontsize=14)
     return ax
@@ -226,8 +231,8 @@ if __name__=="__main__":
     z = 0.03154
 
     files, epochs, tels = get_files()
-    start = 8
-    end = 9
+    start = 0
+    end = 19
     files = files[start:end]
     epochs = epochs[start:end]
     tels = tels[start:end]
@@ -253,7 +258,6 @@ if __name__=="__main__":
         if dt < 20:
             scale = flux[wl > 4100][0]
         else:
-        #    shift = 1.0
             # Continuum dominated by noise, normalize by 1E-16
             scale = 2E-16
         plot_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
@@ -267,12 +271,12 @@ if __name__=="__main__":
     axarr[1].set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     axarr[1].get_yaxis().set_ticks([])
     plt.xlim(3000, 11000)
-    plt.xlim(4950, 5050)
+    #plt.xlim(4900, 5200)
     plt.subplots_adjust(wspace=0)
     axarr[0].set_ylim(0,11)
-    axarr[0].set_ylim(0,2)
+    #axarr[0].set_ylim(0,5)
 
     #plt.tight_layout()
     plt.savefig("spec_sequence.png")
-    plt.show()
-    #plt.close()
+    #plt.show()
+    plt.close()

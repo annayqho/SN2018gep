@@ -1,6 +1,7 @@
 """ Plot the physical evolution as a power law """
 
 import numpy as np
+from math import floor, log10
 import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
@@ -11,6 +12,18 @@ from astropy.io import ascii
 from load_lum import load_lc
 from load_radius import load_radius
 from load_temp import load_temp
+
+
+def round_sig(x, sig=2):
+    if x < 0:
+        return -round(-x, sig-int(floor(log10(-x)))-1)
+    return round(x, sig-int(floor(log10(x)))-1)
+
+
+def ndec(num):
+    dec = str(num).split('.')[-1]
+    return len(dec)
+
 
 def powlaw(x, b, m):
     """ Fitting function for self-absorbed part """
@@ -42,19 +55,31 @@ def print_table():
     dt, temp, ltemp, utemp = load_temp()
 
     # Table of measurements
-    dtprint = np.array([np.round(val,2) for val in dt])
+    dtprint = np.array([round_sig(val,2) for val in dt])
 
-    lprint = np.array([np.round(val,2) for val in lum/3.839E43])
-    ulprint = np.array([np.round(val,2) for val in ulum/3.839E43])
-    llprint = np.array([np.round(val,2) for val in llum/3.839E43])
+    lprint = np.array([round_sig(val,2) for val in lum/3.839E43])
+    ulprint = np.array(
+            [np.round(val,ndec(lprint[ii])) \
+            for ii,val in enumerate(ulum/3.839E43)])
+    llprint = np.array(
+            [np.round(val,ndec(lprint[ii])) \
+            for ii,val in enumerate(llum/3.839E43)])
 
-    rprint = np.array([np.round(val,2) for val in rad/1.496E13])
-    urprint = np.array([np.round(val,2) for val in urad/1.496E13])
-    lrprint = np.array([np.round(val,2) for val in lrad/1.496E13])
+    rprint = np.array([round_sig(val,2) for val in rad/1.496E13])
+    urprint = np.array(
+            [np.round(val,ndec(rprint[ii])) \
+            for ii,val in enumerate(urad/1.496E13)])
+    lrprint = np.array(
+            [np.round(val,ndec(rprint[ii])) \
+            for ii,val in enumerate(lrad/1.496E13)])
 
-    tprint = np.array([np.round(val,2) for val in temp/1E3])
-    utprint = np.array([np.round(val,2) for val in utemp/1E3])
-    ltprint = np.array([np.round(val,2) for val in ltemp/1E3])
+    tprint = np.array([round_sig(val,2) for val in temp/1E3])
+    utprint = np.array(
+            [np.round(val,ndec(tprint[ii])) \
+            for ii,val in enumerate(utemp/1E3)])
+    ltprint = np.array(
+            [np.round(val,ndec(tprint[ii])) \
+            for ii,val in enumerate(ltemp/1E3)])
 
     outputf = open("physevol_tab.txt", "w")
     outputf.write("\\begin{table}[] \n")
@@ -72,9 +97,9 @@ def print_table():
     for ii,l in enumerate(lprint):
         linestr = "$%s$ & $%s^{%s}_{%s}$ & $%s^{%s}_{%s}$ & $%s^{%s}_{%s}$ \\\ \n" %(
                 dtprint[ii], 
-                l, ulprint[ii], llprint[ii],
-                rprint[ii], urprint[ii], lrprint[ii],
-                tprint[ii], utprint[ii], ltprint[ii])
+                l, "+%s" %ulprint[ii], "-%s" %llprint[ii],
+                rprint[ii], "+%s" %urprint[ii], "-%s" %lrprint[ii],
+                tprint[ii], "+%s" %utprint[ii], "-%s" %ltprint[ii])
         outputf.write(linestr)
 
     outputf.write("\hline \n")
@@ -208,4 +233,4 @@ def plot():
 
 
 if __name__=="__main__":
-    plot()
+    print_table()
