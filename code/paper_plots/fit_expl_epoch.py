@@ -42,13 +42,14 @@ elum = 4 * np.pi * d**2 * eflux
 
 # Plot the light curve
 ax.errorbar(
-        dt, lum/1E28, yerr=elum/1E28, c='k', ms=10, fmt='.', label="$g$-band")
+        dt, lum/1E28, yerr=elum/1E28, 
+        c='k', ms=5, fmt='s', label="$g$-band", zorder=2)
 
 # Plot the r-band non-detection
 #ax.scatter(2458370.6408-t0, (10**(-(20.47+48.6)/2.5))/1E28, marker='.', c='r')
-ax.arrow((2458370.6408-t0)*24, 0.2,
-        0, -0.2, length_includes_head=True,
-        head_width=0.1, head_length=0.03, fc='k', ec='k')
+# ax.arrow((2458370.6408-t0), 0.2,
+#         0, -0.2, length_includes_head=True,
+#         head_width=0.1, head_length=0.03, fc='k', ec='k')
 
 # Fit a polynomial (quadratic)
 sec = dt < 3
@@ -57,17 +58,35 @@ out,cov = np.polyfit(dt[sec], lum[sec], deg=2, w=1/elum[sec], cov=True)
 xlab = np.linspace(-1,2)
 ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
 ax.plot(xlab, ylab/1E28, c='k', ls='--')
-axins.plot(xlab*24, ylab/1E28, c='k', ls='--')
 
+# Plot the r-band detections
+rband = np.logical_and(instr=='P48+ZTF', filt=='r')
+choose = np.logical_and(det, rband)
+flux = 10**(-(mag[choose] + 48.6)/2.5)
+lum = 4 * np.pi * d**2 * flux
+dt = jd[choose]-t0
+eflux = emag[choose]*flux
+elum = 4 * np.pi * d**2 * eflux
+ax.errorbar(
+        dt, lum/1E28, yerr=elum/1E28, 
+        ms=5, fmt='o', mfc='white', mec='grey', label="$r$-band", c='grey',
+        zorder=0)
+
+# Vertical line for the first UVOT epoch
+ax.axvline(x=0.48, lw=2, c='lightblue') # UVOT
+ax.axvline(x=0.7, lw=2, c='lightblue') # LT
+ax.axvline(x=1.0, lw=2, c='lightblue') # P200/P60
+ax.axvline(x=1.7, lw=2, c='lightblue') # LT
+ax.axvline(x=2.0, lw=2, c='lightblue') # P200
+ax.axvline(x=2.7, lw=2, c='lightblue') # LT
+
+ax.legend(loc='upper left', fontsize=14)
 ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
-ax.set_xlabel("Days since first (r-band) detection", fontsize=16)
-axins.set_xlabel("Hours since first $r$-band det.", fontsize=14)
+ax.set_xlabel("Days since first detection", fontsize=16)
 ax.yaxis.set_tick_params(labelsize=14)
-axins.yaxis.set_tick_params(labelsize=12)
 ax.xaxis.set_tick_params(labelsize=14)
-axins.xaxis.set_tick_params(labelsize=12)
-ax.set_xlim(-0.5, 1.1)
-ax.set_ylim(-1,5)
+ax.set_xlim(-0.2, 2.1)
+ax.set_ylim(-0.5,4.5)
 
 # Print fitting parameters
 a = out[0]
