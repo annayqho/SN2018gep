@@ -10,16 +10,23 @@ import numpy as np
 from astropy.table import Table
 from astropy.cosmology import Planck15
 import glob
+from uv_lc import get_uv_lc
 
 zp = 2458370.6473
 # extinction values
-bands = ['u', 'g', 'r', 'i', 'z']
+bands = ['UVW2', 'UVM2', 'UVW1', 'U', 'u', 'B', 'g', 'V', 'r', 'i', 'z']
 ext = {}
-ext['u'] = 0.045
-ext['g'] = 0.035
-ext['r'] = 0.024
-ext['i'] = 0.018
-ext['z'] = 0.013
+ext['UVW2'] = 0.05 # placeholder; 1928
+ext['UVM2'] = 0.05 # placeholder; 2246
+ext['UVW1'] = 0.05 # placeholder; 2600
+ext['U'] = 0.05 # placeholder; 3465
+ext['u'] = 0.045 # 3543
+ext['B'] - 0.04 # placeholder; 4392
+ext['g'] = 0.035 # 4770
+ext['V'] = 0.03 # placeholder; 5468
+ext['r'] = 0.024 # 6231
+ext['i'] = 0.018 # 7625
+ext['z'] = 0.013 # 9134
 
 
 def plot_inset():
@@ -64,6 +71,7 @@ def plot_inset():
      
 
 def get_lc():
+    # get optical light curves 
     DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
     f = DATA_DIR + "/ZTF18abukavn_opt_phot.dat"
     dat = np.loadtxt(f, dtype=str, delimiter=' ')
@@ -72,8 +80,17 @@ def get_lc():
     filt = dat[:,2]
     mag = dat[:,3].astype(float)
     emag = dat[:,4].astype(float)
-
     dt = jd-zp
+
+    # add the UV light curves
+    add_dt, add_filt, fnu_mjy, efnu_mjy = get_uv_lc()
+    # convert to AB mag
+    dt = np.append(dt, add_dt)
+    filt = np.append(filt, add_filt)
+    add_mag = -2.5 * np.log10(fnu_mjy*1E-3) + 8.90
+    mag = np.append(mag, add_mag)
+    add_emag = (efnu_mjy/fnu_mjy) # I think it's just the ratio
+    emag = np.append(emag, add_emag)
 
     return dt, filt, mag, emag
 
@@ -84,10 +101,10 @@ def plot_lc():
     nondet = np.logical_or(mag==99, np.isnan(mag))
 
     fig,axarr = plt.subplots(
-            2, 2, figsize=(8,8), sharex=True, sharey=True)
+            4, 3, figsize=(8,8), sharex=True, sharey=True)
 
-    for ii,ax in enumerate(axarr.reshape(-1)):
-        use_f = bands[ii]
+    for ii,use_f in enumerate(bands):
+        ax = axarr.reshape(-1)[ii]
         choose = np.logical_and(det, filt == use_f)
         order = np.argsort(dt[choose])
         ax.errorbar(
