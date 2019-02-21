@@ -23,27 +23,62 @@ mag = dat[:,3].astype(float)
 emag = dat[:,4].astype(float)
 
 det = np.logical_and(mag<99, ~np.isnan(mag))
-tofit = np.logical_and(instr=='P48+ZTF', filt=='g')
-choose = np.logical_and(det, tofit)
 # JD of first (r-band) detection
 t0 = 2458370.6634
-dt = jd[choose]-t0
+dt = jd-t0
 
 # Initialize the figure
-fig,ax = plt.subplots(1,1,figsize=(5,3))
+fig,axarr = plt.subplots(2,1,figsize=(5,6))
 
 # Convert from mag to flux
 # AB flux zero point for g-band is 3631 Jy or 1E-23 erg/cm2/s/Hz
-flux = 10**(-(mag[choose] + 48.6)/2.5)
+flux = 10**(-(mag + 48.6)/2.5)
 lum = 4 * np.pi * d**2 * flux
 # Uncertainty in magnitude is roughly the fractional uncertainty on the flux
-eflux = emag[choose]*flux
+eflux = emag*flux
 elum = 4 * np.pi * d**2 * eflux
 
-# Plot the light curve
+ax = axarr[0]
+# Plot the zoom-in
+gband = np.logical_and(instr=='P48+ZTF', filt=='g')
+choose = np.logical_and(det, gband)
 ax.errorbar(
-        dt, lum/1E28, yerr=elum/1E28, 
-        c='k', ms=5, fmt='s', label="$g$-band", zorder=2)
+        dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
+        c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
+
+# Plot the r-band detections
+rband = np.logical_and(instr=='P48+ZTF', filt=='r')
+choose = np.logical_and(det, rband)
+ax.errorbar(
+        dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
+        ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
+        zorder=0)
+
+# Show the last non-detection
+ax.axvline(x=-32.5, ls=':', c='grey')
+ax.text(-32.5, 0.3, 'ND', fontsize=14,
+        horizontalalignment='center',
+        verticalalignment='center')
+ax.axvline(x=-23, ls='--', c='k')
+ax.text(-18, 0.3, '$t_0$', fontsize=16, horizontalalignment='center',
+        verticalalignment='center')
+
+# Format this box
+ax.set_xlim(-40, 80)
+ax.set_ylim(0, 0.35)
+ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
+ax.set_xlabel("Minutes since first detection", fontsize=16)
+ax.yaxis.set_tick_params(labelsize=14)
+ax.xaxis.set_tick_params(labelsize=14)
+ax.legend(loc='lower right', fontsize=14)
+
+ax = axarr[1]
+# Plot the full light curve
+gband = np.logical_and(instr=='P48+ZTF', filt=='g')
+choose = np.logical_and(det, gband)
+ax.errorbar(
+        dt[choose], lum[choose]/1E28, yerr=elum[choose]/1E28, 
+        c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
 
 # Plot the r-band non-detection
 #ax.scatter(2458370.6408-t0, (10**(-(20.47+48.6)/2.5))/1E28, marker='.', c='r')
@@ -52,9 +87,10 @@ ax.errorbar(
 #         head_width=0.1, head_length=0.03, fc='k', ec='k')
 
 # Fit a polynomial (quadratic)
-sec = dt < 3
-
-out,cov = np.polyfit(dt[sec], lum[sec], deg=2, w=1/elum[sec], cov=True)
+sec = dt[choose] < 3
+out,cov = np.polyfit(
+        dt[choose][sec], lum[choose][sec], 
+        deg=2, w=1/elum[choose][sec], cov=True)
 xlab = np.linspace(-1,2)
 ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
 ax.plot(xlab, ylab/1E28, c='k', ls='--')
@@ -69,7 +105,7 @@ eflux = emag[choose]*flux
 elum = 4 * np.pi * d**2 * eflux
 ax.errorbar(
         dt, lum/1E28, yerr=elum/1E28, 
-        ms=5, fmt='o', mfc='white', mec='grey', label="$r$-band", c='grey',
+        ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
         zorder=0)
 
 # Vertical line for the first UVOT epoch
@@ -104,5 +140,5 @@ c = out[2]
 ec = np.sqrt(cov[2][2])
 
 plt.tight_layout()
-#plt.savefig("quadfit.png")
-plt.show()
+plt.savefig("early_data.png")
+#plt.show()
