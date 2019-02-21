@@ -21,7 +21,7 @@ ext['UVM2'] = 0.05 # placeholder; 2246
 ext['UVW1'] = 0.05 # placeholder; 2600
 ext['U'] = 0.05 # placeholder; 3465
 ext['u'] = 0.045 # 3543
-ext['B'] - 0.04 # placeholder; 4392
+ext['B'] = 0.04 # placeholder; 4392
 ext['g'] = 0.035 # 4770
 ext['V'] = 0.03 # placeholder; 5468
 ext['r'] = 0.024 # 6231
@@ -85,12 +85,13 @@ def get_lc():
     # add the UV light curves
     add_dt, add_filt, fnu_mjy, efnu_mjy = get_uv_lc()
     # convert to AB mag
-    dt = np.append(dt, add_dt)
-    filt = np.append(filt, add_filt)
     add_mag = -2.5 * np.log10(fnu_mjy*1E-3) + 8.90
-    mag = np.append(mag, add_mag)
     add_emag = (efnu_mjy/fnu_mjy) # I think it's just the ratio
-    emag = np.append(emag, add_emag)
+    choose = add_emag < 50
+    dt = np.append(dt, add_dt[choose])
+    filt = np.append(filt, add_filt[choose])
+    mag = np.append(mag, add_mag[choose])
+    emag = np.append(emag, add_emag[choose])
 
     return dt, filt, mag, emag
 
@@ -109,7 +110,7 @@ def plot_lc():
         order = np.argsort(dt[choose])
         ax.errorbar(
                 dt[choose][order], mag[choose][order]-ext[use_f], 
-                emag[choose][order], c='black', fmt='o', ms=4,
+                emag[choose][order], c='black', fmt='o', ms=3,
                 alpha=1.0, zorder=5)
         # for each panel, plot all of them as a grey background
         for f in bands:
@@ -127,31 +128,36 @@ def plot_lc():
         ax.xaxis.set_tick_params(labelsize=14)
 
         # for each panel, also show absolute mag
-        if ii % 2 != 0:
-            ax2 = ax.twinx()
-            ax2.set_ylabel(
-                    "Absolute Magnitude",
-                    fontsize=14, rotation=270, labelpad=15.0)
-            y_f = lambda y_i: y_i-Planck15.distmod(z=0.033).value
-            ymin, ymax = ax.get_ylim()
-            ax2.set_ylim((y_f(ymin), y_f(ymax)))
-            ax2.plot([],[])
-            ax2.tick_params(axis='both', labelsize=14)
+        # if ii % 3 == 2:
+        #     ax2 = ax.twinx()
+        #     y_f = lambda y_i: y_i-Planck15.distmod(z=0.03154).value
+        #     ymin, ymax = ax.get_ylim()
+        #     ax2.set_ylim((y_f(ymin), y_f(ymax)))
+        #     ax2.plot([],[])
+        #     ax2.tick_params(axis='both', labelsize=14)
 
         # label with the band
         ax.text(
-                0.9, 0.9, "$%s$-band" %use_f, 
+                0.9, 0.9, "$%s$" %use_f, 
                 fontsize=14, transform=ax.transAxes,
-                horizontalalignment='right')
+                horizontalalignment='right',
+                verticalalignment='top',
+                bbox=dict(
+                    boxstyle="round", fc='none', ec='k', 
+                    lw=0.5, alpha=0.5, pad=0.4))
 
 
     # Final reconfiguring
+    axarr.reshape(-1)[-1].set_visible(False)
     plt.subplots_adjust(hspace=0, wspace=0)
+    ax.set_xlim(-5,70)
+    ax.set_ylim(14.5, 22)
     ax.invert_yaxis()
     fig.text(0.5, 0.04, 
         r"Days since $t_0=$JD 2458370.6473 (UT 2018 Sept 09.15)", 
         ha='center', fontsize=16) 
     fig.text(0.04, 0.5, 'Apparent Mag', fontsize=16, rotation='vertical')
+    #fig.text(0.9, 0.5, 'Absolute Mag', fontsize=16, rotation=270)
 
     #plt.savefig("lc.png")
     plt.show()
