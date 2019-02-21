@@ -50,22 +50,6 @@ ax.arrow((2458370.6408-t0)*24, 0.2,
         0, -0.2, length_includes_head=True,
         head_width=0.1, head_length=0.03, fc='k', ec='k')
 
-# Inset axis
-axins = inset_axes(
-        ax, 2, 1, loc=1,
-        bbox_to_anchor=(0.98,0.98),
-        bbox_transform=ax.transAxes)
-axins.arrow((2458370.6408-t0)*24, 0.2,
-        0, -0.2, length_includes_head=True,
-        head_width=0.1, head_length=0.03, fc='k', ec='k')
-# axins.scatter(
-#         (2458370.6408-t0)*24, (10**(-(20.47+48.6)/2.5))/1E28,
-#         marker='.', c='r')
-axins.errorbar(dt*24, lum/1E28, yerr=elum/1E28, c='k', ms=10, fmt='.')
-axins.axhline(y=0, c='k', lw=0.5)
-axins.set_xlim(-0.05*24,0.05*24)
-axins.set_ylim(-0.1,0.3)
-
 # Fit a polynomial (quadratic)
 sec = dt < 3
 
@@ -82,7 +66,7 @@ ax.yaxis.set_tick_params(labelsize=14)
 axins.yaxis.set_tick_params(labelsize=12)
 ax.xaxis.set_tick_params(labelsize=14)
 axins.xaxis.set_tick_params(labelsize=12)
-ax.set_xlim(-0.5, 6)
+ax.set_xlim(-0.5, 1.1)
 ax.set_ylim(-1,5)
 
 # Print fitting parameters
@@ -94,5 +78,5 @@ c = out[2]
 ec = np.sqrt(cov[2][2])
 
 plt.tight_layout()
-plt.savefig("quadfit.png")
-#plt.show()
+#plt.savefig("quadfit.png")
+plt.show()
