@@ -87,51 +87,54 @@ def plot_lc():
             2, 2, figsize=(8,8), sharex=True, sharey=True)
 
     for ii,ax in enumerate(axarr.reshape(-1)):
-        f = bands[ii]
-        choose = np.logical_and(det, filt == f)
-        ax.plot(
-                dt[choose], mag[choose]-ext[f], c='black',
-                alpha=1.0, zorder=0)
+        use_f = bands[ii]
+        choose = np.logical_and(det, filt == use_f)
+        order = np.argsort(dt[choose])
+        ax.errorbar(
+                dt[choose][order], mag[choose][order]-ext[use_f], 
+                emag[choose][order], c='black', fmt='o', ms=4,
+                alpha=1.0, zorder=5)
         # for each panel, plot all of them as a grey background
         for f in bands:
             choose = np.logical_and(det, filt == f)
+            order = np.argsort(dt[choose])
             ax.plot(
-                    dt[choose], mag[choose]-ext[f], c='lightgrey',
-                    alpha=0.7, zorder=5)
+                    dt[choose][order], mag[choose][order]-ext[f], 
+                    c='lightgrey', alpha=0.7, zorder=0)
+
+        # for each panel, show the last non-detection (which was r-band)
+        ax.arrow(
+                2458370.6408-zp, 19.97, 0, 0.5, length_includes_head=True,
+                head_width=2, head_length=0.2, fc='k', ec='k')
+        ax.yaxis.set_tick_params(labelsize=14)
+        ax.xaxis.set_tick_params(labelsize=14)
+
+        # for each panel, also show absolute mag
+        if ii % 2 != 0:
+            ax2 = ax.twinx()
+            ax2.set_ylabel(
+                    "Absolute Magnitude",
+                    fontsize=14, rotation=270, labelpad=15.0)
+            y_f = lambda y_i: y_i-Planck15.distmod(z=0.033).value
+            ymin, ymax = ax.get_ylim()
+            ax2.set_ylim((y_f(ymin), y_f(ymax)))
+            ax2.plot([],[])
+            ax2.tick_params(axis='both', labelsize=14)
+
+        # label with the band
+        ax.text(
+                0.9, 0.9, "$%s$-band" %use_f, 
+                fontsize=14, transform=ax.transAxes,
+                horizontalalignment='right')
+
 
     # Final reconfiguring
     plt.subplots_adjust(hspace=0, wspace=0)
     ax.invert_yaxis()
-
-#     choose = np.logical_and(det, band)
-#     ax.errorbar(
-#             dt[choose], mag[choose]-ext[f], emag[choose], fmt='s', ms=6,
-#             mec=rcol, mfc=rcol, c=rcol, label='r', zorder=9)
-
-#     ax.arrow(
-#             2458370.6408-zp, 19.97, 0, 0.5, length_includes_head=True,
-#             head_width=0.01, head_length=0.1, fc='k', ec='k')
-
-   #  ax2 = ax.twinx()
-   #  ax2.set_ylabel(
-   #          "Absolute Magnitude",
-   #          fontsize=14, rotation=270, labelpad=15.0)
-   #  y_f = lambda y_i: y_i-Planck15.distmod(z=0.033).value
-   #  ymin, ymax = ax.get_ylim()
-   #  ax2.set_ylim((y_f(ymin), y_f(ymax)))
-   #  ax2.plot([],[])
-   #  ax2.tick_params(axis='both', labelsize=14)
-
-   #  ax.set_ylabel("Apparent Magnitude", fontsize=16)
-   #  ax.set_xlabel(
-   #      r"Days since $t_0=$JD 2458370.6473 (UT 2018 Sept 09.15)", fontsize=16)
-   #  ax.yaxis.set_tick_params(labelsize=14)
-   #  ax.xaxis.set_tick_params(labelsize=14)
-   #  ax.legend(loc='upper right', fontsize=12)
-    #ax.set_xscale('log')
-    #ax.set_xlim(0, 80)
-   #  ax.invert_yaxis()
-   #  ax2.invert_yaxis()
+    fig.text(0.5, 0.04, 
+        r"Days since $t_0=$JD 2458370.6473 (UT 2018 Sept 09.15)", 
+        ha='center', fontsize=16) 
+    fig.text(0.04, 0.5, 'Apparent Mag', fontsize=16, rotation='vertical')
 
     #plt.savefig("lc.png")
     plt.show()
