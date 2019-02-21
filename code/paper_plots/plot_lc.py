@@ -58,7 +58,7 @@ def plot_inset():
     axins.text(0.5, 0.5, "31.2 mag/day", fontsize=12, transform=axins.transAxes,
             verticalalignment='top')
 
-    axins.set_xlim(-0.3,3)
+    axins.set_xlim(-0.1,3)
     axins.set_ylim(18,21)
     axins.tick_params(axis='both', labelsize=12)
     axins.set_xlabel(r"Hours since $t_0$", fontsize=12)
@@ -123,7 +123,16 @@ def plot_lc():
         # for each panel, show the last non-detection (which was r-band)
         ax.arrow(
                 2458370.6408-zp, 19.97, 0, 0.5, length_includes_head=True,
-                head_width=2, head_length=0.2, fc='k', ec='k')
+                head_width=2, head_length=0.2, fc='r', ec='r', zorder=10)
+        # ax.arrow(
+        #         2458370.6408-zp, 19.97, 0, 0.5, length_includes_head=True,
+        #         head_width=0.05, head_length=0.2, fc='k', ec='k')
+
+        # for each panel, show the r-band peak with a cross
+        print(2458374.65-zp)
+        ax.scatter(
+                2458374.65-zp, 16.3, marker='x', c='r', zorder=10) 
+
         ax.yaxis.set_tick_params(labelsize=14)
         ax.xaxis.set_tick_params(labelsize=14)
 
@@ -137,30 +146,37 @@ def plot_lc():
         #     ax2.tick_params(axis='both', labelsize=14)
 
         # label with the band
+        if use_f == 'r':
+            usecol = 'red'
+            wid = 1.0
+        else:
+            usecol = 'k'
+            wid = 0.5
         ax.text(
                 0.9, 0.9, "$%s$" %use_f, 
                 fontsize=14, transform=ax.transAxes,
                 horizontalalignment='right',
                 verticalalignment='top',
                 bbox=dict(
-                    boxstyle="round", fc='none', ec='k', 
-                    lw=0.5, alpha=0.5, pad=0.4))
+                    boxstyle="round", fc='white', ec=usecol, 
+                    lw=wid, alpha=1.0, pad=0.4))
 
 
     # Final reconfiguring
     axarr.reshape(-1)[-1].set_visible(False)
     plt.subplots_adjust(hspace=0, wspace=0)
-    ax.set_xlim(-5,70)
-    ax.set_ylim(14.5, 22)
+    #ax.set_xlim(1,1)
+    ax.set_xlim(-5, 70)
+    ax.set_ylim(15, 21)
     ax.invert_yaxis()
     fig.text(0.5, 0.04, 
         r"Days since $t_0=$JD 2458370.6473 (UT 2018 Sept 09.15)", 
         ha='center', fontsize=16) 
-    fig.text(0.04, 0.5, 'Apparent Mag', fontsize=16, rotation='vertical')
+    fig.text(0.04, 0.5, 'Apparent Mag (AB)', fontsize=16, rotation='vertical')
     #fig.text(0.9, 0.5, 'Absolute Mag', fontsize=16, rotation=270)
 
-    #plt.savefig("lc.png")
-    plt.show()
+    plt.savefig("lc.png")
+    #plt.show()
 
 
 if __name__=="__main__":
