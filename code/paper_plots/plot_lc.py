@@ -13,6 +13,7 @@ import glob
 
 zp = 2458370.6473
 # extinction values
+bands = ['u', 'g', 'r', 'i', 'z']
 ext = {}
 ext['u'] = 0.045
 ext['g'] = 0.035
@@ -86,12 +87,15 @@ def plot_lc():
             2, 2, figsize=(8,8), sharex=True, sharey=True)
 
     # for each panel, plot all of them as a grey background
-    for ax in axarr:
-        for f in band:
+    for ax in axarr.reshape(-1):
+        for f in bands:
             choose = np.logical_and(det, filt == f)
             ax.plot(
                     dt[choose], mag[choose]-ext[f], c='lightgrey',
                     alpha=0.7)
+
+    # Final reconfiguring
+    plt.subplots_adjust(hspace=0, wspace=0)
 
 #     choose = np.logical_and(det, band)
 #     ax.errorbar(
@@ -123,7 +127,6 @@ def plot_lc():
    #  ax.invert_yaxis()
    #  ax2.invert_yaxis()
 
-    plt.tight_layout()
     #plt.savefig("lc.png")
     plt.show()
 
