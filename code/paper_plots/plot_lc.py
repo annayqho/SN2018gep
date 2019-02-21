@@ -11,6 +11,8 @@ from astropy.table import Table
 from astropy.cosmology import Planck15
 import glob
 
+zp = 2458370.6473
+
 
 def plot_inset():
     # zoomed-in window showing the earliest non-detection and detection
@@ -63,15 +65,16 @@ def get_lc():
     mag = dat[:,3].astype(float)
     emag = dat[:,4].astype(float)
 
-    det = np.logical_and(mag<99, ~np.isnan(mag))
-    nondet = np.logical_or(mag==99, np.isnan(mag))
-    zp = 2458370.6473
     dt = jd-zp
 
-    return dt, filt, det, mag, emag
+    return dt, filt, mag, emag
 
 
 def plot_lc():
+    dt, filt, mag, emag = get_lc()
+    det = np.logical_and(mag<99, ~np.isnan(mag))
+    nondet = np.logical_or(mag==99, np.isnan(mag))
+
     fig,ax = plt.subplots(1,1,figsize=(8,5))
     rcol = 'k'
     ucol = '#f98e09'
@@ -138,5 +141,9 @@ def plot_lc():
     ax2.invert_yaxis()
 
     plt.tight_layout()
-    plt.savefig("lc.png")
-    #plt.show()
+    #plt.savefig("lc.png")
+    plt.show()
+
+
+if __name__=="__main__":
+    plot_lc()
