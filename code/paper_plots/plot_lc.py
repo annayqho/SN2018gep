@@ -86,16 +86,22 @@ def plot_lc():
     fig,axarr = plt.subplots(
             2, 2, figsize=(8,8), sharex=True, sharey=True)
 
-    # for each panel, plot all of them as a grey background
-    for ax in axarr.reshape(-1):
+    for ii,ax in enumerate(axarr.reshape(-1)):
+        f = bands[ii]
+        choose = np.logical_and(det, filt == f)
+        ax.plot(
+                dt[choose], mag[choose]-ext[f], c='black',
+                alpha=1.0, zorder=0)
+        # for each panel, plot all of them as a grey background
         for f in bands:
             choose = np.logical_and(det, filt == f)
             ax.plot(
                     dt[choose], mag[choose]-ext[f], c='lightgrey',
-                    alpha=0.7)
+                    alpha=0.7, zorder=5)
 
     # Final reconfiguring
     plt.subplots_adjust(hspace=0, wspace=0)
+    ax.invert_yaxis()
 
 #     choose = np.logical_and(det, band)
 #     ax.errorbar(
