@@ -168,15 +168,11 @@ def lumtnu(ax):
     x1 = 22*100/5
     y1 = 4.4E29
     ax.scatter(
-            x1, y1, marker='*', s=300, 
+            x1, y1, marker='*', s=100, 
             facecolors='black', edgecolors='black')
     ax.text(
-            22*100/7, 5.5E29, "AT2018cow", fontsize=bigsize, 
+            22*100/7, 5.5E29, "AT2018cow", fontsize=medsize, 
             verticalalignment='bottom', 
-            horizontalalignment='left')
-    ax.text(
-            x1, y1/1.2, "$\Delta t$=22\,d", fontsize=smallsize, 
-            verticalalignment='top', 
             horizontalalignment='left')
 
     ax.set_xlim(2, 3000)
