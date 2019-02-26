@@ -179,21 +179,6 @@ def lumtnu(ax):
             verticalalignment='top', 
             horizontalalignment='left')
 
-    # From the Margutti paper
-    # x2 = 91*10/5
-    # y2 = 4.3E28
-    # ax.scatter(
-    #         x2, y2, marker='*', s=100, 
-    #         facecolors='black', edgecolors='black')
-    # ax.text(
-    #         x2*1.1, y2*1, "$\Delta t$=91\,d", fontsize=10, 
-    #         verticalalignment='bottom', 
-    #         horizontalalignment='left')
-
-    # Arrow from one to the other
-    # plt.arrow(x1,y1,x2-x1,y2-y1)
-
-
     ax.set_xlim(2, 3000)
     ax.set_ylim(5E26, 1E30)
     ax.set_xscale('log')
