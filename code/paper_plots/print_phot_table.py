@@ -1,9 +1,10 @@
-""" Print table of ground-based opt measurements """
+""" Print table of photometry, ground-based and UVOT """
 
 import numpy as np
 from math import floor, log10
 from astropy.time import Time
 from astropy.cosmology import Planck15
+from uv_lc import get_uv_lc
 
 def round_sig(x, sig=2):
     if x < 0:
@@ -15,8 +16,8 @@ d = Planck15.luminosity_distance(z=0.03154).cgs.value
 headings = np.array(
         ['Date (JD)', '$\Delta t$', 'Instrument', 'Filter', 
          'AB Mag', 'Error in AB Mag'])
-label = "opt-phot"
-caption = "Ground-based optical photometry for SN2018gep"
+label = "uvot-phot"
+caption = "Optical and ultraviolet photometry for SN2018gep"
 
 # Print the table headers
 ncol = len(headings)
@@ -50,20 +51,26 @@ dat = np.loadtxt(datadir + "/ZTF18abukavn_opt_phot.dat",
 delimiter=' ', dtype=str)
 tel = dat[:,0]
 mjd = Time(dat[:,1].astype(float), format='mjd')
+t0 = Time(2458370.6473, format='mjd')
+dt = (mjd-t0).value
 filt = dat[:,2]
 mag = dat[:,3].astype(float)
 emag = dat[:,4].astype(float)
 nrows = dat.shape[0]
 
+dt_uv, filt_uv, fnu_mjy_uv, efnu_mjy_uv = get_uv_lc()
+dt = np.append(dt, dt_uv)
+filt = np.append(filt, filt_uv)
+mag = np.append(mag, -2.5*np.log10(fnu_mjy_uv*1E-3/3631))
+emag = np.append(emag, efnu_mjy_uv/fnu_mjy_uv)
+tel = np.append(tel, ['UVOT']*len(dt_uv))
+
 for ii in np.arange(nrows):
-    # Print the date as is
-    # Convert the date into a dt
-    t0 = Time(2458370.6473, format='mjd')
-    dt = round_sig((mjd[ii]-t0).value, 1)
     # Convert the flux into a fluxstr
     if mag[ii] < 99.0:
         # If not an upper limit, print row
-        row = rowstr %(mjd[ii], dt, tel[ii], filt[ii], mag[ii], emag[ii])
+        dt_str = round_sig((dt[ii]-t0).value, 1)
+        row = rowstr %(mjd[ii], dt_str, tel[ii], filt[ii], mag[ii], emag[ii])
         outputf.write(row)
 
 outputf.write("\enddata \n")
