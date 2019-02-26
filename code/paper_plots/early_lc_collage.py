@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 from matplotlib import rc
 rc("font", family="serif")
 rc("text", usetex=True)
+from astropy.io import ascii
+
+fig, axarr = plt.subplots(2,2,sharex=True,sharey=True)
 
 datadir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/lc"
 
@@ -26,10 +29,15 @@ for ii,band in enumerate(bands):
     mag_err = np.array(
             [float(val.split("$\\pm$")[1]) for val in lc[~bad]])
     t = jd[~bad]
-    plt.plot(t,mag,c='k', linestyle=ls[ii])
-    plt.errorbar(
-            t,mag,yerr=mag_err,ecolor='k', fmt=shapes[ii],
-            mfc=colors[ii],mec='k',label=band,ms=5)
-    plt.legend()
+    for ax in axarr.reshape(-1):
+        ax.plot(t,mag,c='k', linestyle=ls[ii])
+        ax.errorbar(
+                t,mag,yerr=mag_err,ecolor='k', fmt=shapes[ii],
+                mfc=colors[ii],mec='k',label=band,ms=5)
+        ax.legend()
 
+ax.set_xlim(0,4)
+ax.set_ylim(15,16.5)
+ax.invert_yaxis()
+plt.subplots_adjust(wspace=0, hspace=0)
 plt.show()
