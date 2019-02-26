@@ -2,6 +2,7 @@
 
 Use: P48 photometry as is, P60 photometry as is,
 LT photometry from Christoffer's individual files.
+LOT photometry from Christoffer's individual files.
 
 Columns should be:
     JD, filter, mag, mag_error (statistical)
@@ -36,6 +37,21 @@ for f in filts:
     filt = np.append(filt, ['%s' %f]*nvals)
     m = np.append(m, dat[:,1])
     e_m = np.append(e_m, dat[:,2])
+
+# get the LOT photometry
+filts = ['g', 'i', 'r']
+for f in filts:
+    print(f)
+    dat = np.loadtxt(
+            "ZTF18abukavn_%s_band_LOT_final.ascii" %f, 
+            dtype=str, delimiter=',')
+    nvals = len(dat[:,1])
+    instr = np.append(instr, ['LOT']*nvals)
+    jd = np.append(jd, dat[:,0])
+    filt = np.append(filt, ['%s' %f]*nvals)
+    m = np.append(m, dat[:,1])
+    e_m = np.append(e_m, dat[:,2])
+
 
 # formatting
 instr = np.char.strip(instr, '"')
