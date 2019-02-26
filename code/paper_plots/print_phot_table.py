@@ -12,6 +12,12 @@ def round_sig(x, sig=2):
         return -round(-x, sig-int(floor(log10(-x)))-1)
     return round(x, sig-int(floor(log10(x)))-1)
 
+
+def ndec(num):
+    dec = str(num).split('.')[-1]
+    return len(dec)
+
+
 d = Planck15.luminosity_distance(z=0.03154).cgs.value
 
 headings = np.array(
@@ -70,10 +76,10 @@ for ii in np.arange(len(dt)):
     # Convert the flux into a fluxstr
     if mag[ii] < 99.0:
         # If not an upper limit, print row
-        mjd_str = round_sig(mjd[ii], 4)
-        dt_str = round_sig(dt[ii], 1)
-        mag_str = round_sig(mag[ii], 2)
-        emag_str = round_sig(emag[ii], 2)
+        mjd_str = round_sig(mjd[ii], 11)
+        dt_str = np.round(dt[ii], 1)
+        mag_str = round_sig(mag[ii], 3)
+        emag_str = np.round(emag[ii], ndec(mag_str))
         row = rowstr %(
                 mjd_str, dt_str, tel[ii], filt[ii], 
                 mag_str, emag_str)
