@@ -109,19 +109,30 @@ ax.errorbar(
         zorder=0)
 
 # Vertical line for the first UVOT epoch
+textor = 'vertical' # textorientation
 ax.axvline(x=0.48, lw=2, c='lightblue') # UVOT
-ax.text(0.48, 4.2, 'Sw', fontsize=14, horizontalalignment='center')
+ax.text(
+        0.48, 4.2, 'Swift', fontsize=14, horizontalalignment='right',
+        rotation=textor)
 ax.axvline(x=0.7, lw=2, c='lightblue') # LT
-ax.text(0.7, 4.2, 'LT', fontsize=14, horizontalalignment='center')
+ax.text(
+        0.7, 4.2, 'LT', fontsize=14, horizontalalignment='right',
+        rotation=textor)
 ax.axvline(x=1.0, lw=2, c='lightblue') # P200/P60
-ax.text(1.0, 4.2, 'P200', fontsize=14, horizontalalignment='center')
-ax.text(1.0, 3.7, 'P60', fontsize=14, horizontalalignment='center')
+ax.text(
+        1.0, 0.8, 'P200', fontsize=14, horizontalalignment='right',
+        rotation=textor)
+ax.text(1.0, 4.2, 'P60', fontsize=14, horizontalalignment='right',
+        rotation=textor)
 ax.axvline(x=1.7, lw=2, c='lightblue') # LT
-ax.text(1.7, 4.2, 'LT', fontsize=14, horizontalalignment='center')
+ax.text(1.7, 4.2, 'LT', fontsize=14, horizontalalignment='right',
+        rotation=textor)
 ax.axvline(x=2.0, lw=2, c='lightblue') # P200
-ax.text(2.0, 4.2, 'P200', fontsize=14, horizontalalignment='center')
+ax.text(2.0, 2.0, 'P200', fontsize=14, horizontalalignment='right',
+        rotation=textor)
 ax.axvline(x=2.7, lw=2, c='lightblue') # LT
-ax.text(2.7, 4.2, 'LT', fontsize=14, horizontalalignment='center')
+ax.text(2.7, 4.2, 'LT', fontsize=14, horizontalalignment='right',
+        rotation=textor)
 
 ax.legend(loc='lower right', fontsize=14)
 ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
