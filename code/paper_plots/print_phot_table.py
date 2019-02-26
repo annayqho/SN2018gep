@@ -7,6 +7,7 @@ from astropy.cosmology import Planck15
 from uv_lc import get_uv_lc
 
 def round_sig(x, sig=2):
+    print(x)
     if x < 0:
         return -round(-x, sig-int(floor(log10(-x)))-1)
     return round(x, sig-int(floor(log10(x)))-1)
@@ -56,21 +57,26 @@ dt = (mjd-t0).value
 filt = dat[:,2]
 mag = dat[:,3].astype(float)
 emag = dat[:,4].astype(float)
-nrows = dat.shape[0]
 
 dt_uv, filt_uv, fnu_mjy_uv, efnu_mjy_uv = get_uv_lc()
+mjd = np.append(mjd.value, Time(dt_uv + t0.value, format='mjd').value)
 dt = np.append(dt, dt_uv)
 filt = np.append(filt, filt_uv)
 mag = np.append(mag, -2.5*np.log10(fnu_mjy_uv*1E-3/3631))
 emag = np.append(emag, efnu_mjy_uv/fnu_mjy_uv)
-tel = np.append(tel, ['UVOT']*len(dt_uv))
+tel = np.append(tel, np.array(['UVOT']*len(dt_uv)))
 
-for ii in np.arange(nrows):
+for ii in np.arange(len(dt)):
     # Convert the flux into a fluxstr
     if mag[ii] < 99.0:
         # If not an upper limit, print row
-        dt_str = round_sig((dt[ii]-t0).value, 1)
-        row = rowstr %(mjd[ii], dt_str, tel[ii], filt[ii], mag[ii], emag[ii])
+        mjd_str = round_sig(mjd[ii], 4)
+        dt_str = round_sig(dt[ii], 1)
+        mag_str = round_sig(mag[ii], 2)
+        emag_str = round_sig(emag[ii], 2)
+        row = rowstr %(
+                mjd_str, dt_str, tel[ii], filt[ii], 
+                mag_str, emag_str)
         outputf.write(row)
 
 outputf.write("\enddata \n")
