@@ -33,7 +33,7 @@ def vel_lines(ax, x, v):
     ax.plot(xvals, yvals, ls='--', c='k', lw=0.5)
     rotangle = 65
     ax.text(
-            x, 7E27, "$R/\Delta t = %sc$" %v, 
+            x, 4E27, "$R/\Delta t = %sc$" %v, 
             fontsize=smallsize, rotation=rotangle,
             horizontalalignment='center', verticalalignment='top')
     return yvals
@@ -121,11 +121,25 @@ def lumtnu(ax):
     lpeak = 8.2E28
     ax.scatter(
             tnu, lpeak, marker='s', edgecolor='k', s=squaresize,
-            facecolor='k', label="LLGRB-SNe")
+            facecolor='k', label="LLGRB-SN")
     ax.text(
             tnu, lpeak*1.2, "1998bw", fontsize=medsize,
             verticalalignment='bottom',
             horizontalalignment='center')
+
+    # GRB 171205A
+    tnu = (4.3)*(6/5)
+    dgrb = Planck15.luminosity_distance(z=0.0368).cgs.value
+    # 3 mJy at 6 GHz with the VLA; Laskar et al. 2017
+    lpeak = 3E-3 * 1E-23 * 4 * np.pi * dgrb**2
+    ax.scatter(
+            tnu, lpeak, marker='s', edgecolor='k', s=squaresize,
+            facecolor='k', label=None)
+    ax.text(
+            tnu, lpeak*1.2, "171205A", fontsize=medsize,
+            verticalalignment='bottom',
+            horizontalalignment='center')
+
 
     # SN 2009bb
     tnu = (20)*(6/5)
@@ -137,6 +151,16 @@ def lumtnu(ax):
             verticalalignment='center',
             horizontalalignment='right')
 
+    # SN 2018gep
+    tnu = (5)*(9/5)
+    lpeak = 8E27/9
+    ax.scatter(
+            tnu, lpeak, marker='+', c='k', s=100, label=None)
+    ax.text(
+            tnu, lpeak/1.3, "SN2018gep", fontsize=medsize,
+            verticalalignment='top',
+            horizontalalignment='center')
+
     # SN 2006aj
     tnu = (5)*(4/5)
     lpeak = 8.3E27
@@ -144,7 +168,7 @@ def lumtnu(ax):
             tnu, lpeak, marker='s', edgecolor='k', s=squaresize,
             facecolor='k', label=None)
     ax.text(
-            tnu, lpeak/1.5, "2006aj", fontsize=medsize,
+            tnu, lpeak/1.3, "2006aj", fontsize=medsize,
             verticalalignment='top',
             horizontalalignment='center')
 
@@ -155,14 +179,14 @@ def lumtnu(ax):
             tnu, lpeak, marker='s', edgecolor='k', s=squaresize,
             facecolor='k', label=None)
     ax.text(
-            tnu, lpeak/1.5, "2010bh", fontsize=medsize,
+            tnu, lpeak/1.3, "2010bh", fontsize=medsize,
             verticalalignment='top',
             horizontalalignment='center')
 
     # Lines
-    y = vel_lines(ax, 7, 1)
-    y = vel_lines(ax, 70, 0.1)
-    y = vel_lines(ax, 700, 0.01)
+    y = vel_lines(ax, 5.5, 1)
+    y = vel_lines(ax, 55, 0.1)
+    y = vel_lines(ax, 550, 0.01)
 
     # AT2018cow
     x1 = 22*100/5
@@ -195,7 +219,7 @@ ax.set_ylabel("Peak Radio Luminosity ($\mathrm{erg\,s^{-1}\,Hz^{-1}}$)",
     fontsize=bigsize)
 #ax.get_yaxis().set_visible(False)
 ax.legend(
-        loc='lower center', ncol=3, fontsize=medsize, 
+        loc=(0.55,0.3), ncol=1, fontsize=medsize, 
         columnspacing=0.01, borderpad=0.3)#, columnspacing=0.1)
 #y = mdot_curves(ax, 700, 1E1)
 
