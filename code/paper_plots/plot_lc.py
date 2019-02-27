@@ -10,23 +10,29 @@ import numpy as np
 from astropy.table import Table
 from astropy.cosmology import Planck15
 import glob
+import extinction
 from uv_lc import get_uv_lc
 
 zp = 2458370.6473
-# extinction values
+
+# use wavelengths to get extinctions
 bands = ['UVW2', 'UVM2', 'UVW1', 'U', 'u', 'B', 'g', 'V', 'r', 'i', 'z']
+wl = {}
+wl['UVW2'] = 1928
+wl['UVM2'] = 2246
+wl['UVW1'] = 2600
+wl['U'] = 3465
+wl['u'] = 3543
+wl['B'] = 4392
+wl['g'] = 4770
+wl['V'] = 5468
+wl['r'] = 6231
+wl['i'] = 7625
+wl['z'] = 9134
+
 ext = {}
-ext['UVW2'] = 0.05 # placeholder; 1928
-ext['UVM2'] = 0.05 # placeholder; 2246
-ext['UVW1'] = 0.05 # placeholder; 2600
-ext['U'] = 0.046 # 3465
-ext['u'] = 0.045 # 3543
-ext['B'] = 0.048 # 4392
-ext['g'] = 0.035 # 4770
-ext['V'] = 0.029 # 5468
-ext['r'] = 0.024 # 6231
-ext['i'] = 0.018 # 7625
-ext['z'] = 0.013 # 9134
+for band in bands:
+    ext[band] = extinction.fitzpatrick99(wl[band], 0.029, 3.1)
 
 
 def plot_inset():
