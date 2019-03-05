@@ -28,8 +28,51 @@ t0 = 2458370.6634
 dt = jd-t0
 
 # Initialize the figure
-fig,ax = plt.subplots(1,1,figsize=(8,5))
+fig,axarr = plt.subplots(2,1,figsize=(5,6))
 
+# Convert from mag to flux
+# AB flux zero point for g-band is 3631 Jy or 1E-23 erg/cm2/s/Hz
+flux = 10**(-(mag + 48.6)/2.5)
+lum = 4 * np.pi * d**2 * flux
+# Uncertainty in magnitude is roughly the fractional uncertainty on the flux
+eflux = emag*flux
+elum = 4 * np.pi * d**2 * eflux
+
+ax = axarr[0]
+# Plot the zoom-in
+gband = np.logical_and(instr=='P48+ZTF', filt=='g')
+choose = np.logical_and(det, gband)
+ax.errorbar(
+        dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
+        c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
+
+# Plot the r-band detections
+rband = np.logical_and(instr=='P48+ZTF', filt=='r')
+choose = np.logical_and(det, rband)
+ax.errorbar(
+        dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
+        ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
+        zorder=0)
+
+# Show the last non-detection
+ax.axvline(x=-32.5, ls=':', c='grey')
+ax.text(-32.5, 0.3, 'ND', fontsize=14,
+        horizontalalignment='center',
+        verticalalignment='center')
+ax.axvline(x=-23, ls='--', c='k')
+ax.text(-18, 0.3, '$t_0$', fontsize=16, horizontalalignment='center',
+        verticalalignment='center')
+
+# Format this box
+ax.set_xlim(-40, 80)
+ax.set_ylim(0, 0.35)
+ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
+ax.set_xlabel("Minutes since first detection", fontsize=16)
+ax.yaxis.set_tick_params(labelsize=14)
+ax.xaxis.set_tick_params(labelsize=14)
+ax.legend(loc='lower right', fontsize=14)
+
+ax = axarr[1]
 # Plot the full light curve
 gband = np.logical_and(instr=='P48+ZTF', filt=='g')
 choose = np.logical_and(det, gband)
