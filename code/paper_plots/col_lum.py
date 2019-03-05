@@ -60,7 +60,7 @@ def at2018gep(ax):
     cb = ax.scatter(
             gr, g-distmod, c=dt_grid, cmap='inferno', marker='o', zorder=5)
     ax.scatter(
-            0, 0, marker='o', c='k', label="ZTF18abukavn (AT2018gep)")
+            0, 0, marker='o', c='k', label="ZTF18abukavn (SN2018gep)")
     return cb
 
 
@@ -201,7 +201,7 @@ def ksn2015k(ax):
     G = 20.01-diff
     ax.errorbar(
             gr, G, xerr=0.20, yerr=0.12, 
-            fmt='s', c='grey', mfc='white', ms=7, label="FBOT")
+            fmt='s', c='grey', mfc='white', ms=7, label=None)
     ax.text(gr, G, "KSN2015K", fontsize=12,
             horizontalalignment='right', verticalalignment='bottom')
 
@@ -291,7 +291,7 @@ def sn2002bj(ax):
 
 
 def fbot():
-    fig,ax = plt.subplots(1,1,figsize=(9,7))
+    fig,ax = plt.subplots(1,1,figsize=(7,5))
     cb = at2018gep(ax)
     cbar = plt.colorbar(cb)
     at2018cow(ax)
@@ -519,7 +519,7 @@ def sn2007ru(ax):
 
 
 if __name__=="__main__":
-    fig,ax = plt.subplots(1,1,figsize=(9,7))
+    fig,ax = plt.subplots(1,1,figsize=(7,5))
     cb = at2018gep(ax)
     at2018cow(ax)
     ksn2015k(ax)
@@ -527,7 +527,7 @@ if __name__=="__main__":
     # Formatting
     cbar = plt.colorbar(cb)
     ax.tick_params(axis='both', labelsize=14)
-    cbar.ax.set_ylabel("Days from some $t_0$", fontsize=12)
+    cbar.ax.set_ylabel("Days from some $t_0$", fontsize=14)
     cbar.ax.tick_params(labelsize=12)
     ax.set_xlabel("$g-r$, observer frame", fontsize=16)
     ax.set_ylabel("Absolute $g$-band mag, observer frame", fontsize=16)
@@ -537,6 +537,6 @@ if __name__=="__main__":
 
     plt.tight_layout()
 
-    plt.show()
-    #plt.savefig("g_gr.png")
+    #plt.show()
+    plt.savefig("g_gr.png")
 

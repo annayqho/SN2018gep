@@ -255,11 +255,7 @@ if __name__=="__main__":
         #plot_lines(ax, z, tel, dt)
         wl, flux = clip_tellurics(wl, flux)
         wl, flux = fluxcal(wl, flux, dt)
-        if dt < 20:
-            scale = flux[wl > 4100][0]
-        else:
-            # Continuum dominated by noise, normalize by 1E-16
-            scale = 2E-16
+        scale = (flux[wl > 4100][0])/2
         plot_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
         plot_smoothed_spec(
                 ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), ivar, tel, dt)
@@ -277,6 +273,6 @@ if __name__=="__main__":
     #axarr[0].set_ylim(0,5)
 
     #plt.tight_layout()
-    plt.savefig("spec_sequence.png")
-    #plt.show()
-    plt.close()
+    #plt.savefig("spec_sequence.png")
+    plt.show()
+    #plt.close()

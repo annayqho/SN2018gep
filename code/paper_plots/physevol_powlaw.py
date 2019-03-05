@@ -122,7 +122,7 @@ def plot():
 
 
     # Initialize the figure
-    fig,axarr = plt.subplots(3,1, figsize=(8,10), sharex=True)
+    fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
 
     # Luminosity panel
     axarr[0].errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k')
@@ -141,7 +141,7 @@ def plot():
     axarr[0].axvline(x=0.48, ls='-', c='lightgrey', lw=3, zorder=0)
     axarr[0].text(
             0.47, 1E43, "$t_\mathrm{rise}<0.48\,$d", fontsize=12,
-            horizontalalignment='right')
+            horizontalalignment='center')
 
     # Fit another power law
     m = -2

@@ -32,7 +32,7 @@ wl['z'] = 9134
 
 ext = {}
 for band in bands:
-    ext[band] = extinction.fitzpatrick99(wl[band], 0.029, 3.1)
+    ext[band] = extinction.fitzpatrick99(np.array([wl[band]]), 0.029, 3.1)[0]
 
 
 def plot_inset():
@@ -128,7 +128,7 @@ def plot_lc():
 
         # for each panel, show the last non-detection (which was r-band)
         ax.arrow(
-                2458370.6408-zp, 19.97, 0, 0.5, length_includes_head=True,
+                2458370.6408-zp, 20.47, 0, 0.5, length_includes_head=True,
                 head_width=2, head_length=0.2, fc='r', ec='r', zorder=10)
         # ax.arrow(
         #         2458370.6408-zp, 19.97, 0, 0.5, length_includes_head=True,
