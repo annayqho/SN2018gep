@@ -151,5 +151,5 @@ c = out[2]
 ec = np.sqrt(cov[2][2])
 
 plt.tight_layout()
-plt.savefig("early_data.png")
-#plt.show()
+#plt.savefig("early_data.png")
+plt.show()

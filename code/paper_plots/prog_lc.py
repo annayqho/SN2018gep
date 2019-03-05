@@ -1,125 +1,155 @@
-""" Plot all data from < 3 days into one figure """
+""" 
+Fit for the explosion epoch by fitting a polynomial 
+to the g-band light curve """
 
+import numpy as np
 import matplotlib.pyplot as plt
-plt.rc("font", family="serif")
-plt.rc("text", usetex=True)
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
-import numpy as np
-from astropy.table import Table
+from matplotlib import rc
+rc("font", family="serif")
+rc("text", usetex=True)
 from astropy.cosmology import Planck15
-import glob
+
+d = Planck15.luminosity_distance(z=0.033).cgs.value
 
 DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
-
-def plot_band(x, y, ey, filt, f, col, fcol, ext, shape, line, size):
-    choose = np.logical_and(filt==f, x < 1)
-    ax.errorbar(
-            x[choose], y[choose]-ext, ey[choose], fmt=shape, ms=size,
-            mec=col, mfc=fcol, c=col, label=f, zorder=8)
-    order = np.argsort(x[choose])
-    ax.plot(x[choose][order], y[choose][order]-ext, c=col, ls=line)
-
-
-fig,ax = plt.subplots(1,1,figsize=(8,5))
-
 f = DATA_DIR + "/ZTF18abukavn_opt_phot.dat"
 dat = np.loadtxt(f, dtype=str, delimiter=' ')
 instr = dat[:,0]
 jd = dat[:,1].astype(float)
-filts = dat[:,2]
+filt = dat[:,2]
 mag = dat[:,3].astype(float)
 emag = dat[:,4].astype(float)
 
 det = np.logical_and(mag<99, ~np.isnan(mag))
-nondet = np.logical_or(mag==99, np.isnan(mag))
-zp = 2458370.6473
-dt = jd-zp
+# JD of first (r-band) detection
+t0 = 2458370.6634
+dt = jd-t0
 
-plot_band(
-        dt[det], mag[det], emag[det], filts[det], 
-        'u', '#f98e09', '#f98e09', 0.045, 'o', '-', 6)
-plot_band(
-        dt[det], mag[det], emag[det], filts[det], 
-        'g', '#57106e', '#57106e', 0.035, 'D', '-', 6)
-plot_band(
-        dt[det], mag[det], emag[det], filts[det], 
-        'r', 'k', 'k', 0.024, 's', '-', 6)
-plot_band(
-        dt[det], mag[det], emag[det], filts[det], 
-        'i', 'grey', 'grey', 0.018, 'P', '-', 8)
-# value of limiting mag: 20.47
-ax.arrow(
-       2458370.6408-zp, 19.97, 0, 0.5, length_includes_head=True,
-       head_width=0.01, head_length=0.1, fc='k', ec='k')
-# There's no z-band in the first day
+# Initialize the figure
+fig,axarr = plt.subplots(2,1,figsize=(5,6))
 
-# UVOT light curves
-DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/uv"
-d = Planck15.luminosity_distance(z=0.033).cgs.value
+# Convert from mag to flux
+# AB flux zero point for g-band is 3631 Jy or 1E-23 erg/cm2/s/Hz
+flux = 10**(-(mag + 48.6)/2.5)
+lum = 4 * np.pi * d**2 * flux
+# Uncertainty in magnitude is roughly the fractional uncertainty on the flux
+eflux = emag*flux
+elum = 4 * np.pi * d**2 * eflux
 
-f = DATA_DIR + "/UVOT_lightcurve_maghist_full_hostsub.ascii"
-dat = np.loadtxt(f, dtype=str, delimiter=' ')
-jd = dat[:,0].astype(float)
-filts = dat[:,1]
-fnu_mjy = dat[:,2].astype(float)
-# convert mJy to AB magnitudes
-mab = -2.5 * np.log10(fnu_mjy * 1E-3) + 8.90 
-efnu = dat[:,3].astype(float) 
-emab = 2.5 * (efnu / fnu_mjy)
-zp = 2458370.6473
-dt = jd-zp
+ax = axarr[0]
+# Plot the zoom-in
+gband = np.logical_and(instr=='P48+ZTF', filt=='g')
+choose = np.logical_and(det, gband)
+ax.errorbar(
+        dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
+        c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
 
-plot_band(
-        dt, mab, emab, filts, 
-        'UVM2', 'k', 'white', 0, 's', '--', 6)
-plot_band(
-        dt, mab, emab, filts, 
-        'UVW2', '#57106e', 'white', 0, 'o', '--', 6)
-plot_band(
-        dt, mab, emab, filts, 
-        'U', '#f98e09', 'white', 0, 'D', '--', 6)
-plot_band(
-        dt, mab, emab, filts, 
-        'UVW1', 'magenta', 'white', 0, '^', '--', 8)
-plot_band(
-        dt, mab, emab, filts, 
-        'B', 'grey', 'white', 0, 'P', '--', 10)
-plot_band(
-        dt, mab, emab, filts, 
-        'V', 'black', 'white', 0, 'x', '--', 10)
+# Plot the r-band detections
+rband = np.logical_and(instr=='P48+ZTF', filt=='r')
+choose = np.logical_and(det, rband)
+ax.errorbar(
+        dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
+        ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
+        zorder=0)
 
-ax2 = ax.twinx()
-ax2.set_ylabel(
-        "Absolute Magnitude",
-        fontsize=14, rotation=270, labelpad=15.0)
-y_f = lambda y_i: y_i-Planck15.distmod(z=0.033).value
-ymin, ymax = ax.get_ylim()
-ax2.set_ylim((y_f(ymin), y_f(ymax)))
-ax2.plot([],[])
-ax2.tick_params(axis='both', labelsize=14)
+# Show the last non-detection
+ax.axvline(x=-32.5, ls=':', c='grey')
+ax.text(-32.5, 0.3, 'ND', fontsize=14,
+        horizontalalignment='center',
+        verticalalignment='center')
+ax.axvline(x=-23, ls='--', c='k')
+ax.text(-18, 0.3, '$t_0$', fontsize=16, horizontalalignment='center',
+        verticalalignment='center')
 
-# Put the legend outside of the plot
-box = ax.get_position()
-ax.set_position([box.x0, box.y0,
-    box.width, box.height * 0.9])
-ax2.set_position([box.x0, box.y0,
-    box.width, box.height * 0.9])
-ax.legend(loc='lower center', bbox_to_anchor=(0.5, 1.00),
-        fancybox=True, ncol=5, fontsize=12)
-
-ax.set_ylabel("Apparent Magnitude", fontsize=16)
-ax.set_xlabel(
-    r"Time since $t_0$ (Days)", fontsize=16)
+# Format this box
+ax.set_xlim(-40, 80)
+ax.set_ylim(0, 0.35)
+ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
+ax.set_xlabel("Minutes since first detection", fontsize=16)
 ax.yaxis.set_tick_params(labelsize=14)
 ax.xaxis.set_tick_params(labelsize=14)
-#ax.legend(loc='lower right', fontsize=12, ncol=5)
-#ax.set_xscale('log')
-ax.set_xlim(-0.1, 1)
-ax.set_ylim(15, 21)
-ax.invert_yaxis()
-ax2.invert_yaxis()
+ax.legend(loc='lower right', fontsize=14)
 
-#plt.tight_layout()
-#plt.savefig("early_lc.png")
+ax = axarr[1]
+# Plot the full light curve
+gband = np.logical_and(instr=='P48+ZTF', filt=='g')
+choose = np.logical_and(det, gband)
+ax.errorbar(
+        dt[choose], lum[choose]/1E28, yerr=elum[choose]/1E28, 
+        c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
+
+# Plot the r-band non-detection
+#ax.scatter(2458370.6408-t0, (10**(-(20.47+48.6)/2.5))/1E28, marker='.', c='r')
+# ax.arrow((2458370.6408-t0), 0.2,
+#         0, -0.2, length_includes_head=True,
+#         head_width=0.1, head_length=0.03, fc='k', ec='k')
+
+# Fit a polynomial (quadratic)
+sec = dt[choose] < 3
+out,cov = np.polyfit(
+        dt[choose][sec], lum[choose][sec], 
+        deg=2, w=1/elum[choose][sec], cov=True)
+xlab = np.linspace(-1,2)
+ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
+ax.plot(xlab, ylab/1E28, c='k', ls='--')
+
+# Plot the r-band detections
+rband = np.logical_and(instr=='P48+ZTF', filt=='r')
+choose = np.logical_and(det, rband)
+flux = 10**(-(mag[choose] + 48.6)/2.5)
+lum = 4 * np.pi * d**2 * flux
+dt = jd[choose]-t0
+eflux = emag[choose]*flux
+elum = 4 * np.pi * d**2 * eflux
+ax.errorbar(
+        dt, lum/1E28, yerr=elum/1E28, 
+        ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
+        zorder=0)
+
+# Vertical line for the first UVOT epoch
+textor = 'vertical' # textorientation
+ax.axvline(x=0.48, lw=2, c='lightblue') # UVOT
+ax.text(
+        0.48, 4.2, 'Swift', fontsize=14, horizontalalignment='right',
+        rotation=textor)
+ax.axvline(x=0.7, lw=2, c='lightblue') # LT
+ax.text(
+        0.7, 4.2, 'LT', fontsize=14, horizontalalignment='right',
+        rotation=textor)
+ax.axvline(x=1.0, lw=2, c='lightblue') # P200/P60
+ax.text(
+        1.0, 0.8, 'P200', fontsize=14, horizontalalignment='right',
+        rotation=textor)
+ax.text(1.0, 4.2, 'P60', fontsize=14, horizontalalignment='right',
+        rotation=textor)
+ax.axvline(x=1.7, lw=2, c='lightblue') # LT
+ax.text(1.7, 4.2, 'LT', fontsize=14, horizontalalignment='right',
+        rotation=textor)
+ax.axvline(x=2.0, lw=2, c='lightblue') # P200
+ax.text(2.0, 2.0, 'P200', fontsize=14, horizontalalignment='right',
+        rotation=textor)
+ax.axvline(x=2.7, lw=2, c='lightblue') # LT
+ax.text(2.7, 4.2, 'LT', fontsize=14, horizontalalignment='right',
+        rotation=textor)
+
+ax.legend(loc='lower right', fontsize=14)
+ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
+ax.set_xlabel("Days since first detection", fontsize=16)
+ax.yaxis.set_tick_params(labelsize=14)
+ax.xaxis.set_tick_params(labelsize=14)
+ax.set_xlim(-0.2, 2.2)
+ax.set_ylim(-0.5,4.7)
+
+# Print fitting parameters
+a = out[0]
+ea = np.sqrt(cov[0][0])
+b = out[1]
+eb = np.sqrt(cov[1][1])
+c = out[2]
+ec = np.sqrt(cov[2][2])
+
+plt.tight_layout()
+#plt.savefig("early_data.png")
 plt.show()
