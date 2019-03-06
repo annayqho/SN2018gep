@@ -52,10 +52,10 @@ def full_lc():
     prog_limmag = prog['lim_mag']
     code = prog['instrument']
     prog_det = np.logical_and(prog_dt < 0, ~np.isnan(prog_mag))
-    prog_nondet = np.logical_and(prog_dt < 0, np.isnan(prog_mag))
+    prog_nondet = np.logical_and(code=='ZTF Deep Stacks', np.isnan(prog_mag))
 
     # Initialize the figure
-    fig,ax = plt.subplots(1,1,figsize=(8,4))
+    fig,ax = plt.subplots(1,1,figsize=(8,3))
 
     # Plot the g-band LC
     gband = np.logical_and(instr=='P48+ZTF', filt=='g')
@@ -80,10 +80,10 @@ def full_lc():
 
     # Plot the g-band prog non-detections
     choose = np.logical_and(prog_nondet, prog_filter=='ztfg')
-    for ii,dt_val in enumerate(prog_dt[choose]):
-        ax.arrow(
-            dt_val, prog_limmag[choose][ii], 0, 0.5, length_includes_head=True,
-            head_width=0.01, head_length=0.1, fc='k', ec='k') 
+    ax.scatter(
+            prog_dt[choose], prog_limmag[choose], 
+            color='k', 
+            s=20, marker='_', label=None, zorder=2)
 
     # Plot the r-band prog LC
     choose = np.logical_and(prog_det, prog_filter=='ztfr')
@@ -92,6 +92,12 @@ def full_lc():
             ms=5, fmt='o', mfc='white', mec='grey', label=None, c='grey',
             zorder=0)
 
+    # Plot the r-band prog non-detections
+    choose = np.logical_and(prog_nondet, prog_filter=='ztfr')
+    ax.scatter(
+            prog_dt[choose], prog_limmag[choose], 
+            color='grey', 
+            s=10, marker='_', label=None, zorder=2)
 
 
 # # Show the last non-detection
@@ -104,7 +110,7 @@ def full_lc():
 #         verticalalignment='center')
 
     # Format this box
-    #ax.set_xlim(-40, 80)
+    ax.set_xlim(-110, 33)
     #ax.set_ylim(18.5,21)
     ax.set_ylabel(r"Apparent Mag", fontsize=16)
     ax.set_xlabel("Days since $t_0$", fontsize=16)
