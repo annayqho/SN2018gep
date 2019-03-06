@@ -72,6 +72,20 @@ def full_lc():
             ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
             zorder=0)
 
+    # Plot the g-band prog LC
+    choose = np.logical_and(prog_det, prog_filter=='ztfg')
+    ax.errorbar(
+            prog_dt[choose], prog_mag[choose], yerr=prog_emag[choose], 
+            c='k', ms=5, fmt='s', label=None, zorder=2)
+
+    # Plot the r-band prog LC
+    choose = np.logical_and(prog_det, prog_filter=='ztfr')
+    ax.errorbar(
+            prog_dt[choose], prog_mag[choose], yerr=prog_emag[choose], 
+            ms=5, fmt='o', mfc='white', mec='grey', label=None, c='grey',
+            zorder=0)
+
+
 # # Show the last non-detection
 # ax.axvline(x=-32.5, ls=':', c='grey')
 # ax.text(-32.5, 19, 'ND', fontsize=14,
@@ -82,10 +96,10 @@ def full_lc():
 #         verticalalignment='center')
 
     # Format this box
-    ax.set_xlim(-40, 80)
-    ax.set_ylim(18.5,21)
+    #ax.set_xlim(-40, 80)
+    #ax.set_ylim(18.5,21)
     ax.set_ylabel(r"Apparent Mag", fontsize=16)
-    ax.set_xlabel("Minutes since first detection", fontsize=16)
+    ax.set_xlabel("Days since $t_0$", fontsize=16)
     ax.yaxis.set_tick_params(labelsize=14)
     ax.xaxis.set_tick_params(labelsize=14)
     ax.invert_yaxis()
