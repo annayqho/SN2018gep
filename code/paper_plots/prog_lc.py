@@ -24,7 +24,7 @@ def mag_to_flux(mag, emag):
     # Uncertainty in magnitude is roughly the fractional uncertainty on the flux
     eflux = emag*flux
     elum = 4 * np.pi * d**2 * eflux
-    return lum, elum
+    return np.array(lum), np.array(elum)
 
 
 def full_lc():
@@ -99,19 +99,8 @@ def full_lc():
             color='grey', 
             s=10, marker='_', label=None, zorder=2)
 
-
-# # Show the last non-detection
-# ax.axvline(x=-32.5, ls=':', c='grey')
-# ax.text(-32.5, 19, 'ND', fontsize=14,
-#         horizontalalignment='center',
-#         verticalalignment='center')
-# ax.axvline(x=-23, ls='--', c='k')
-# ax.text(-18, 19, '$t_0$', fontsize=16, horizontalalignment='center',
-#         verticalalignment='center')
-
     # Format this box
     ax.set_xlim(-110, 33)
-    #ax.set_ylim(18.5,21)
     ax.set_ylabel(r"Apparent Mag", fontsize=16)
     ax.set_xlabel("Days since $t_0$", fontsize=16)
     ax.yaxis.set_tick_params(labelsize=14)
@@ -120,8 +109,95 @@ def full_lc():
     ax.legend(loc='lower right', fontsize=14)
 
     plt.tight_layout()
-    plt.show()
+    plt.savefig("lc_full.png")
 
+
+def lc_zoom():
+    """ Plot the zoomed LC in luminosity """
+    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
+    f = DATA_DIR + "/ZTF18abukavn_opt_phot.dat"
+    dat = np.loadtxt(f, dtype=str, delimiter=' ')
+    instr = dat[:,0]
+    jd = dat[:,1].astype(float)
+    dt = jd-t0
+    filt = dat[:,2]
+    mag = dat[:,3].astype(float)
+    emag = dat[:,4].astype(float)
+    det = np.logical_and(mag<99, ~np.isnan(mag))
+    lum, elum = mag_to_flux(mag, emag)
+
+    # Progenitor data
+    f = DATA_DIR + "/precursor.csv"
+    prog = ascii.read(f)
+    prog_mjd = prog['mjd']
+    prog_jd = prog_mjd + 2400000.5
+    prog_dt = prog_jd - t0
+    prog_filter = prog['filter']
+    prog_mag = prog['mag']
+    prog_emag = prog['magerr']
+    prog_limmag = prog['lim_mag']
+    code = prog['instrument']
+    prog_det = np.logical_and(prog_dt < 0, ~np.isnan(prog_mag))
+    prog_nondet = np.logical_and(code=='ZTF Deep Stacks', np.isnan(prog_mag))
+    progf, progef = mag_to_flux(prog_mag, prog_emag)
+
+    # Initialize the figure
+    fig,ax = plt.subplots(1,1,figsize=(8,3))
+
+    # Plot the g-band LC
+    gband = np.logical_and(instr=='P48+ZTF', filt=='g')
+    choose = np.logical_and(det, gband)
+    ax.errorbar(
+            dt[choose], lum[choose]/1E28, yerr=elum[choose]/1E28, 
+            c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
+
+    # Plot the r-band detections
+    rband = np.logical_and(instr=='P48+ZTF', filt=='r')
+    choose = np.logical_and(det, rband)
+    ax.errorbar(
+            dt[choose], lum[choose]/1E28, yerr=elum[choose]/1E28, 
+            ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
+            zorder=0)
+
+    # Plot the g-band prog LC
+    # choose = np.logical_and(prog_det, prog_filter=='ztfg')
+    # ax.errorbar(
+    #         prog_dt[choose], progf[choose], yerr=progef[choose], 
+    #         c='k', ms=5, fmt='s', label=None, zorder=2)
+
+    # Plot the g-band prog non-detections
+    # choose = np.logical_and(prog_nondet, prog_filter=='ztfg')
+    # ax.scatter(
+    #         prog_dt[choose], prog_limmag[choose], 
+    #         color='k', 
+    #         s=20, marker='_', label=None, zorder=2)
+
+    # Plot the r-band prog LC
+    #choose = np.logical_and(prog_det, prog_filter=='ztfr')
+    #ax.errorbar(
+    #        prog_dt[choose], progf[choose], yerr=progef[choose], 
+    #        ms=5, fmt='o', mfc='white', mec='grey', label=None, c='grey',
+    #        zorder=0)
+# 
+    # Plot the r-band prog non-detections
+#     choose = np.logical_and(prog_nondet, prog_filter=='ztfr')
+#     ax.scatter(
+#             prog_dt[choose], prog_limmag[choose], 
+#             color='grey', 
+#             s=10, marker='_', label=None, zorder=2)
+# 
+    # Format this box
+    ax.set_xlim(-10, 3)
+    ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
+    ax.set_xlabel("Days since $t_0$", fontsize=16)
+    ax.yaxis.set_tick_params(labelsize=14)
+    ax.xaxis.set_tick_params(labelsize=14)
+    ax.legend(loc='lower right', fontsize=14)
+
+    plt.tight_layout()
+    plt.show()
+ 
 
 if __name__=="__main__":
-    full_lc()
+    lc_zoom()
+
