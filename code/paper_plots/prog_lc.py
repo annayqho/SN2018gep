@@ -78,12 +78,20 @@ def full_lc():
             prog_dt[choose], prog_mag[choose], yerr=prog_emag[choose], 
             c='k', ms=5, fmt='s', label=None, zorder=2)
 
+    # Plot the g-band prog non-detections
+    choose = np.logical_and(prog_nondet, prog_filter=='ztfg')
+    for ii,dt_val in enumerate(prog_dt[choose]):
+        ax.arrow(
+            dt_val, prog_limmag[choose][ii], 0, 0.5, length_includes_head=True,
+            head_width=0.01, head_length=0.1, fc='k', ec='k') 
+
     # Plot the r-band prog LC
     choose = np.logical_and(prog_det, prog_filter=='ztfr')
     ax.errorbar(
             prog_dt[choose], prog_mag[choose], yerr=prog_emag[choose], 
             ms=5, fmt='o', mfc='white', mec='grey', label=None, c='grey',
             zorder=0)
+
 
 
 # # Show the last non-detection
