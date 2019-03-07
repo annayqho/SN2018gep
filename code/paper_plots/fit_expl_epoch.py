@@ -28,7 +28,7 @@ t0 = 2458370.6634
 dt = jd-t0
 
 # Initialize the figure
-fig,axarr = plt.subplots(2,1,figsize=(5,6))
+fig,axarr = plt.subplots(2,1,figsize=(4,6))
 
 # Convert from mag to flux
 # AB flux zero point for g-band is 3631 Jy or 1E-23 erg/cm2/s/Hz
@@ -55,16 +55,16 @@ ax.errorbar(
         zorder=0)
 
 # Show the last non-detection
-ax.axvline(x=-32.5, ls=':', c='grey')
-ax.text(-32.5, 0.3, 'ND', fontsize=14,
-        horizontalalignment='center',
-        verticalalignment='center')
-ax.axvline(x=-23, ls='--', c='k')
-ax.text(-18, 0.3, '$t_0$', fontsize=16, horizontalalignment='center',
-        verticalalignment='center')
+#ax.axvline(x=-32.5, ls=':', c='grey')
+# ax.text(-32.5, 0.3, 'ND', fontsize=14,
+#         horizontalalignment='center',
+#         verticalalignment='center')
+#ax.axvline(x=-23, ls='--', c='k')
+# ax.text(-18, 0.3, '$t_0$', fontsize=16, horizontalalignment='center',
+#         verticalalignment='center')
 
 # Format this box
-ax.set_xlim(-40, 80)
+ax.set_xlim(-25, 80)
 ax.set_ylim(0, 0.35)
 ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
 ax.set_xlabel("Minutes since first detection", fontsize=16)
@@ -94,6 +94,7 @@ out,cov = np.polyfit(
 xlab = np.linspace(-1,2)
 ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
 ax.plot(xlab, ylab/1E28, c='k', ls='--')
+axarr[0].plot(xlab*24*60, ylab/1E28, c='k', ls='--')
 
 # Plot the r-band detections
 rband = np.logical_and(instr=='P48+ZTF', filt=='r')
@@ -151,5 +152,5 @@ c = out[2]
 ec = np.sqrt(cov[2][2])
 
 plt.tight_layout()
-#plt.savefig("early_data.png")
-plt.show()
+plt.savefig("early_data.png")
+#plt.show()

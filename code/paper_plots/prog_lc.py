@@ -160,10 +160,10 @@ def lc_zoom():
             zorder=0)
 
     # Plot the g-band prog LC
-    # choose = np.logical_and(prog_det, prog_filter=='ztfg')
-    # ax.errorbar(
-    #         prog_dt[choose], progf[choose], yerr=progef[choose], 
-    #         c='k', ms=5, fmt='s', label=None, zorder=2)
+    choose = np.logical_and(prog_det, prog_filter=='ztfg')
+    ax.errorbar(
+            prog_dt[choose], progf[choose]/1E28, yerr=progef[choose]/1E28, 
+            c='k', ms=5, fmt='s', label=None, zorder=2)
 
     # Plot the g-band prog non-detections
     # choose = np.logical_and(prog_nondet, prog_filter=='ztfg')
@@ -190,6 +190,7 @@ def lc_zoom():
     ax.set_xlim(-10, 3)
     ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
     ax.set_xlabel("Days since $t_0$", fontsize=16)
+    ax.set_yscale('log')
     ax.yaxis.set_tick_params(labelsize=14)
     ax.xaxis.set_tick_params(labelsize=14)
     ax.legend(loc='lower right', fontsize=14)
