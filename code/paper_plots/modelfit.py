@@ -9,6 +9,7 @@ import sys
 sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
 from scipy.optimize import curve_fit
 from astropy.io import ascii
+from astropy.table import Table
 from load_lum import load_lc
 from load_radius import load_radius
 from load_temp import load_temp
@@ -121,25 +122,50 @@ def plot():
     # Load the temperature
     dt, temp, ltemp, utemp = load_temp()
 
-    # Load David's model on this grid
+    # Load David's model
     mdt, ml, mr, mt = load()     
-    ml = np.interp(dt, mdt, ml) 
-    mr = np.interp(dt, mdt, mr) 
-    mt = np.interp(dt, mdt, mt) 
 
     # Initialize the figure
     fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
 
     # Luminosity panel
-    axarr[0].errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k')
-    axarr[0].plot(dt, ml, c='k', lw=1)
+    axarr[0].errorbar(
+            dt, lum, yerr=[llum,ulum], fmt='o', c='k', label="SN2018gep")
+    axarr[0].plot(mdt, ml, c='k', lw=1, ls="--", label="Model")
+
+    # Plot the SN
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/bol_lc"
+    dat = Table.read(ddir + "/sn2010bh.dat", format='ascii.fast_no_header')
+    sndt = dat['col1']
+    snlum = dat['col2']
+    xsn = sndt
+    ysn = snlum*2
+    axarr[0].plot(xsn, ysn, c='k', ls=':', lw=1, label='SN2010bh, x2')
+
+    # Plot the total
+    ysn_grid = np.interp(mdt, xsn, ysn) # put SN LC onto model grid
+    tot = ysn_grid + ml
+    axarr[0].plot(
+            mdt, tot, c='k', ls='-', lw=1, label="Model + SN2010bhx2")
+
+    # Legend
+    axarr[0].legend(fontsize=14)
 
     # Radius panel
-    axarr[1].errorbar(dt, rad, yerr=[lrad,urad], fmt='o', c='k')
+    axarr[1].errorbar(
+            dt, rad, yerr=[lrad,urad], fmt='o', c='k', label="SN2018gep")
+    axarr[1].plot(mdt, mr, c='k', lw=1, ls='--', label="Model")
+    axarr[1].legend(fontsize=14, loc='lower right')
 
     # Temperature panel
-    choose = np.logical_and(dt>1, dt<19)
-    axarr[2].errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k')
+    axarr[2].errorbar(
+            dt, temp, yerr=[ltemp,utemp], fmt='o', c='k', label="SN2018gep")
+    tsn = (tot/(4*np.pi*mr**2*5.67E-5))**0.25
+    axarr[2].plot(mdt, mt, c='k', lw=1, ls='--', label="Model")
+    axarr[2].plot(
+            mdt, tsn, c='k', lw=1, ls='-', 
+            label=r"$L_\mathrm{bol} / (4\pi R^2 \sigma)$")
+    axarr[2].legend(fontsize=14, loc='upper right')
 
     # Formatting
     axarr[0].xaxis.label.set_visible(False)
@@ -153,8 +179,8 @@ def plot():
         axarr[ii].set_yscale('log')
 
     axarr[1].set_ylim(1E14, 1E16)
-    axarr[2].set_xlim(2E-1, 50)
-    axarr[2].set_xscale('log')
+    axarr[2].set_xlim(0, 18)
+    #axarr[2].set_xscale('log')
     axarr[2].set_xlabel(r'Days since $t_0$', fontsize=16)
     axarr[0].set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
     axarr[1].set_ylabel(r'$R_\mathrm{ph}$ (cm)', fontsize=16)
@@ -162,8 +188,8 @@ def plot():
 
     plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    plt.show()
-    #plt.savefig("bbfit_log.png")
+    #plt.show()
+    plt.savefig("modelfit.png")
 
 
 if __name__=="__main__":

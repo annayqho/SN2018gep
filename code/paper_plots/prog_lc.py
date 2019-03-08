@@ -55,7 +55,7 @@ def full_lc():
     prog_nondet = np.logical_and(code=='ZTF Deep Stacks', np.isnan(prog_mag))
 
     # Initialize the figure
-    fig,ax = plt.subplots(1,1,figsize=(8,3))
+    fig,ax = plt.subplots(1,1,figsize=(5,3))
 
     # Plot the g-band LC
     gband = np.logical_and(instr=='P48+ZTF', filt=='g')
