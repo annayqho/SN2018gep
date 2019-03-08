@@ -100,7 +100,7 @@ def full_lc():
             s=10, marker='_', label=None, zorder=2)
 
     # Format this box
-    ax.set_xlim(-110, 33)
+    ax.set_xlim(-10, 33)
     ax.set_ylabel(r"Apparent Mag", fontsize=16)
     ax.set_xlabel("Days since $t_0$", fontsize=16)
     ax.yaxis.set_tick_params(labelsize=14)
@@ -109,6 +109,7 @@ def full_lc():
     ax.legend(loc='lower right', fontsize=14)
 
     plt.tight_layout()
+    #plt.show()
     plt.savefig("lc_full.png")
 
 
@@ -200,5 +201,4 @@ def lc_zoom():
  
 
 if __name__=="__main__":
-    lc_zoom()
-
+    full_lc()
