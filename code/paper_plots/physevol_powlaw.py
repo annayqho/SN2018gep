@@ -207,6 +207,9 @@ def plot():
             horizontalalignment='left', verticalalignment='center', 
             fontsize=14)
 
+    # Showing where 15,000 K is
+    axarr[2].axhline(y=15000)
+
     # Formatting
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
@@ -228,8 +231,8 @@ def plot():
 
     plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    #plt.show()
-    plt.savefig("bbfit_log.png")
+    plt.show()
+    #plt.savefig("bbfit_log.png")
 
 
 if __name__=="__main__":
