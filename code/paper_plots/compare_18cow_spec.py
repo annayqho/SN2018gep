@@ -36,18 +36,30 @@ plot_smoothed_spec(
         'P200', dt, lw=1, ls='--', label="AT2018cow/4.7, $\Delta t=5.353$")
 
 # Add suggestions for lines
-ax.scatter(4111, 2.5, marker='v', c='k')
+ax.scatter(3490, 5.2, marker='v', c='k')
 ax.text(
-        4111, 2.6, "CIII", fontsize=12, 
+        3490, 5.3, "CII", fontsize=12, 
         verticalalignment='bottom', horizontalalignment='center')
-ax.scatter(5036, 2.5, marker='v', c='k')
+ax.scatter(3800, 4.2, marker='v', c='k')
 ax.text(
-        4111, 2.6, "CIII", fontsize=12, 
+        3800, 4.3, "CII", fontsize=12, 
+        verticalalignment='bottom', horizontalalignment='center')
+ax.scatter(4141, 3.5, marker='v', c='k')
+ax.text(
+        4141, 3.6, "CIII", fontsize=12, 
+        verticalalignment='bottom', horizontalalignment='center')
+ax.scatter(5072, 1.6, marker='v', c='k')
+ax.text(
+        5072, 1.7, "CIII", fontsize=12, 
+        verticalalignment='bottom', horizontalalignment='center')
+ax.scatter(3319, 4.6, marker='v', c='k')
+ax.text(
+        3319, 4.7, "OII", fontsize=12, 
         verticalalignment='bottom', horizontalalignment='center')
 
 plt.tick_params(labelsize=14)
 plt.xlim(3190, 9000)
-plt.ylim(0.25, 5.4)
+plt.ylim(0.25, 5.7)
 plt.xlabel(r"Observed Wavelength (\AA)", fontsize=16)
 plt.ylabel(
     r"Flux $f_{\lambda}$ ($10^{-15}$ erg cm$^{-2}$ s$^{-1}$ \AA$^{-1}$)", 
@@ -55,6 +67,6 @@ plt.ylabel(
 plt.legend(fontsize=14)
 
 plt.tight_layout()
-#plt.savefig("spec_comp_18cow.png")
-plt.show()
+plt.savefig("spec_comp_18cow.png")
+#plt.show()
 
