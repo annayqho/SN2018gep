@@ -211,7 +211,9 @@ def plot_tellurics():
 def fluxcal(wl, flux, dt_spec):
     """ Flux-calibrate to R-band light curve """
     # get r-band LC
-    dt, filt, det, mag, emag = get_lc()
+    dt, filt, mag, emag = get_lc()
+    det = np.logical_and(mag<99, ~np.isnan(mag))
+    nondet = np.logical_or(mag==99, np.isnan(mag))
     choose = np.logical_and(det, filt=='r')
     # interpolate to this epoch
     rval = np.interp(dt_spec, dt[choose], mag[choose])
