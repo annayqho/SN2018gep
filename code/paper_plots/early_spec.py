@@ -202,47 +202,54 @@ def plot_ciii(ax, y, v, label=None):
     ax.scatter(
         wl, y, marker='v', c='k', label=label)
 
-def plot_cii(ax, v, label=None):
-    """ return some ionization lines, shifted by some velocity and redshift
-    
-    Parameters
-    ----------
-    v: velocity given in km/s
-    """
-    cii = 6580
-    wl = cii*(1-v/3E5)
-    ax.scatter(
-            line, smoothed[wl<line][-1]+0.05, marker='v', 
-            facecolor='white', edgecolor='k', label=None)
 
-def plot_siv(ax, v, label=None):
+def get_cii(v):
+    return 6580*(1-v/3E5)
+
+
+def plot_cii(ax, y, v, label=None):
     """ return some ionization lines, shifted by some velocity and redshift
     
     Parameters
     ----------
     v: velocity given in km/s
     """
-    siv = 4110
-    wl = siv*(1-v/3E5)
-    ax.scatter(line, smoothed[wl<line][-1]+0.1, marker='d', 
+    wl = get_cii(v)
+    ax.scatter(
+            wl, y, marker='v', 
+            facecolor='white', edgecolor='k', label=label)
+
+
+def get_siv(v):
+    return 4110*(1-v/3E5)
+
+
+def plot_siv(ax, y, v, label=None):
+    """ return some ionization lines, shifted by some velocity and redshift
+    
+    Parameters
+    ----------
+    v: velocity given in km/s
+    """
+    line = get_siv(v)
+    ax.scatter(line, y, marker='d', 
             facecolor='black', edgecolor='k', label=label)
 
-def plot_oii(ax, v, label=None):
+
+def get_oii(v):
+    return np.array([4670,4350])*(1-v/3E5)
+
+
+def plot_oii(ax, y, v, label=None):
     """ return some ionization lines, shifted by some velocity and redshift
     
     Parameters
     ----------
     v: velocity given in km/s
     """
-    oii = np.array([4670,4350])
-    wl = oii*(1-v/3E5)
-    for ii,line in enumerate(wl):
-        if ii == 0:
-            label = label
-        else:
-            label = None
-        ax.scatter(line, smoothed[wl<line][-1]+0.1, marker='d', 
-                facecolor='white', edgecolor='k', label=label)
+    wl = get_oii(v)
+    ax.scatter(wl, y, marker='d', 
+            facecolor='white', edgecolor='k', label=label)
     return wl
 
 
@@ -351,8 +358,16 @@ if __name__=="__main__":
             wl_ciii = get_ciii(v)
             y_ciii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_ciii])
             plot_ciii(ax, y_ciii, v, label="CIII")
+            wl_oii = get_oii(v)
+            y_oii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_oii])
+            plot_oii(ax, y_oii, v, label="OII")
+            wl_cii = get_cii(v)
+            y_cii = smoothed[wl<wl_cii][-1]+0.05 
+            plot_cii(ax, y_cii, v, label="CII")
+            wl_siv = get_siv(v)
+            y_siv = smoothed[wl<wl_siv][-1]+0.1
+            plot_siv(ax, y_siv, v, label="SIV")
         ax.tick_params(axis='both', labelsize=14)
-        ax.axvline(x=6770)
     ax.set_ylabel(
             r"Scaled $F_{\lambda}$ + constant",
             fontsize=16)
