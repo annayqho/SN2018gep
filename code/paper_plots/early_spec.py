@@ -351,8 +351,12 @@ if __name__=="__main__":
         scale = flux[wl>4100][0]
         shifted = flux/scale-shift[ii]
         plot_spec(ax, wl, shifted, tel, dt)
-        smoothed = plot_smoothed_spec(
-                ax, wl, shifted, ivar, tel, dt)
+        if ii == 7:
+            smoothed = plot_smoothed_spec(
+                    ax, wl, shifted, ivar, tel, dt, lw=1)
+        else:
+            smoothed = plot_smoothed_spec(
+                    ax, wl, shifted, ivar, tel, dt)
         if ii == 7:
             v = 22000
             wl_ciii = get_ciii(v)
@@ -378,6 +382,6 @@ if __name__=="__main__":
     #axarr[0].set_ylim(0,5)
 
     plt.tight_layout()
-    #plt.savefig("spec_sequence.png")
+    #plt.savefig("early_spectra.png")
     plt.show()
     #plt.close()
