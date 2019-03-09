@@ -35,9 +35,25 @@ ax.text(0.9, 0.7, r"$v\approx35,000\,$km/s", fontsize=14,
         verticalalignment='top')
 
 # Plot the lines
-ax.scatter(5261, 1.9, marker='v', c='k')
+ax.scatter(5261, 2.5, marker='v', c='k')
 ax.text(
-        5261, 2.0, "CIII", fontsize=12, 
+        5261, 2.6, "CIII", fontsize=12, 
+        verticalalignment='bottom', horizontalalignment='center')
+ax.scatter(4295, 4.0, marker='v', c='k')
+ax.text(
+        4295, 4.1, "CIII", fontsize=12, 
+        verticalalignment='bottom', horizontalalignment='center')
+ax.scatter(5391, 1.8, marker='v', c='k')
+ax.text(
+        5391, 1.9, "CIV", fontsize=12, 
+        verticalalignment='bottom', horizontalalignment='center')
+ax.scatter(3443, 6.5, marker='v', c='k')
+ax.text(
+        3443, 6.6, "OII", fontsize=12, 
+        verticalalignment='bottom', horizontalalignment='center')
+ax.scatter(6079, 1.5, marker='v', c='k')
+ax.text(
+        6079, 1.6, "CII", fontsize=12, 
         verticalalignment='bottom', horizontalalignment='center')
 
 plt.tick_params(labelsize=14)
@@ -50,6 +66,6 @@ plt.ylabel(
 plt.legend(fontsize=14)
 
 plt.tight_layout()
-#plt.savefig("spec_day2.png")
-plt.show()
+plt.savefig("spec_day2.png")
+#plt.show()
 
