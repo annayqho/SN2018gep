@@ -34,6 +34,12 @@ ax.text(0.9, 0.7, r"$v\approx35,000\,$km/s", fontsize=14,
         transform=ax.transAxes, horizontalalignment='right',
         verticalalignment='top')
 
+# Plot the lines
+ax.scatter(5261, 1.9, marker='v', c='k')
+ax.text(
+        5261, 2.0, "CIII", fontsize=12, 
+        verticalalignment='bottom', horizontalalignment='center')
+
 plt.tick_params(labelsize=14)
 plt.xlim(3200, 9320)
 plt.ylim(0.015, 8.7)
