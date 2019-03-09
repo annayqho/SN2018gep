@@ -142,15 +142,15 @@ def plot_spec(ax, x, y, tel, epoch):
     return ax
 
 
-def plot_smoothed_spec(ax, x, y, ivar, tel, epoch):
+def plot_smoothed_spec(ax, x, y, ivar, tel, epoch, ls='-', lw=0.5, c='black', label=None):
     """ plot the smoothed spectrum """
     res = get_res(tel)
     choose_x = np.logical_and(x >= 3200, x<= 9300)
     choose = choose_x 
     smoothed = smooth_spec(x, y, ivar, res*3)
     ax.plot(
-            x[choose], smoothed[choose], c='black', 
-            drawstyle='steps-mid', lw=0.5, alpha=1.0)
+            x[choose], smoothed[choose], c=c, 
+            drawstyle='steps-mid', lw=lw, ls=ls, alpha=1.0, label=label)
     dt_str = r"+%s\,d" %str(np.round(epoch, 1))
     ax.text(
             x[choose][-1]+100, smoothed[choose][-1],  s=dt_str, 
