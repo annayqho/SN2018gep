@@ -9,6 +9,7 @@ import numpy as np
 from astropy.table import Table
 from astropy.cosmology import Planck15
 from astropy.time import Time
+from extinction import fitzpatrick99
 from astropy.modeling.blackbody import blackbody_lambda
 import glob
 from plot_lc import get_lc
@@ -24,9 +25,10 @@ from load_radius import load_radius
 from load_temp import load_temp
 
 
+SPEC_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec"
+
 def get_files():
-    files = np.array(glob.glob(
-    "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec/ZTF18abukavn/*.ascii"))
+    files = np.array(glob.glob(SPEC_DIR + "/ZTF18abukavn/*.ascii"))
     dt = np.zeros(len(files))
     tels = []
     cols = np.array([""]*len(dt), dtype='U10')
@@ -158,7 +160,7 @@ def plot_spec(ax, x, y, tel, epoch):
     return ax
 
 
-def plot_smoothed_spec(ax, x, y, ivar, tel, epoch, ls='-', lw=0.5, c='black', label=None):
+def plot_smoothed_spec(ax, x, y, ivar, tel, epoch, ls='-', lw=0.5, c='black', label=None, text=True):
     """ plot the smoothed spectrum """
     res = get_res(tel)
     choose_x = np.logical_and(x >= 3200, x<= 9300)
@@ -169,10 +171,11 @@ def plot_smoothed_spec(ax, x, y, ivar, tel, epoch, ls='-', lw=0.5, c='black', la
             drawstyle='steps-mid', lw=lw, ls=ls, alpha=1.0, label=label)
     dt_str = r"+%s\,d ($T=%s\,$kK)" %(
             str(np.round(epoch, 1)), (int(round_sig(temp/1000))))
-    ax.text(
-            x[choose][-1]+100, smoothed[choose][-1],  s=dt_str, 
-            horizontalalignment='left', verticalalignment='center', 
-            fontsize=12)
+    if text:
+        ax.text(
+                x[choose][-1]+100, smoothed[choose][-1],  s=dt_str, 
+                horizontalalignment='left', verticalalignment='center', 
+                fontsize=12)
     return smoothed
 
 
@@ -324,10 +327,11 @@ if __name__=="__main__":
     nfiles = len(files)
     shift = [0, 0.2, 0.4, 0.7, 1.0, 1.1, 1.6, 2.0, 2.2]
 
-    fig,ax = plt.subplots(
-            1, 1, figsize=(8,6), sharex=True)
+    fig,axarr = plt.subplots(
+            2, 1, figsize=(8,8), sharex=True, 
+            gridspec_kw={'height_ratios':[2,1]})
 
-    done = 0
+    ax = axarr[0]
     for ii,f in enumerate(files):
         tel = tels[ii]
         dt = epochs[ii]
@@ -371,17 +375,55 @@ if __name__=="__main__":
             wl_siv = get_siv(v)
             y_siv = smoothed[wl<wl_siv][-1]+0.1
             plot_siv(ax, y_siv, v, label="SIV")
-        ax.tick_params(axis='both', labelsize=14)
     ax.set_ylabel(
             r"Scaled $F_{\lambda}$ + constant",
             fontsize=16)
-    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     ax.set_xlim(3000, 8440)
     ax.set_ylim(-2,1.5)
     ax.legend(loc='upper right', fontsize=12)
     #axarr[0].set_ylim(0,5)
 
-    plt.tight_layout()
+    # Plot spectrum on Day 4 compared to other spectra with W features
+    ax = axarr[1]
+    f = files[7]
+    tel = tels[7]
+    dt = epochs[7]
+    wl, flux, ivar = load_spec(f, tel)
+    choose = wl < 6000
+    wl = wl[choose]
+    flux = flux[choose]
+    ivar = ivar[choose]
+    wl, flux = fluxcal(wl, flux, dt)
+    wl, flux = clip_lines(wl, flux, z, tel, dt)
+    wl, flux = clip_tellurics(wl, flux)
+    scale = flux[wl>4100][0]
+    shifted = flux/scale-shift[ii]
+    plot_spec(ax, wl, shifted, tel, dt)
+    smoothed = plot_smoothed_spec(
+        ax, wl, shifted, ivar, tel, dt, lw=1.0, text=False)
+    ax.text(
+            wl[-1]*1.01, smoothed[-1], 
+            'SN2018gep, +4.2d, $T=20$\,kK', fontsize=12,
+            horizontalalignment='left', verticalalignment='center')
+    dat = np.loadtxt(SPEC_DIR + "/2008d.txt", delimiter=',')
+    x = dat[:,0]
+    y = dat[:,1]
+    choose = x < 6000
+    x = x[choose]
+    y = y[choose]
+    ext = fitzpatrick99(x+100, 0.63)
+    yplot = y/0.1-4.2+ext
+    ax.plot(x+60, yplot, alpha=0.5, lw=0.5, c='k', label="SN2008D") 
+    ax.text(x[-1]*1.02, yplot[-1], 'SN2008D, +1.4d, $T=11$\,kK', fontsize=12,
+            horizontalalignment='left', verticalalignment='center')
+
+    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+
+    for ax in axarr:
+        ax.tick_params(axis='both', labelsize=14)
+        ax.get_yaxis().set_ticks([])
+
+    plt.subplots_adjust(hspace=0.1)
     #plt.savefig("early_spectra.png")
     plt.show()
     #plt.close()
