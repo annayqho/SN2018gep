@@ -35,6 +35,15 @@ plot_smoothed_spec(
         ax, wl_cow, flux_cow/1E-15/4.7, ivar_cow, 
         'P200', dt, lw=1, ls='--', label="AT2018cow/4.7, $\Delta t=5.353$")
 
+# Add suggestions for lines
+ax.scatter(4111, 2.5, marker='v', c='k')
+ax.text(
+        4111, 2.6, "CIII", fontsize=12, 
+        verticalalignment='bottom', horizontalalignment='center')
+ax.scatter(5036, 2.5, marker='v', c='k')
+ax.text(
+        4111, 2.6, "CIII", fontsize=12, 
+        verticalalignment='bottom', horizontalalignment='center')
 
 plt.tick_params(labelsize=14)
 plt.xlim(3190, 9000)
