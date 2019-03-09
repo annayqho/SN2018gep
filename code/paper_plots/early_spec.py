@@ -136,6 +136,9 @@ def load_spec(f, tel):
     dat = np.loadtxt(f)
     wl = dat[:,0]
     flux = dat[:,1]
+    # the DCT spec is shifted by like 15 AA
+    if tel == 'DCT':
+        wl = wl - 15
     if tel == 'Keck':
         eflux = dat[:,3]
     else:
@@ -170,7 +173,7 @@ def plot_smoothed_spec(ax, x, y, ivar, tel, epoch, ls='-', lw=0.5, c='black', la
             x[choose][-1]+100, smoothed[choose][-1],  s=dt_str, 
             horizontalalignment='left', verticalalignment='center', 
             fontsize=12)
-    return ax
+    return smoothed
 
 
 def choose_gal_lines(z, dt):
@@ -183,31 +186,63 @@ def choose_gal_lines(z, dt):
     gal_wl = np.hstack((balmer, oiii, oii)) * (z+1)
     return gal_wl
 
-def ciii(z, v):
-    """ return ciii ionization lines, shifted by some velocity and redshift
+
+def get_ciii(v):
+    return np.array([4649, 5696])*(1-v/3E5)
+
+
+def plot_ciii(ax, y, v, label=None):
+    """ plot ciii ionization lines, shifted by some velocity 
     
     Parameters
     ----------
     v: velocity given in km/s
     """
-    ciii = 4649
-    wl = ciii*(1-v/3E5)
-    return wl
+    wl = get_ciii(v)
+    ax.scatter(
+        wl, y, marker='v', c='k', label=label)
 
-
-def sn_lines(z, v):
+def plot_cii(ax, v, label=None):
     """ return some ionization lines, shifted by some velocity and redshift
     
     Parameters
     ----------
     v: velocity given in km/s
     """
-    ciii = np.array([4649])
-    #cii = np.array([6578, 6583])
-    cii = np.array([6580])
-    #oii = np.array([4639,4676,4649,4317,4357])
+    cii = 6580
+    wl = cii*(1-v/3E5)
+    ax.scatter(
+            line, smoothed[wl<line][-1]+0.05, marker='v', 
+            facecolor='white', edgecolor='k', label=None)
+
+def plot_siv(ax, v, label=None):
+    """ return some ionization lines, shifted by some velocity and redshift
+    
+    Parameters
+    ----------
+    v: velocity given in km/s
+    """
+    siv = 4110
+    wl = siv*(1-v/3E5)
+    ax.scatter(line, smoothed[wl<line][-1]+0.1, marker='d', 
+            facecolor='black', edgecolor='k', label=label)
+
+def plot_oii(ax, v, label=None):
+    """ return some ionization lines, shifted by some velocity and redshift
+    
+    Parameters
+    ----------
+    v: velocity given in km/s
+    """
     oii = np.array([4670,4350])
-    wl = np.hstack((ciii,oii,cii))*(1-v/3E5)
+    wl = oii*(1-v/3E5)
+    for ii,line in enumerate(wl):
+        if ii == 0:
+            label = label
+        else:
+            label = None
+        ax.scatter(line, smoothed[wl<line][-1]+0.1, marker='d', 
+                facecolor='white', edgecolor='k', label=label)
     return wl
 
 
@@ -285,6 +320,7 @@ if __name__=="__main__":
     fig,ax = plt.subplots(
             1, 1, figsize=(8,6), sharex=True)
 
+    done = 0
     for ii,f in enumerate(files):
         tel = tels[ii]
         dt = epochs[ii]
@@ -308,18 +344,22 @@ if __name__=="__main__":
         scale = flux[wl>4100][0]
         shifted = flux/scale-shift[ii]
         plot_spec(ax, wl, shifted, tel, dt)
-        plot_smoothed_spec(
+        smoothed = plot_smoothed_spec(
                 ax, wl, shifted, ivar, tel, dt)
         if ii == 7:
-            line = ciii(z, 22000)
-            ax.scatter(line, shifted[wl<line][-1]+0.1, marker='v', c='k')
+            v = 22000
+            wl_ciii = get_ciii(v)
+            y_ciii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_ciii])
+            plot_ciii(ax, y_ciii, v, label="CIII")
         ax.tick_params(axis='both', labelsize=14)
+        ax.axvline(x=6770)
     ax.set_ylabel(
             r"Scaled $F_{\lambda}$ + constant",
             fontsize=16)
     ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     ax.set_xlim(3000, 8440)
     ax.set_ylim(-2,1.5)
+    ax.legend(loc='upper right', fontsize=12)
     #axarr[0].set_ylim(0,5)
 
     plt.tight_layout()
