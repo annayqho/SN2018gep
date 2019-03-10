@@ -325,7 +325,7 @@ if __name__=="__main__":
     epochs = epochs[start:end]
     tels = tels[start:end]
     nfiles = len(files)
-    shift = [0, 0.2, 0.4, 0.7, 1.0, 1.1, 1.6, 2.0, 2.2]
+    shift = [0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 2.0, 2.2]
 
     fig,axarr = plt.subplots(
             2, 1, figsize=(8,8), sharex=True, 
@@ -375,9 +375,6 @@ if __name__=="__main__":
             wl_siv = get_siv(v)
             y_siv = smoothed[wl<wl_siv][-1]+0.1
             plot_siv(ax, y_siv, v, label="SIV")
-    ax.set_ylabel(
-            r"Scaled $F_{\lambda}$ + constant",
-            fontsize=16)
     ax.set_xlim(3000, 8440)
     ax.set_ylim(-2,1.5)
     ax.legend(loc='upper right', fontsize=12)
@@ -404,27 +401,25 @@ if __name__=="__main__":
     ext = fitzpatrick99(x+100, 0.63)
     yplot = y/0.1-4.2+ext
     ax.plot(
-            x+60, yplot, alpha=0.5, lw=0.5, c='k', 
+            x+60, yplot, lw=0.5, c='k', 
             label="SN2008D, +1.4d, $T=11$\,kK")
     dat = np.loadtxt(SPEC_DIR + "/ptf12dam.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
     yplot = y/2-2
-    ax.plot(x-600, yplot, alpha=0.5, lw=0.5, c='k')
-    ax.text(
-            x[-1]*1.02, yplot[-1], 
-            'PTF12dam, +???d, $T=??$\,kK', fontsize=12,
-            horizontalalignment='left', verticalalignment='center')
-
-    #ax.text(0.9, 0.9, 'SN2018gep at +4.2d ($T=20$\,kK', fontsize=14,
-    #        horizontalalignment='right')
+    ax.plot(
+            x-600, yplot, lw=0.5, c='k', ls=':', 
+            label="PTF12dam, -25d, $T=15$--20\,kK")
     ax.legend(fontsize=14, loc='upper right')
-
+    ax.set_ylim(-2.5,0)
     ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
 
     for ax in axarr:
         ax.tick_params(axis='both', labelsize=14)
         ax.get_yaxis().set_ticks([])
+        ax.set_ylabel(
+                r"Scaled $F_{\lambda}$ + constant",
+                fontsize=16)
 
     plt.subplots_adjust(hspace=0.1)
     #plt.savefig("early_spectra.png")
