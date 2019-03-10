@@ -329,7 +329,7 @@ if __name__=="__main__":
 
     fig,axarr = plt.subplots(
             2, 1, figsize=(8,8), sharex=True, 
-            gridspec_kw={'height_ratios':[2,1]})
+            gridspec_kw={'height_ratios':[1.5,1]})
 
     ax = axarr[0]
     for ii,f in enumerate(files):
@@ -389,10 +389,6 @@ if __name__=="__main__":
     tel = tels[7]
     dt = epochs[7]
     wl, flux, ivar = load_spec(f, tel)
-    choose = wl < 6000
-    wl = wl[choose]
-    flux = flux[choose]
-    ivar = ivar[choose]
     wl, flux = fluxcal(wl, flux, dt)
     wl, flux = clip_lines(wl, flux, z, tel, dt)
     wl, flux = clip_tellurics(wl, flux)
@@ -402,20 +398,22 @@ if __name__=="__main__":
     smoothed = plot_smoothed_spec(
         ax, wl, shifted, ivar, tel, dt, lw=1.0, text=False, 
         label='SN2018gep, +4.2d, $T=20$\,kK')
-    # ax.text(
-    #         wl[-1]*1.01, smoothed[-1], 
-    #         'SN2018gep, +4.2d, $T=20$\,kK', fontsize=12,
-    #         horizontalalignment='left', verticalalignment='center')
     dat = np.loadtxt(SPEC_DIR + "/2008d.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
-    choose = x < 6000
-    x = x[choose]
-    y = y[choose]
     ext = fitzpatrick99(x+100, 0.63)
     yplot = y/0.1-4.2+ext
-    ax.plot(x+60, yplot, alpha=0.5, lw=0.5, c='k')
-    ax.text(x[-1]*1.02, yplot[-1], 'SN2008D, +1.4d, $T=11$\,kK', fontsize=12,
+    ax.plot(
+            x+60, yplot, alpha=0.5, lw=0.5, c='k', 
+            label="SN2008D, +1.4d, $T=11$\,kK")
+    dat = np.loadtxt(SPEC_DIR + "/ptf12dam.txt", delimiter=',')
+    x = dat[:,0]
+    y = dat[:,1]
+    yplot = y/2-2
+    ax.plot(x-600, yplot, alpha=0.5, lw=0.5, c='k')
+    ax.text(
+            x[-1]*1.02, yplot[-1], 
+            'PTF12dam, +???d, $T=??$\,kK', fontsize=12,
             horizontalalignment='left', verticalalignment='center')
 
     #ax.text(0.9, 0.9, 'SN2018gep at +4.2d ($T=20$\,kK', fontsize=14,
