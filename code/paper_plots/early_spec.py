@@ -400,11 +400,12 @@ if __name__=="__main__":
     shifted = flux/scale-shift[ii]
     plot_spec(ax, wl, shifted, tel, dt)
     smoothed = plot_smoothed_spec(
-        ax, wl, shifted, ivar, tel, dt, lw=1.0, text=False)
-    ax.text(
-            wl[-1]*1.01, smoothed[-1], 
-            'SN2018gep, +4.2d, $T=20$\,kK', fontsize=12,
-            horizontalalignment='left', verticalalignment='center')
+        ax, wl, shifted, ivar, tel, dt, lw=1.0, text=False, 
+        label='SN2018gep, +4.2d, $T=20$\,kK')
+    # ax.text(
+    #         wl[-1]*1.01, smoothed[-1], 
+    #         'SN2018gep, +4.2d, $T=20$\,kK', fontsize=12,
+    #         horizontalalignment='left', verticalalignment='center')
     dat = np.loadtxt(SPEC_DIR + "/2008d.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
@@ -413,9 +414,13 @@ if __name__=="__main__":
     y = y[choose]
     ext = fitzpatrick99(x+100, 0.63)
     yplot = y/0.1-4.2+ext
-    ax.plot(x+60, yplot, alpha=0.5, lw=0.5, c='k', label="SN2008D") 
+    ax.plot(x+60, yplot, alpha=0.5, lw=0.5, c='k')
     ax.text(x[-1]*1.02, yplot[-1], 'SN2008D, +1.4d, $T=11$\,kK', fontsize=12,
             horizontalalignment='left', verticalalignment='center')
+
+    #ax.text(0.9, 0.9, 'SN2018gep at +4.2d ($T=20$\,kK', fontsize=14,
+    #        horizontalalignment='right')
+    ax.legend(fontsize=14, loc='upper right')
 
     ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
 
