@@ -13,9 +13,9 @@ DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
 
 
 def plot_18gep():
-    # From Avishay
-    dt = np.array([2.07, 4.25])
-    vel = np.array([35000, 25000]) / 1E3
+    # From early spectra
+    dt = np.array([1, 2, 4.2])
+    vel = np.array([45000, 33000, 30000]) / 1E3
     plt.scatter(
             dt, vel, marker='s', facecolor='white', 
             edgecolor='k', s=100, lw=2)
@@ -28,7 +28,7 @@ def plot_18gep():
 
     plt.errorbar(
             dt[el=='Fe'], vel[el=='Fe'], yerr=evel[el=='Fe'], 
-            fmt='s', c='k', label="ZTF18abukavn (AT2018gep)", 
+            fmt='s', c='k', label="SN2018gep", 
             zorder=10, ms=10, lw=2)
 
 
@@ -334,7 +334,7 @@ def plot_population():
 if __name__=="__main__":
     fig,ax = plt.subplots(1, 1, figsize=(8,5))
 
-    #plot_18gep()
+    plot_18gep()
     plot_grbsne()
     plot_16asu()
     plot_icbl()
@@ -342,14 +342,14 @@ if __name__=="__main__":
     plot_12gzk()
 
     # Formatting
-    plt.legend(fontsize=14, loc='lower left', ncol=2)
+    plt.legend(fontsize=14, loc='upper right', ncol=2)
     plt.xlabel(r"$\Delta t$ [days]", fontsize=16)
     plt.ylabel(
             r"Fe II Velocity ($10^3$ km/s)", fontsize=16)
     #plt.yscale('log')
     #plt.xscale('log')
     plt.xlim(0, 30)
-    plt.ylim(0, 40)
+    plt.ylim(5, 50)
     plt.tick_params(axis='both', labelsize=16)
     plt.tight_layout()
 

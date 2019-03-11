@@ -25,6 +25,7 @@ from load_radius import load_radius
 from load_temp import load_temp
 
 
+z = 0.03154
 SPEC_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec"
 
 def get_files():
@@ -191,8 +192,7 @@ def choose_gal_lines(z, dt):
 
 
 def get_ciii(v):
-    return np.array([4649, 5696])*(1-v/3E5)
-
+    return np.array([4649, 5696])*(1-v/3E5+z)
 
 def plot_ciii(ax, y, v, label=None):
     """ plot ciii ionization lines, shifted by some velocity 
@@ -206,8 +206,24 @@ def plot_ciii(ax, y, v, label=None):
         wl, y, marker='v', c='k', label=label)
 
 
+def get_civ(v):
+    return 5801*(1-v/3E5+z)
+
+
+def plot_civ(ax, y, v, label=None):
+    """ plot civ ionization lines, shifted by some velocity 
+    
+    Parameters
+    ----------
+    v: velocity given in km/s
+    """
+    wl = get_civ(v)
+    ax.scatter(
+        wl, y, marker='1', c='k', label=label)
+
+
 def get_cii(v):
-    return 6580*(1-v/3E5)
+    return np.array([3919,4267,6580])*(1-v/3E5+z)
 
 
 def plot_cii(ax, y, v, label=None):
@@ -224,7 +240,7 @@ def plot_cii(ax, y, v, label=None):
 
 
 def get_siv(v):
-    return 4110*(1-v/3E5)
+    return 4110*(1-v/3E5+z)
 
 
 def plot_siv(ax, y, v, label=None):
@@ -240,7 +256,7 @@ def plot_siv(ax, y, v, label=None):
 
 
 def get_oii(v):
-    return np.array([4670,4350])*(1-v/3E5)
+    return np.array([3727,4670,4350])*(1-v/3E5+z)
 
 
 def plot_oii(ax, y, v, label=None):
@@ -316,8 +332,6 @@ def fluxcal(wl, flux, dt_spec):
 
 
 if __name__=="__main__":
-    z = 0.03154
-
     files, epochs, tels = get_files()
     start = 0
     end = 9
@@ -328,8 +342,8 @@ if __name__=="__main__":
     shift = [0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 2.0, 2.2]
 
     fig,axarr = plt.subplots(
-            2, 1, figsize=(8,8), sharex=True, 
-            gridspec_kw={'height_ratios':[1.5,1]})
+            2, 1, figsize=(8,9), sharex=True, 
+            gridspec_kw={'height_ratios':[2,1]})
 
     ax = axarr[0]
     for ii,f in enumerate(files):
@@ -355,14 +369,47 @@ if __name__=="__main__":
         scale = flux[wl>4100][0]
         shifted = flux/scale-shift[ii]
         plot_spec(ax, wl, shifted, tel, dt)
+
+        # Plot the dt=4 epoch in bold
         if ii == 7:
             smoothed = plot_smoothed_spec(
                     ax, wl, shifted, ivar, tel, dt, lw=1)
         else:
             smoothed = plot_smoothed_spec(
                     ax, wl, shifted, ivar, tel, dt)
+
+        # Line identifications for dt=2
+        if ii == 1:
+            v = 45000
+            wl_ciii = get_ciii(v)
+            y_ciii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_ciii])
+            plot_ciii(ax, y_ciii, v)
+            wl_civ = get_civ(v)
+            y_civ = smoothed[wl<wl_civ][-1]+0.1 
+            plot_civ(ax, y_civ, v, label="CIV")
+            wl_oii = get_oii(v)
+            y_oii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_oii])
+            plot_oii(ax, y_oii, v)
+            wl_cii = get_cii(v)
+            y_cii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_cii])
+            plot_cii(ax, y_cii, v)
+        if ii == 3:
+            v = 33000
+            wl_ciii = get_ciii(v)
+            y_ciii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_ciii])
+            plot_ciii(ax, y_ciii, v)
+            wl_civ = get_civ(v)
+            y_civ = smoothed[wl<wl_civ][-1]+0.1 
+            plot_civ(ax, y_civ, v)
+            wl_oii = get_oii(v)
+            y_oii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_oii])
+            plot_oii(ax, y_oii, v)
+            wl_cii = get_cii(v)
+            y_cii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_cii])
+            plot_cii(ax, y_cii, v)
+        # Line identifications for dt=4
         if ii == 7:
-            v = 22000
+            v = 30000
             wl_ciii = get_ciii(v)
             y_ciii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_ciii])
             plot_ciii(ax, y_ciii, v, label="CIII")
@@ -370,14 +417,14 @@ if __name__=="__main__":
             y_oii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_oii])
             plot_oii(ax, y_oii, v, label="OII")
             wl_cii = get_cii(v)
-            y_cii = smoothed[wl<wl_cii][-1]+0.05 
+            y_cii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_cii])
             plot_cii(ax, y_cii, v, label="CII")
             wl_siv = get_siv(v)
             y_siv = smoothed[wl<wl_siv][-1]+0.1
             plot_siv(ax, y_siv, v, label="SIV")
     ax.set_xlim(3000, 8440)
     ax.set_ylim(-2,1.5)
-    ax.legend(loc='upper right', fontsize=12)
+    ax.legend(loc='upper right', fontsize=12, ncol=2)
     #axarr[0].set_ylim(0,5)
 
     # Plot spectrum on Day 4 compared to other spectra with W features
@@ -422,6 +469,6 @@ if __name__=="__main__":
                 fontsize=16)
 
     plt.subplots_adjust(hspace=0.1)
-    #plt.savefig("early_spectra.png")
-    plt.show()
-    #plt.close()
+    plt.savefig("early_spectra.png")
+    #plt.show()
+    plt.close()

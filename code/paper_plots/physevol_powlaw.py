@@ -138,10 +138,10 @@ def plot():
     axarr[0].text(25, 5E42, '$t^{%s}$' %mstr,
             horizontalalignment='left', verticalalignment='center', 
             fontsize=14)
-    axarr[0].axvline(x=0.48, ls='-', c='lightgrey', lw=3, zorder=0)
+    axarr[0].axvline(x=3.22, ls='-', c='lightgrey', lw=3, zorder=0)
     axarr[0].text(
-            0.47, 1E43, "$t_\mathrm{rise}<0.48\,$d", fontsize=12,
-            horizontalalignment='center')
+            3, 1E43, "$t_\mathrm{rise}<3.2\,$d", fontsize=14,
+            horizontalalignment='right')
 
     # Fit another power law
     m = -2
