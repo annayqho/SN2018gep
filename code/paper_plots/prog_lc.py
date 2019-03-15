@@ -105,13 +105,12 @@ def full_lc():
     ax2.set_ylabel(
             "Absolute Mag",
             fontsize=16, rotation=270, labelpad=15.0)
-    y_f = lambda y_i: y_i - Planck15.distmod(z=z)
+    y_f = lambda y_i: y_i - Planck15.distmod(z=z).value
     ymin, ymax = ax.get_ylim()
     ax2.set_ylim((y_f(ymin), y_f(ymax)))
     ax2.plot([],[])
-    ax2.set_yscale('log')
     ax2.tick_params(axis='both', labelsize=14)
-    ax2.set_xlim(4E-3, 8)
+    ax2.invert_yaxis()
 
     # Format this box
     ax.set_xlim(-10, 33)
@@ -123,8 +122,8 @@ def full_lc():
     ax.legend(loc='lower right', fontsize=14)
 
     plt.tight_layout()
-    plt.show()
-    #plt.savefig("lc_full.png")
+    #plt.show()
+    plt.savefig("lc_full.png")
 
 
 def lc_zoom():
