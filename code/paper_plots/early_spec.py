@@ -342,7 +342,7 @@ if __name__=="__main__":
     shift = [0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 2.0, 2.2]
 
     fig,axarr = plt.subplots(
-            3, 1, figsize=(7,11), sharex=True, 
+            3, 1, figsize=(8,11), sharex=True, 
             gridspec_kw={'height_ratios':[2,1,1]})
 
     ax = axarr[0]
@@ -370,10 +370,10 @@ if __name__=="__main__":
         shifted = flux/scale-shift[ii]
         plot_spec(ax, wl, shifted, tel, dt)
 
-        # Plot the dt=4 epoch in bold
+        # Plot the dt=4 epoch in bold and make it purple
         if ii == 7:
             smoothed = plot_smoothed_spec(
-                    ax, wl, shifted, ivar, tel, dt, lw=1)
+                    ax, wl, shifted, ivar, tel, dt, lw=1, c='purple')
         else:
             smoothed = plot_smoothed_spec(
                     ax, wl, shifted, ivar, tel, dt)
@@ -437,14 +437,14 @@ if __name__=="__main__":
     wl, flux = clip_lines(wl, flux, z, tel, dt)
     wl, flux = clip_tellurics(wl, flux)
     scale = flux[wl>4100][0]
-    shifted = flux/scale-shift[ii]
-    plot_spec(ax, wl, shifted, tel, dt)
+    #shifted = flux/scale-shift[ii]
+    plot_spec(ax, wl, flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
-        ax, wl, shifted, ivar, tel, dt, lw=1.0, text=False, 
+        ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
         label='SN2018gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000))
     wl_cow, flux_cow, ivar_cow = load_spec(
             SPEC_DIR + "/AT2018cow/AT2018cow_20180621_P200_v3.ascii", 'P200')
-    scale = flux_cow[wl>4100][0]
+    scale = flux_cow[wl_cow>4100][0]
     plot_smoothed_spec(
             ax, wl_cow, flux_cow/scale, ivar_cow,
             'P200', dt, lw=1, ls='--', label=r"AT2018cow, $T\approx26\,$kK")
@@ -463,7 +463,7 @@ if __name__=="__main__":
     plot_spec(ax, wl, shifted, tel, dt)
     smoothed = plot_smoothed_spec(
         ax, wl, shifted, ivar, tel, dt, lw=1.0, text=False, 
-        label='SN2018gep, +4.2d, $T=20$\,kK')
+        label='SN2018gep, +4.2d, $T=20$\,kK', c='purple')
     dat = np.loadtxt(SPEC_DIR + "/2008d.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
@@ -487,10 +487,10 @@ if __name__=="__main__":
         ax.tick_params(axis='both', labelsize=14)
         ax.get_yaxis().set_ticks([])
         ax.set_ylabel(
-                r"Scaled $F_{\lambda}$ + constant",
+                r"Scaled $F_{\lambda}$ + const.",
                 fontsize=16)
 
     plt.subplots_adjust(hspace=0.1)
     plt.savefig("early_spectra.png")
-    plt.show()
+    #plt.show()
     #plt.close()
