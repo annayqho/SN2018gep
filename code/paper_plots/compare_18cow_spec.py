@@ -67,6 +67,6 @@ plt.ylabel(
 plt.legend(fontsize=14)
 
 plt.tight_layout()
-plt.savefig("spec_comp_18cow.png")
-#plt.show()
+#plt.savefig("spec_comp_18cow.png")
+plt.show()
 

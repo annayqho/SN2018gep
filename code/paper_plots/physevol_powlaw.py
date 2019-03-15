@@ -58,6 +58,7 @@ def print_table():
     dtprint = np.array([round_sig(val,2) for val in dt])
 
     lprint = np.array([round_sig(val,2) for val in lum/3.839E43])
+    lprint = np.array([round_sig(val,2) for val in lum/3.839E43])
     ulprint = np.array(
             [np.round(val,ndec(lprint[ii])) \
             for ii,val in enumerate(ulum/3.839E43)])
@@ -66,7 +67,6 @@ def print_table():
             for ii,val in enumerate(llum/3.839E43)])
 
     rprint = np.array([round_sig(val,2) for val in rad/1.496E13])
-    rprint = np.array([int(r) if r>=10 for r in rprint])
     urprint = np.array(
             [np.round(val,ndec(rprint[ii])) \
             for ii,val in enumerate(urad/1.496E13)])
@@ -96,11 +96,19 @@ def print_table():
     outputf.write("\hline")
 
     for ii,l in enumerate(lprint):
+        t = tprint[ii]
+        ut = utprint[ii]
+        lt = ltprint[ii]
+        if tprint[ii] >= 10:
+            t = int(t)
+            ut = int(ut)
+            lt = int(lt)
         linestr = "$%s$ & $%s^{%s}_{%s}$ & $%s^{%s}_{%s}$ & $%s^{%s}_{%s}$ \\\ \n" %(
                 dtprint[ii], 
                 l, "+%s" %ulprint[ii], "-%s" %llprint[ii],
-                rprint[ii], "+%s" %urprint[ii], "-%s" %lrprint[ii],
-                tprint[ii], "+%s" %utprint[ii], "-%s" %ltprint[ii])
+                int(rprint[ii]), "+%s" %int(urprint[ii]), 
+                "-%s" %int(lrprint[ii]),
+                t, "+%s" %ut, "-%s" %lt)
         outputf.write(linestr)
 
     outputf.write("\hline \n")
@@ -237,4 +245,4 @@ def plot():
 
 
 if __name__=="__main__":
-    plot()
+    print_table()

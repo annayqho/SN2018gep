@@ -342,8 +342,8 @@ if __name__=="__main__":
     shift = [0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 2.0, 2.2]
 
     fig,axarr = plt.subplots(
-            2, 1, figsize=(8,9), sharex=True, 
-            gridspec_kw={'height_ratios':[2,1]})
+            3, 1, figsize=(7,11), sharex=True, 
+            gridspec_kw={'height_ratios':[2,1,1]})
 
     ax = axarr[0]
     for ii,f in enumerate(files):
@@ -427,8 +427,30 @@ if __name__=="__main__":
     ax.legend(loc='upper right', fontsize=12, ncol=2)
     #axarr[0].set_ylim(0,5)
 
-    # Plot spectrum on Day 4 compared to other spectra with W features
+    # Plot spectrum on Day 1 compared to 18cow
     ax = axarr[1]
+    f = files[1]
+    tel = tels[1]
+    dt = epochs[1]
+    wl, flux, ivar = load_spec(f, tel)
+    wl, flux = fluxcal(wl, flux, dt)
+    wl, flux = clip_lines(wl, flux, z, tel, dt)
+    wl, flux = clip_tellurics(wl, flux)
+    scale = flux[wl>4100][0]
+    shifted = flux/scale-shift[ii]
+    plot_spec(ax, wl, shifted, tel, dt)
+    smoothed = plot_smoothed_spec(
+        ax, wl, shifted, ivar, tel, dt, lw=1.0, text=False, 
+        label='SN2018gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000))
+    wl_cow, flux_cow, ivar_cow = load_spec(
+            SPEC_DIR + "/AT2018cow/AT2018cow_20180621_P200_v3.ascii", 'P200')
+    scale = flux_cow[wl>4100][0]
+    plot_smoothed_spec(
+            ax, wl_cow, flux_cow/scale, ivar_cow,
+            'P200', dt, lw=1, ls='--', label=r"AT2018cow, $T\approx26\,$kK")
+     
+    # Plot spectrum on Day 4 compared to other spectra with W features
+    ax = axarr[2]
     f = files[7]
     tel = tels[7]
     dt = epochs[7]
@@ -470,5 +492,5 @@ if __name__=="__main__":
 
     plt.subplots_adjust(hspace=0.1)
     plt.savefig("early_spectra.png")
-    #plt.show()
-    plt.close()
+    plt.show()
+    #plt.close()
