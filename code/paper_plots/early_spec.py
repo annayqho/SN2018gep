@@ -313,7 +313,7 @@ def plot_18cow(ax, scale):
             SPEC_DIR + "/AT2018cow/AT2018cow_20180621_P200_v3.ascii", 'P200')
     plot_smoothed_spec(
             ax, wl_cow, flux_cow/scale, ivar_cow,
-            'P200', dt, lw=1, ls='--', 
+            'P200', 1.0, lw=1, ls='--', 
             label=r"AT2018cow/4.7, +5.353d, $T=26\,$kK")
 
 
@@ -443,8 +443,8 @@ if __name__=="__main__":
     ax = axarr[0]
     spec_evol(ax)
     
-    #ax = axarr[1]
-    #early_comparison(ax)
+    ax = axarr[1]
+    early_comparison(ax)
      
     ax = axarr[2]
     w_comparison(ax)
