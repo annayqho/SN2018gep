@@ -3,6 +3,7 @@
 import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
+from collections import OrderedDict
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 import numpy as np
@@ -28,7 +29,12 @@ from load_temp import load_temp
 z = 0.03154
 SPEC_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/spec"
 
-def get_files():
+
+def get_files(sind, eind):
+    """ 
+    start_ind: starting index
+    end_ind: end index
+    """
     files = np.array(glob.glob(SPEC_DIR + "/ZTF18abukavn/*.ascii"))
     dt = np.zeros(len(files))
     tels = []
@@ -94,7 +100,7 @@ def get_files():
     dt_sorted = dt[order]
     tel_sorted = np.array(tels)[order]
     cols = cols[order]
-    return files_sorted, dt_sorted, tel_sorted
+    return files_sorted[sind:eind], dt_sorted[sind:eind], tel_sorted[sind:eind]
 
 
 def get_res(tel):
@@ -164,6 +170,7 @@ def plot_spec(ax, x, y, tel, epoch):
 def plot_smoothed_spec(ax, x, y, ivar, tel, epoch, ls='-', lw=0.5, c='black', label=None, text=True):
     """ plot the smoothed spectrum """
     res = get_res(tel)
+    temp = get_temp(epoch)
     choose_x = np.logical_and(x >= 3200, x<= 9300)
     choose = choose_x 
     smoothed = smooth_spec(x, y, ivar, res*3)
@@ -191,85 +198,54 @@ def choose_gal_lines(z, dt):
     return gal_wl
 
 
-def get_ciii(v):
-    return np.array([4649, 5696])*(1-v/3E5+z)
+def get_lines(species, v):
+    """ Return wavelengths of lines shifted to some velocity, 
+    taking in the species """
+    if species == "CIII":
+        return np.array([4649, 5696])*(1-v/3E5+z)
+    elif species == "CIV":
+        return np.array([5801])*(1-v/3E5+z)
+    elif species == "CII":
+        return np.array([3919,4267,6580])*(1-v/3E5+z)
+    elif species == "SIV":
+        return np.array([4110*(1-v/3E5+z)])
+    elif species == "OII":
+        return np.array([3727,4670,4350])*(1-v/3E5+z)
+    else:
+        print("I don't recognize this species!")
 
-def plot_ciii(ax, y, v, label=None):
-    """ plot ciii ionization lines, shifted by some velocity 
+
+def plot_lines(ax, y, v, species):
+    """ plot ionization lines, shifted by some velocity 
     
     Parameters
     ----------
     v: velocity given in km/s
     """
-    wl = get_ciii(v)
+    markers = {}
+    fc = {}
+    markers["CIII"] = 'v'
+    fc["CIII"] = 'k'
+    markers["CIV"] = '1'
+    fc["CIV"] = 'k'
+    markers["CII"] = 'v'
+    fc["CII"] = 'white'
+    markers["SIV"] = 'd'
+    fc["SIV"] = 'black'
+    markers["OII"] = 'd'
+    fc["OII"] = 'white'
+    wl = get_lines(species, v)
     ax.scatter(
-        wl, y, marker='v', c='k', label=label)
+        wl, y, marker=markers[species], 
+        facecolor=fc[species], edgecolor='k', label=species)
 
 
-def get_civ(v):
-    return 5801*(1-v/3E5+z)
-
-
-def plot_civ(ax, y, v, label=None):
-    """ plot civ ionization lines, shifted by some velocity 
-    
-    Parameters
-    ----------
-    v: velocity given in km/s
-    """
-    wl = get_civ(v)
-    ax.scatter(
-        wl, y, marker='1', c='k', label=label)
-
-
-def get_cii(v):
-    return np.array([3919,4267,6580])*(1-v/3E5+z)
-
-
-def plot_cii(ax, y, v, label=None):
-    """ return some ionization lines, shifted by some velocity and redshift
-    
-    Parameters
-    ----------
-    v: velocity given in km/s
-    """
-    wl = get_cii(v)
-    ax.scatter(
-            wl, y, marker='v', 
-            facecolor='white', edgecolor='k', label=label)
-
-
-def get_siv(v):
-    return 4110*(1-v/3E5+z)
-
-
-def plot_siv(ax, y, v, label=None):
-    """ return some ionization lines, shifted by some velocity and redshift
-    
-    Parameters
-    ----------
-    v: velocity given in km/s
-    """
-    line = get_siv(v)
-    ax.scatter(line, y, marker='d', 
-            facecolor='black', edgecolor='k', label=label)
-
-
-def get_oii(v):
-    return np.array([3727,4670,4350])*(1-v/3E5+z)
-
-
-def plot_oii(ax, y, v, label=None):
-    """ return some ionization lines, shifted by some velocity and redshift
-    
-    Parameters
-    ----------
-    v: velocity given in km/s
-    """
-    wl = get_oii(v)
-    ax.scatter(wl, y, marker='d', 
-            facecolor='white', edgecolor='k', label=label)
-    return wl
+def plot_species(ax, v, wl, smoothed, sp):
+    """ Plot lines for a list of species """
+    for s in sp:
+        lines = get_lines(s, v)
+        y = np.array([smoothed[wl<line][-1]+0.1 for line in lines])
+        plot_lines(ax, y, v, s)
 
 
 def plot_gal_lines(ax, z, tel, dt):
@@ -331,21 +307,21 @@ def fluxcal(wl, flux, dt_spec):
     return wl, flux*scale
 
 
-if __name__=="__main__":
-    files, epochs, tels = get_files()
-    start = 0
-    end = 9
-    files = files[start:end]
-    epochs = epochs[start:end]
-    tels = tels[start:end]
+def plot_18cow(ax, scale):
+    """ Plot 18cow spectrum scaled by some amount """
+    wl_cow, flux_cow, ivar_cow = load_spec(
+            SPEC_DIR + "/AT2018cow/AT2018cow_20180621_P200_v3.ascii", 'P200')
+    plot_smoothed_spec(
+            ax, wl_cow, flux_cow/scale, ivar_cow,
+            'P200', dt, lw=1, ls='--', 
+            label=r"AT2018cow/4.7, +5.353d, $T=26\,$kK")
+
+
+def spec_evol(ax):
+    """ Evolution of the early spectra """
+    files, epochs, tels = get_files(0, 9)
     nfiles = len(files)
     shift = [0, 0.2, 0.4, 0.7, 1.0, 1.2, 1.6, 2.0, 2.2]
-
-    fig,axarr = plt.subplots(
-            3, 1, figsize=(8,11), sharex=True, 
-            gridspec_kw={'height_ratios':[2,1,1]})
-
-    ax = axarr[0]
     for ii,f in enumerate(files):
         tel = tels[ii]
         dt = epochs[ii]
@@ -360,7 +336,6 @@ if __name__=="__main__":
 
         wl, flux = fluxcal(wl, flux, dt)
         wl, flux = clip_lines(wl, flux, z, tel, dt)
-        #plot_lines(ax, z, tel, dt)
         wl, flux = clip_tellurics(wl, flux)
         wl, flux = fluxcal(wl, flux, dt)
         temp = get_temp(dt)
@@ -370,96 +345,66 @@ if __name__=="__main__":
         shifted = flux/scale-shift[ii]
         plot_spec(ax, wl, shifted, tel, dt)
 
-        # Plot the dt=1 epoch in bold and make it orange
-        # Plot the dt=4 epoch in bold and make it purple
-        if ii == 7:
-            smoothed = plot_smoothed_spec(
-                    ax, wl, shifted, ivar, tel, dt, lw=1, c='purple')
-        elif ii == 1:
-            smoothed = plot_smoothed_spec(
-                    ax, wl, shifted, ivar, tel, dt, lw=1, c='darkorange')
-        else:
-            smoothed = plot_smoothed_spec(
-                    ax, wl, shifted, ivar, tel, dt)
+        smoothed = plot_smoothed_spec(
+                ax, wl, shifted, ivar, tel, dt)
 
         # Line identifications for dt=2
         if ii == 1:
-            v = 45000
-            wl_ciii = get_ciii(v)
-            y_ciii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_ciii])
-            plot_ciii(ax, y_ciii, v)
-            wl_civ = get_civ(v)
-            y_civ = smoothed[wl<wl_civ][-1]+0.1 
-            plot_civ(ax, y_civ, v, label="CIV")
-            wl_oii = get_oii(v)
-            y_oii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_oii])
-            plot_oii(ax, y_oii, v)
-            wl_cii = get_cii(v)
-            y_cii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_cii])
-            plot_cii(ax, y_cii, v)
+            smoothed = plot_smoothed_spec(
+                    ax, wl, shifted, ivar, tel, dt, lw=1, c='darkorange')
+            sp = ["CIII", "CIV", "OII", "CII"]
+            plot_species(ax, 45000, wl, smoothed, sp) 
         if ii == 3:
-            v = 33000
-            wl_ciii = get_ciii(v)
-            y_ciii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_ciii])
-            plot_ciii(ax, y_ciii, v)
-            wl_civ = get_civ(v)
-            y_civ = smoothed[wl<wl_civ][-1]+0.1 
-            plot_civ(ax, y_civ, v)
-            wl_oii = get_oii(v)
-            y_oii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_oii])
-            plot_oii(ax, y_oii, v)
-            wl_cii = get_cii(v)
-            y_cii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_cii])
-            plot_cii(ax, y_cii, v)
-        # Line identifications for dt=4
+            sp = ["CIII", "CIV", "OII", "CII"]
+            plot_species(ax, 33000, wl, smoothed, sp)
         if ii == 7:
-            v = 30000
-            wl_ciii = get_ciii(v)
-            y_ciii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_ciii])
-            plot_ciii(ax, y_ciii, v, label="CIII")
-            wl_oii = get_oii(v)
-            y_oii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_oii])
-            plot_oii(ax, y_oii, v, label="OII")
-            wl_cii = get_cii(v)
-            y_cii = np.array([smoothed[wl<line][-1]+0.1 for line in wl_cii])
-            plot_cii(ax, y_cii, v, label="CII")
-            wl_siv = get_siv(v)
-            y_siv = smoothed[wl<wl_siv][-1]+0.1
-            plot_siv(ax, y_siv, v, label="SIV")
+            smoothed = plot_smoothed_spec(
+                    ax, wl, shifted, ivar, tel, dt, lw=1, c='purple')
+            sp = ["CIII", "OII", "CII", "SIV"]
+            plot_species(ax, 30000, wl, smoothed, sp)
     ax.set_xlim(3000, 8440)
     ax.set_ylim(-2,1.5)
-    ax.legend(loc='upper right', fontsize=12, ncol=2)
-    #axarr[0].set_ylim(0,5)
+    handles, labels = ax.get_legend_handles_labels()
+    by_label = OrderedDict(zip(labels,handles))
+    ax.legend(
+            by_label.values(), by_label.keys(), 
+            loc='upper right', fontsize=12, ncol=2)
+    ax.set_ylabel(
+        r"Scaled $F_{\lambda}$ + const.",
+        fontsize=16)
 
-    # Plot spectrum on Day 1 compared to 18cow
-    ax = axarr[1]
-    f = files[1]
-    tel = tels[1]
-    dt = epochs[1]
+
+def early_comparison(ax):
+    """ Early spec compared to 18cow, 10vgv, 12gzk """
+    files, epochs, tels = get_files(1, 2)
+    f = files[0]
+    tel = tels[0]
+    dt = epochs[0]
     wl, flux, ivar = load_spec(f, tel)
     wl, flux = fluxcal(wl, flux, dt)
     wl, flux = clip_lines(wl, flux, z, tel, dt)
     wl, flux = clip_tellurics(wl, flux)
-    scale = flux[wl>4100][0]
+    scale = 1E-15
     #shifted = flux/scale-shift[ii]
     plot_spec(ax, wl, flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
         ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
         label='SN2018gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000),
         c='darkorange')
-    wl_cow, flux_cow, ivar_cow = load_spec(
-            SPEC_DIR + "/AT2018cow/AT2018cow_20180621_P200_v3.ascii", 'P200')
-    scale = flux_cow[wl_cow>4100][0]
-    plot_smoothed_spec(
-            ax, wl_cow, flux_cow/scale, ivar_cow,
-            'P200', dt, lw=1, ls='--', label=r"AT2018cow, +5.353d, $T=26\,$kK")
+    plot_18cow(ax, 1E-15*4.8)
+    ax.set_ylim(0.25,5.5)
+    ax.set_ylabel(
+            r"Scaled $F_{\lambda}$ + const.",
+            fontsize=16)
     ax.legend(fontsize=14, loc='upper right')
-     
-    # Plot spectrum on Day 4 compared to other spectra with W features
-    ax = axarr[2]
-    f = files[7]
-    tel = tels[7]
-    dt = epochs[7]
+
+
+def w_comparison(ax):
+    """ Compare spec with W feature """
+    files, epochs, tels = get_files(7,8)
+    f = files[0]
+    tel = tels[0]
+    dt = epochs[0]
     wl, flux, ivar = load_spec(f, tel)
     wl, flux = fluxcal(wl, flux, dt)
     wl, flux = clip_lines(wl, flux, z, tel, dt)
@@ -488,13 +433,28 @@ if __name__=="__main__":
     ax.legend(fontsize=14, loc='upper right')
     ax.set_ylim(-2.5,0)
     ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    ax.set_ylabel(
+        r"Scaled $F_{\lambda}$ + const.",
+        fontsize=16)
+
+
+if __name__=="__main__":
+    fig,axarr = plt.subplots(
+            3, 1, figsize=(8,11), sharex=True, 
+            gridspec_kw={'height_ratios':[2,1,1]})
+
+    ax = axarr[0]
+    spec_evol(ax)
+    
+    #ax = axarr[1]
+    #early_comparison(ax)
+     
+    #ax = axarr[2]
+    #w_comparison(ax)
 
     for ax in axarr:
         ax.tick_params(axis='both', labelsize=14)
         ax.get_yaxis().set_ticks([])
-        ax.set_ylabel(
-                r"Scaled $F_{\lambda}$ + const.",
-                fontsize=16)
 
     plt.subplots_adjust(hspace=0.1)
     plt.savefig("early_spectra.png")
