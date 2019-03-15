@@ -66,6 +66,7 @@ def print_table():
             for ii,val in enumerate(llum/3.839E43)])
 
     rprint = np.array([round_sig(val,2) for val in rad/1.496E13])
+    rprint = np.array([int(r) if r>=10 for r in rprint])
     urprint = np.array(
             [np.round(val,ndec(rprint[ii])) \
             for ii,val in enumerate(urad/1.496E13)])
