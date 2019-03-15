@@ -12,7 +12,8 @@ rc("text", usetex=True)
 from astropy.cosmology import Planck15
 from astropy.io import ascii
 
-d = Planck15.luminosity_distance(z=0.033).cgs.value
+z = 0.03154
+d = Planck15.luminosity_distance(z=0.03154).cgs.value
 # JD of first (r-band) detection
 t0 = 2458370.6634
 
@@ -99,6 +100,19 @@ def full_lc():
             color='grey', 
             s=10, marker='_', label=None, zorder=2)
 
+    # Add an axis on the right-hand side showing the absolute mag
+    ax2 = ax.twinx()
+    ax2.set_ylabel(
+            "Absolute Mag",
+            fontsize=16, rotation=270, labelpad=15.0)
+    y_f = lambda y_i: y_i - Planck15.distmod(z=z)
+    ymin, ymax = ax.get_ylim()
+    ax2.set_ylim((y_f(ymin), y_f(ymax)))
+    ax2.plot([],[])
+    ax2.set_yscale('log')
+    ax2.tick_params(axis='both', labelsize=14)
+    ax2.set_xlim(4E-3, 8)
+
     # Format this box
     ax.set_xlim(-10, 33)
     ax.set_ylabel(r"Apparent Mag", fontsize=16)
@@ -109,8 +123,8 @@ def full_lc():
     ax.legend(loc='lower right', fontsize=14)
 
     plt.tight_layout()
-    #plt.show()
-    plt.savefig("lc_full.png")
+    plt.show()
+    #plt.savefig("lc_full.png")
 
 
 def lc_zoom():

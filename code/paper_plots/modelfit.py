@@ -186,10 +186,13 @@ def plot():
     axarr[1].set_ylabel(r'$R_\mathrm{ph}$ (cm)', fontsize=16)
     axarr[2].set_ylabel(r'$T_\mathrm{eff}$ (K)', fontsize=16)
 
+    axarr[0].axvline(x=1.1)
+    axarr[0].axvline(x=1.2)
+
     plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    #plt.show()
-    plt.savefig("modelfit.png")
+    plt.show()
+    #plt.savefig("modelfit.png")
 
 
 if __name__=="__main__":
