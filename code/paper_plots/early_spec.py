@@ -370,10 +370,14 @@ if __name__=="__main__":
         shifted = flux/scale-shift[ii]
         plot_spec(ax, wl, shifted, tel, dt)
 
+        # Plot the dt=1 epoch in bold and make it orange
         # Plot the dt=4 epoch in bold and make it purple
         if ii == 7:
             smoothed = plot_smoothed_spec(
                     ax, wl, shifted, ivar, tel, dt, lw=1, c='purple')
+        elif ii == 1:
+            smoothed = plot_smoothed_spec(
+                    ax, wl, shifted, ivar, tel, dt, lw=1, c='darkorange')
         else:
             smoothed = plot_smoothed_spec(
                     ax, wl, shifted, ivar, tel, dt)
@@ -441,13 +445,15 @@ if __name__=="__main__":
     plot_spec(ax, wl, flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
         ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
-        label='SN2018gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000))
+        label='SN2018gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000),
+        c='darkorange')
     wl_cow, flux_cow, ivar_cow = load_spec(
             SPEC_DIR + "/AT2018cow/AT2018cow_20180621_P200_v3.ascii", 'P200')
     scale = flux_cow[wl_cow>4100][0]
     plot_smoothed_spec(
             ax, wl_cow, flux_cow/scale, ivar_cow,
-            'P200', dt, lw=1, ls='--', label=r"AT2018cow, $T\approx26\,$kK")
+            'P200', dt, lw=1, ls='--', label=r"AT2018cow, +5.353d, $T=26\,$kK")
+    ax.legend(fontsize=14, loc='upper right')
      
     # Plot spectrum on Day 4 compared to other spectra with W features
     ax = axarr[2]
