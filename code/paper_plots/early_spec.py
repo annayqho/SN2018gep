@@ -410,28 +410,25 @@ def w_comparison(ax):
     wl, flux = clip_lines(wl, flux, z, tel, dt)
     wl, flux = clip_tellurics(wl, flux)
     scale = flux[wl>4100][0]
-    shifted = flux/scale-shift[ii]
-    plot_spec(ax, wl, shifted, tel, dt)
+    plot_spec(ax, wl, flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
-        ax, wl, shifted, ivar, tel, dt, lw=1.0, text=False, 
+        ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
         label='SN2018gep, +4.2d, $T=20$\,kK', c='purple')
     dat = np.loadtxt(SPEC_DIR + "/2008d.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
     ext = fitzpatrick99(x+100, 0.63)
-    yplot = y/0.1-4.2+ext
     ax.plot(
-            x+60, yplot, lw=0.5, c='k', 
+            x+60, y/0.1+ext-2.0, lw=0.5, c='k', 
             label="SN2008D, +1.4d, $T=11$\,kK")
     dat = np.loadtxt(SPEC_DIR + "/ptf12dam.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
-    yplot = y/2-2
     ax.plot(
-            x-600, yplot, lw=0.5, c='k', ls=':', 
+            x-600, y/2+0.2, lw=0.5, c='k', ls=':', 
             label="PTF12dam, -25d, $T=15$--20\,kK")
     ax.legend(fontsize=14, loc='upper right')
-    ax.set_ylim(-2.5,0)
+    ax.set_ylim(-0.4,2.5)
     ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     ax.set_ylabel(
         r"Scaled $F_{\lambda}$ + const.",
@@ -449,8 +446,8 @@ if __name__=="__main__":
     #ax = axarr[1]
     #early_comparison(ax)
      
-    #ax = axarr[2]
-    #w_comparison(ax)
+    ax = axarr[2]
+    w_comparison(ax)
 
     for ax in axarr:
         ax.tick_params(axis='both', labelsize=14)
