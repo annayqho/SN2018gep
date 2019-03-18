@@ -14,10 +14,10 @@ DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
 
 def plot_18gep():
     # From early spectra
-    dt = np.array([1, 2, 4.2])
-    vel = np.array([45000, 33000, 30000]) / 1E3
+    dt_early = np.array([1, 2, 4.2])
+    vel_early = np.array([45000, 33000, 30000]) / 1E3
     plt.scatter(
-            dt, vel, marker='s', facecolor='white', 
+            dt_early, vel_early, marker='s', facecolor='white', 
             edgecolor='k', s=100, lw=2)
 
     # From Ragnhild
@@ -30,6 +30,10 @@ def plot_18gep():
             dt[el=='Fe'], vel[el=='Fe'], yerr=evel[el=='Fe'], 
             fmt='s', c='k', label="SN2018gep", 
             zorder=10, ms=10, lw=2)
+
+    plt.plot(
+        np.hstack((dt_early, dt)), np.hstack((vel_early, vel)), 
+        c='k', ls='--')
 
 
 def plot_16asu():
@@ -46,9 +50,9 @@ def plot_16asu():
     evel = np.array(
             [1.3, 1.4, 0.3, 0.4, 1.3])*1000/1E3
     plt.errorbar(dt, vel, yerr=evel, marker='.', c='purple', fmt='--')
-    plt.text(dt[0]/1.03, vel[0], 'iPTF16asu',
-            horizontalalignment='right', fontsize=12,
-            verticalalignment='center')
+    plt.text(dt[1]*1.1, vel[1], 'iPTF16asu',
+            horizontalalignment='center', fontsize=12,
+            verticalalignment='bottom')
 
 
 
@@ -226,9 +230,9 @@ def plot_12gzk():
     dt = phase+16
     plt.errorbar(
             dt, vel/1E3, yerr=evel/1E3, fmt='.', ls='--', c='orange')
-    plt.text(dt[0]/1.03, vel[0]/1E3, 'PTF12gzk',
+    plt.text(dt[1], vel[1]/1E3, 'PTF12gzk',
             horizontalalignment='right', fontsize=12,
-            verticalalignment='center')
+            verticalalignment='bottom')
 
 
 

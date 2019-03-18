@@ -317,6 +317,16 @@ def plot_18cow(ax, scale):
             label=r"AT2018cow/4.7, +5.353d, $T=26\,$kK")
 
 
+def plot_10vgv(ax, scale):
+    dat = np.loadtxt(SPEC_DIR + "/ptf10vgv.txt", delimiter=',')
+    x = dat[:,0]
+    y = dat[:,1]
+    ax.plot(
+            x, y, lw=0.5, c='k', ls=':', 
+            label="PTF10vgv, +3.3d, $T=$?")
+
+
+
 def spec_evol(ax):
     """ Evolution of the early spectra """
     files, epochs, tels = get_files(0, 9)

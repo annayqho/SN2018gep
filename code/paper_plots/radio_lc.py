@@ -314,5 +314,5 @@ if __name__=="__main__":
     ax.legend(fontsize=12, loc='upper right')
 
     plt.subplots_adjust(wspace=0.05)
-    #plt.show()
-    plt.savefig("radio_lc.png")
+    plt.show()
+    #plt.savefig("radio_lc.png")
