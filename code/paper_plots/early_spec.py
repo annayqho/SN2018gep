@@ -176,7 +176,8 @@ def plot_smoothed_spec(ax, x, y, ivar, tel, epoch, ls='-', lw=0.5, c='black', la
     smoothed = smooth_spec(x, y, ivar, res*3)
     ax.plot(
             x[choose], smoothed[choose], c=c, 
-            drawstyle='steps-mid', lw=lw, ls=ls, alpha=1.0, label=label)
+            drawstyle='steps-mid', lw=lw, ls=ls, alpha=1.0, label=label,
+            zorder=10)
     dt_str = r"+%s\,d ($T=%s\,$kK)" %(
             str(np.round(epoch, 1)), (int(round_sig(temp/1000))))
     if text:
@@ -322,16 +323,17 @@ def plot_10vgv(ax, scale):
     x = dat[:,0]
     y = dat[:,1]
     ax.plot(
-            x, y/scale, lw=0.5, c='k', ls='-', 
-            label="PTF10vgv, +3.3d, $T=$?")
+            x, y/scale-0.2, lw=0.5, c='k', alpha=0.5, ls='-', 
+            label="PTF10vgv, +2d")
+
 
 def plot_12gzk(ax, scale):
     dat = np.loadtxt(SPEC_DIR + "/ptf12gzk.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
     ax.plot(
-            x, y/scale, lw=0.5, c='green', ls='-', 
-            label="PTF12gzk, +3.3d, $T=$?")
+            x, y/scale-0.1, lw=0.5, c='green', ls='-', 
+            label="PTF12gzk, +3d", zorder=5)
 
 
 def spec_evol(ax):
@@ -403,15 +405,15 @@ def early_comparison(ax):
     wl, flux = clip_tellurics(wl, flux)
     scale = 1E-15
     #shifted = flux/scale-shift[ii]
-    plot_spec(ax, wl, flux/scale, tel, dt)
+    plot_spec(ax, wl, flux*1.2/scale, tel, dt)
     smoothed = plot_smoothed_spec(
-        ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
+        ax, wl, flux*1.2/scale, ivar, tel, dt, lw=1.0, text=False, 
         label='SN2018gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000),
         c='darkorange')
     plot_18cow(ax, 1E-15*4.8)
     plot_10vgv(ax, 0.2)
     plot_12gzk(ax, 1E-15)
-    ax.set_ylim(0.25,5.5)
+    ax.set_ylim(0.25,3)
     ax.set_ylabel(
             r"Scaled $F_{\lambda}$ + const.",
             fontsize=16)
@@ -446,7 +448,7 @@ def w_comparison(ax):
     ax.plot(
             x-600, y/2+0.2, lw=0.5, c='k', ls=':', 
             label="PTF12dam, -25d, $T=15$--20\,kK")
-    ax.legend(fontsize=14, loc='upper right')
+    ax.legend(fontsize=12, loc='upper right')
     ax.set_ylim(-0.4,2.5)
     ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     ax.set_ylabel(
@@ -473,6 +475,6 @@ if __name__=="__main__":
         ax.get_yaxis().set_ticks([])
 
     plt.subplots_adjust(hspace=0.1)
-    #plt.savefig("early_spectra.png")
-    plt.show()
-    #plt.close()
+    plt.savefig("early_spectra.png")
+    #plt.show()
+    plt.close()
