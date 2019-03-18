@@ -314,7 +314,7 @@ def plot_18cow(ax, scale):
     plot_smoothed_spec(
             ax, wl_cow, flux_cow/scale, ivar_cow,
             'P200', 1.0, lw=1, ls='--', 
-            label=r"AT2018cow/4.7, +5.353d, $T=26\,$kK")
+            label=r"AT2018cow, +5.353d, $T=26\,$kK")
 
 
 def plot_10vgv(ax, scale):
@@ -322,9 +322,16 @@ def plot_10vgv(ax, scale):
     x = dat[:,0]
     y = dat[:,1]
     ax.plot(
-            x, y, lw=0.5, c='k', ls=':', 
+            x, y/scale, lw=0.5, c='k', ls='-', 
             label="PTF10vgv, +3.3d, $T=$?")
 
+def plot_12gzk(ax, scale):
+    dat = np.loadtxt(SPEC_DIR + "/ptf12gzk.txt", delimiter=',')
+    x = dat[:,0]
+    y = dat[:,1]
+    ax.plot(
+            x, y/scale, lw=0.5, c='green', ls='-', 
+            label="PTF12gzk, +3.3d, $T=$?")
 
 
 def spec_evol(ax):
@@ -402,11 +409,13 @@ def early_comparison(ax):
         label='SN2018gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000),
         c='darkorange')
     plot_18cow(ax, 1E-15*4.8)
+    plot_10vgv(ax, 0.2)
+    plot_12gzk(ax, 1E-15)
     ax.set_ylim(0.25,5.5)
     ax.set_ylabel(
             r"Scaled $F_{\lambda}$ + const.",
             fontsize=16)
-    ax.legend(fontsize=14, loc='upper right')
+    ax.legend(fontsize=12, loc='upper right')
 
 
 def w_comparison(ax):
@@ -464,6 +473,6 @@ if __name__=="__main__":
         ax.get_yaxis().set_ticks([])
 
     plt.subplots_adjust(hspace=0.1)
-    plt.savefig("early_spectra.png")
-    #plt.show()
+    #plt.savefig("early_spectra.png")
+    plt.show()
     #plt.close()
