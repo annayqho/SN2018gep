@@ -323,7 +323,7 @@ def plot_10vgv(ax, scale):
     x = dat[:,0]
     y = dat[:,1]
     ax.plot(
-            x, y/scale-0.2, lw=0.5, c='k', alpha=0.5, ls='-', 
+            x, y/scale, lw=0.5, c='k', alpha=0.5, ls='-', 
             label="PTF10vgv, +2d")
 
 
@@ -403,17 +403,17 @@ def early_comparison(ax):
     wl, flux = fluxcal(wl, flux, dt)
     wl, flux = clip_lines(wl, flux, z, tel, dt)
     wl, flux = clip_tellurics(wl, flux)
-    scale = 1E-15
+    scale = flux[wl>4100][0]
     #shifted = flux/scale-shift[ii]
-    plot_spec(ax, wl, flux*1.2/scale, tel, dt)
+    plot_spec(ax, wl, flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
-        ax, wl, flux*1.2/scale, ivar, tel, dt, lw=1.0, text=False, 
+        ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
         label='SN2018gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000),
         c='darkorange')
-    plot_18cow(ax, 1E-15*4.8)
-    plot_10vgv(ax, 0.2)
+    plot_18cow(ax, 1.6E-14)
+    plot_10vgv(ax, 0.6)
     plot_12gzk(ax, 1E-15)
-    ax.set_ylim(0.25,3)
+    ax.set_ylim(0.05,1.8)
     ax.set_ylabel(
             r"Scaled $F_{\lambda}$ + const.",
             fontsize=16)
