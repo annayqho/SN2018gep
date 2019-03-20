@@ -153,7 +153,7 @@ def lumtnu(ax):
 
     # SN 2018gep
     tnu = (5)*(9/5)
-    lpeak = 8E27/9
+    lpeak = 8.3E26
     ax.scatter(
             tnu, lpeak, marker='+', c='k', s=100, label=None)
     ax.text(
@@ -240,5 +240,5 @@ ax2.set_xlim(2,3000)
 plt.tight_layout()
 
 
-plt.show()
-#plt.savefig("lum_tnu.pdf")
+#plt.show()
+plt.savefig("lum_tnu.pdf")
