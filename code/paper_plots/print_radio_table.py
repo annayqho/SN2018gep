@@ -13,10 +13,12 @@ def round_sig(x, sig=2):
 d = Planck15.luminosity_distance(z=0.03154).cgs.value
 
 headings = np.array(
-        ['Date (UTC)', '$\Delta t$', 'Instrument', r'$\nu$ (GHz)', 
-         'Flux $\mu$Jy', r'$L_\nu$ (erg\,\psec\,\phz)', 
-         r'$\theta_\mathrm{FWHM}$',
-         'Int. time (h)', 'Notes'])
+        ['Start Time', '$\Delta t$', 'Instrument', r'$\nu$', 
+         r'$f_\nu$', r'$L_\nu$', r'$\theta_\mathrm{FWHM}$',
+         'Int. time (h)'])
+subheadings = np.array(
+        ['(UTC)', '(days)', '', '(GHz)', '($\mu$Jy)', '(erg\,\psec\,\phz)',
+         '$^{\prime\prime}$', '(hr)']
 label = "radio-flux"
 caption = "Radio flux density measurements for SN2018gep."
 
@@ -25,24 +27,28 @@ ncol = len(headings)
 colstr = ""
 colstr += 'l'
 for col in np.arange(ncol-1): colstr+="r"
-print(colstr)
 
 colheadstr = ""
 for col in np.arange(ncol-1):
     colheadstr += "\colhead{%s} & " %headings[col]
 colheadstr += "\colhead{%s}" %headings[-1]
 
+colsubheadstr = ""
+for col in np.arange(ncol-1):
+    colsubheadstr += "\colhead{%s} & " %subheadings[col]
+colsubheadstr += "\colhead{%s}" %subheadings[-1]
+
 rowstr = ""
 for col in np.arange(ncol-1):
     rowstr += "%s & "
 rowstr += "%s \\\ \n"
 
-outputf = open("radio_table_%s.txt" %label, "w")
+outputf = open("%s.txt" %label, "w")
 outputf.write("\\startlongtable \n")
 outputf.write("\\begin{deluxetable}{%s} \n" %colstr)
 outputf.write("\\tablecaption{%s\label{tab:%s}} \n" %(caption,label))
 outputf.write("\\tablewidth{0pt} \n")
-outputf.write("\\tablehead{ %s } \n" %colheadstr)
+outputf.write("\\tablehead{ %s \\ %s} \n" %(colheadstr,colsubheadstr))
 #outputf.write("\\rotate \n")
 outputf.write("\\tabletypesize{\scriptsize} \n")
 outputf.write("\startdata \n")
