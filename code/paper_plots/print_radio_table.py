@@ -18,7 +18,7 @@ headings = np.array(
          'Int. time (h)'])
 subheadings = np.array(
         ['(UTC)', '(days)', '', '(GHz)', '($\mu$Jy)', '(erg\,\psec\,\phz)',
-         '$^{\prime\prime}$', '(hr)']
+         '$^{\prime\prime}$', '(hr)'])
 label = "radio-flux"
 caption = "Radio flux density measurements for SN2018gep."
 
@@ -93,5 +93,5 @@ for ii in np.arange(nrows):
     outputf.write(row)
 
 outputf.write("\enddata \n")
-outputf.write("\tablecomments{For VLA measurements: The quoted errors are calculated as the quadrature sums of the image rms, plus a 5\% nominal absolute flux calibration uncertainty. When the peak flux density within the circular region is less than three times the RMS, we report an upper limit equal to three times the RMS of the image. For AMI measurements: non-detections are reported as 3-$\sigma$ upper limits. For SMA measurements: non-detections are reported as a 1-$\sigma$ upper limit.")
+outputf.write("\\tablecomments{For VLA measurements: The quoted errors are calculated as the quadrature sums of the image rms, plus a 5\% nominal absolute flux calibration uncertainty. When the peak flux density within the circular region is less than three times the RMS, we report an upper limit equal to three times the RMS of the image. For AMI measurements: non-detections are reported as 3-$\sigma$ upper limits. For SMA measurements: non-detections are reported as a 1-$\sigma$ upper limit.}")
 outputf.write("\end{deluxetable} \n")
