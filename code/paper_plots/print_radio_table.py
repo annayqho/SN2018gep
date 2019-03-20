@@ -14,12 +14,11 @@ d = Planck15.luminosity_distance(z=0.03154).cgs.value
 
 headings = np.array(
         ['Date (UTC)', '$\Delta t$', 'Instrument', r'$\nu$ (GHz)', 
-         'Flux $\mu$Jy', 'Luminosity (erg\,\psec)', 
+         'Flux $\mu$Jy', r'$L_\nu$ (erg\,\psec\,\phz)', 
          r'$\theta_\mathrm{FWHM}$',
          'Int. time (h)', 'Notes'])
 label = "radio-flux"
-caption = "Radio flux density measurements for SN2018gep. \
-           An upper limit refers to the image RMS."
+caption = "Radio flux density measurements for SN2018gep."
 
 # Print the table headers
 ncol = len(headings)
@@ -72,8 +71,8 @@ for ii in np.arange(nrows):
         # if not an upper limit, include the uncertainty
         fstr = '$%s \pm %s$' %(f[ii], ef[ii])
         fval = float(f[ii])
-    # Convert the flux into a luminosity
-    lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2 * float(nu[ii]) 
+    # Convert the flux into a luminosity density
+    lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2 
     if '<' in f[ii]:
         lumstr = "$<%s$" %round_sig(lum,2)
     else:
