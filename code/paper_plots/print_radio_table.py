@@ -61,12 +61,15 @@ tel = dat[:,1]
 nu = dat[:,2]
 f = dat[:,3]
 ef = dat[:,4]
+majbeam = dat[:,5]
+minbeam = dat[:,6]
+inttime = dat[:,7]
 nrows = dat.shape[0]
 
 for ii in np.arange(nrows):
     # Print the date as is
     # Convert the date into a dt
-    t0 = Time('2018-09-09')
+    t0 = Time('2018-09-09T03:32')
     dt = int((date[ii]-t0).value)
     # Convert the flux into a fluxstr
     if '<' in f[ii]:
@@ -84,8 +87,11 @@ for ii in np.arange(nrows):
     else:
         lumstr = round_sig(lum, 2)
     # Print row
-    row = rowstr %(date[ii], dt, tel[ii], nu[ii], fstr, lumstr, "", "", "")
+    row = rowstr %(
+            date[ii], dt, tel[ii], nu[ii], fstr, lumstr, 
+            '%s x %s' %(majbeam[ii],minbeam[ii]), inttime[ii])
     outputf.write(row)
 
 outputf.write("\enddata \n")
+outputf.write("\tablecomments{For VLA measurements: The quoted errors are calculated as the quadrature sums of the image rms, plus a 5\% nominal absolute flux calibration uncertainty. When the peak flux density within the circular region is less than three times the RMS, we report an upper limit equal to three times the RMS of the image. For AMI measurements: non-detections are reported as 3-$\sigma$ upper limits. For SMA measurements: non-detections are reported as a 1-$\sigma$ upper limit.")
 outputf.write("\end{deluxetable} \n")
