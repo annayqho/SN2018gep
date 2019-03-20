@@ -15,7 +15,7 @@ d = Planck15.luminosity_distance(z=0.03154).cgs.value
 headings = np.array(
         ['Start Time', '$\Delta t$', 'Instrument', r'$\nu$', 
          r'$f_\nu$', r'$L_\nu$', r'$\theta_\mathrm{FWHM}$',
-         'Int. time (h)'])
+         'Int. time'])
 subheadings = np.array(
         ['(UTC)', '(days)', '', '(GHz)', '($\mu$Jy)', '(erg\,\psec\,\phz)',
          '$^{\prime\prime}$', '(hr)'])
@@ -70,7 +70,9 @@ for ii in np.arange(nrows):
     # Print the date as is
     # Convert the date into a dt
     t0 = Time('2018-09-09T03:32')
-    dt = int((date[ii]-t0).value)
+    dt = np.round((date[ii]-t0).value, 1)
+    # Stop at minutes
+    datestr = ' '.join(date[ii].value[0:-7].split('T'))
     # Convert the flux into a fluxstr
     if '<' in f[ii]:
         # if upper limit, print as such
@@ -88,8 +90,8 @@ for ii in np.arange(nrows):
         lumstr = round_sig(lum, 2)
     # Print row
     row = rowstr %(
-            date[ii], dt, tel[ii], nu[ii], fstr, lumstr, 
-            '%s x %s' %(majbeam[ii],minbeam[ii]), inttime[ii])
+            datestr, dt, tel[ii], nu[ii], fstr, lumstr, 
+            '$%s \\times %s$' %(majbeam[ii],minbeam[ii]), inttime[ii])
     outputf.write(row)
 
 outputf.write("\enddata \n")
