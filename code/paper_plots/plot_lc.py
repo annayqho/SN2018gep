@@ -137,7 +137,7 @@ def plot_lc():
         # for each panel, show the r-band peak with a cross
         print(2458374.65-zp)
         ax.scatter(
-                2458374.65-zp, 16.3, marker='x', c='r', zorder=10) 
+                2458374.65-zp, 16.3, marker='+', c='r', zorder=10) 
 
         ax.yaxis.set_tick_params(labelsize=14)
         ax.xaxis.set_tick_params(labelsize=14)
