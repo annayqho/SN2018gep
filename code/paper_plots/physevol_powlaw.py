@@ -213,7 +213,7 @@ def temp_panel(ax):
 
 def lum_16asu(ax):
     """ Plot the lum evolution of iPTF16asu for comparison """
-    dt = np.linspace(2,50,1000)
+    dt = np.linspace(2,50,1000)+5.25
     # model as an exponential for now
     lum = 2E43 * np.exp(-(dt-3)/13.56)
     ax.plot(dt, lum, c='grey', lw=2, alpha=0.5, label="iPTF16asu")
@@ -221,14 +221,14 @@ def lum_16asu(ax):
 
 def temp_16asu(ax):
     """ Plot the lum evolution of iPTF16asu for comparison """
-    x = np.array([0, 18])
+    x = np.array([0, 18])+5.25
     y = np.array([11000, 6000])
     ax.plot(x, y, c='grey', lw=2, alpha=0.5)
 
 
 def rad_16asu(ax):
     """ Plot the radius evolution of iPTF16asu for comparison """
-    x = np.array([0, 18])
+    x = np.array([0, 18])+5.25
     y = np.array([0.1E16, 0.6E16])
     ax.plot(x, y, c='grey', lw=2, alpha=0.5)
 
