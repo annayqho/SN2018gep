@@ -119,22 +119,9 @@ def print_table():
     outputf.close()
 
 
-def plot():
-    # Load the bolometric light curve
-    dt, lum, llum, ulum = load_lc()
-
-    # Load the radius
-    dt, rad, lrad, urad = load_radius()
-
-    # Load the temperature
-    dt, temp, ltemp, utemp = load_temp()
-
-
-    # Initialize the figure
-    fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
-
-    # Luminosity panel
-    axarr[0].errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k')
+def lum_panel(ax):
+    """ Panel showing the luminosity evolution """
+    ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k')
     # Fit power law to all points after 1 day
     m = -5/3
     mstr = '-5/3'
@@ -143,12 +130,12 @@ def plot():
             dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose], m=m)
     xfit = np.linspace(1, max(dt))
     yfit = powlaw(xfit, b, m)
-    axarr[0].plot(xfit, yfit, ls='--', c='#f98e09')
-    axarr[0].text(25, 5E42, '$t^{%s}$' %mstr,
+    ax.plot(xfit, yfit, ls='--', c='#f98e09')
+    ax.text(25, 5E42, '$t^{%s}$' %mstr,
             horizontalalignment='left', verticalalignment='center', 
             fontsize=14)
-    axarr[0].axvline(x=3.22, ls='-', c='lightgrey', lw=3, zorder=0)
-    axarr[0].text(
+    ax.axvline(x=3.22, ls='-', c='lightgrey', lw=3, zorder=0)
+    ax.text(
             3, 1E43, "$t_\mathrm{rise}<3.2\,$d", fontsize=14,
             horizontalalignment='right')
 
@@ -160,8 +147,8 @@ def plot():
             dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose], m=m)
     xfit = np.linspace(1, max(dt))
     yfit = powlaw(xfit, b, m)
-    axarr[0].plot(xfit, yfit, ls='--', c='#57106e')
-    axarr[0].text(2, 5E44, '$t^{%s}$' %mstr,
+    ax.plot(xfit, yfit, ls='--', c='#57106e')
+    ax.text(2, 5E44, '$t^{%s}$' %mstr,
             horizontalalignment='left', verticalalignment='center', fontsize=14)
 
     # Fit a power law to points before 3.5 days
@@ -170,29 +157,31 @@ def plot():
     xfit = np.linspace(0.3, 5)
     yfit = 10**(m*np.log10(xfit)+b)
     mstr = str(np.round(m, 1))
-    axarr[0].plot(xfit, yfit, ls='--', c='grey')
-    axarr[0].text(1, 1E44, '$t^{%s}$' %mstr,
+    ax.plot(xfit, yfit, ls='--', c='grey')
+    ax.text(1, 1E44, '$t^{%s}$' %mstr,
             horizontalalignment='left', verticalalignment='center', fontsize=14)
 
-    # Formatting
 
-    # Radius panel
-    axarr[1].errorbar(dt, rad, yerr=[lrad,urad], fmt='o', c='k')
+def rad_panel(ax):
+    """ Panel showing the radius evolution """
+    ax.errorbar(dt, rad, yerr=[lrad,urad], fmt='o', c='k')
 
     # Plot lines of constant velocity
     xvals = np.linspace(1E-3, 1E2, 1000)
 
     # v = 0.1c
     yvals = 0.1 * (3E10) * xvals * 86400
-    axarr[1].plot(xvals, yvals, ls='--', c='grey')
-    axarr[1].text(1, 2E14, 'v=0.1c', fontsize=14)
+    ax.plot(xvals, yvals, ls='--', c='grey')
+    ax.text(1, 2E14, 'v=0.1c', fontsize=14)
 
     # v = 0.26c
     #yvals = 0.26 * (3E10) * xvals * 86400
     #axarr[1].plot(xvals, yvals, ls='--', c='grey')
     #axarr[1].text(0.4, 7E14, 'v=0.26c', fontsize=14)
 
-    # Temperature panel
+
+def temp_panel(ax):
+    """ Panel showing the temp evolution """
     choose = np.logical_and(dt>1, dt<19)
     axarr[2].errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k')
     m = -0.92
@@ -202,8 +191,8 @@ def plot():
     xfit = np.linspace(1, max(dt))
     yfit = 10**(m*np.log10(xfit)+b)
     mstr = str(np.round(m, 1))
-    axarr[2].plot(xfit, yfit, ls='--', c='#f98e09')
-    axarr[2].text(10, 1E4, '$t^{%s}$' %mstr,
+    ax.plot(xfit, yfit, ls='--', c='#f98e09')
+    ax.text(10, 1E4, '$t^{%s}$' %mstr,
             horizontalalignment='left', verticalalignment='center', 
             fontsize=14)
     choose = dt <= 3.5
@@ -211,14 +200,36 @@ def plot():
     xfit = np.linspace(0.3, 5)
     yfit = 10**(m*np.log10(xfit)+b)
     mstr = str(np.round(m, 1))
-    axarr[2].plot(xfit, yfit, ls='--', c='grey')
-    axarr[2].text(1, 2E4, '$t^{%s}$' %mstr,
+    ax.plot(xfit, yfit, ls='--', c='grey')
+    ax.text(1, 2E4, '$t^{%s}$' %mstr,
             horizontalalignment='left', verticalalignment='center', 
             fontsize=14)
-    axarr[2].axhline(y=5000, c='k', ls='--', lw=0.5)
-    axarr[2].text(0.5, 5000, "5000 K", fontsize=14)
+    ax.axhline(y=5000, c='k', ls='--', lw=0.5)
+    ax.text(0.5, 5000, "5000 K", fontsize=14)
 
-    # Formatting
+
+def plot():
+    # Load the bolometric light curve
+    dt, lum, llum, ulum = load_lc()
+
+    # Load the radius
+    dt, rad, lrad, urad = load_radius()
+
+    # Load the temperature
+    dt, temp, ltemp, utemp = load_temp()
+
+    # Initialize the figure
+    fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
+
+    # Luminosity panel
+    lum_panel(axarr[0])
+
+    # Radius panel
+    rad_panel(axarr[1])
+
+    # Temperature panel
+    temp_panel(axarr[2])
+
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
 
@@ -239,8 +250,8 @@ def plot():
 
     plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    #plt.show()
-    plt.savefig("bbfit_log.png")
+    plt.show()
+    #plt.savefig("bbfit_log.png")
 
 
 if __name__=="__main__":
