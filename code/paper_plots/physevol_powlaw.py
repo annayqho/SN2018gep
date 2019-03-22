@@ -121,7 +121,8 @@ def print_table():
 
 def lum_panel(ax):
     """ Panel showing the luminosity evolution """
-    ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k')
+    dt, lum, llum, ulum = load_lc()
+    ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k', label="SN2018gep")
     # Fit power law to all points after 1 day
     m = -5/3
     mstr = '-5/3'
@@ -131,12 +132,12 @@ def lum_panel(ax):
     xfit = np.linspace(1, max(dt))
     yfit = powlaw(xfit, b, m)
     ax.plot(xfit, yfit, ls='--', c='#f98e09')
-    ax.text(25, 5E42, '$t^{%s}$' %mstr,
-            horizontalalignment='left', verticalalignment='center', 
+    ax.text(1, 5E44, '$t^{%s}$' %mstr,
+            horizontalalignment='right', verticalalignment='center', 
             fontsize=14)
-    ax.axvline(x=3.22, ls='-', c='lightgrey', lw=3, zorder=0)
+    ax.axvline(x=3.22, ls='--', c='k', lw=0.5, zorder=0)
     ax.text(
-            3, 1E43, "$t_\mathrm{rise}<3.2\,$d", fontsize=14,
+            3, 1E42, "$t_\mathrm{rise}<3.2\,$d", fontsize=14,
             horizontalalignment='right')
 
     # Fit another power law
@@ -148,8 +149,8 @@ def lum_panel(ax):
     xfit = np.linspace(1, max(dt))
     yfit = powlaw(xfit, b, m)
     ax.plot(xfit, yfit, ls='--', c='#57106e')
-    ax.text(2, 5E44, '$t^{%s}$' %mstr,
-            horizontalalignment='left', verticalalignment='center', fontsize=14)
+    ax.text(2, 5E44, '$t^{%s}$' %mstr, fontsize=14,
+            horizontalalignment='left', verticalalignment='center')
 
     # Fit a power law to points before 3.5 days
     choose = dt <= 3.5
@@ -158,12 +159,13 @@ def lum_panel(ax):
     yfit = 10**(m*np.log10(xfit)+b)
     mstr = str(np.round(m, 1))
     ax.plot(xfit, yfit, ls='--', c='grey')
-    ax.text(1, 1E44, '$t^{%s}$' %mstr,
-            horizontalalignment='left', verticalalignment='center', fontsize=14)
+    ax.text(1, 1E44, '$t^{%s}$' %mstr, fontsize=14,
+            horizontalalignment='left', verticalalignment='center')
 
 
 def rad_panel(ax):
     """ Panel showing the radius evolution """
+    dt, rad, lrad, urad = load_radius()
     ax.errorbar(dt, rad, yerr=[lrad,urad], fmt='o', c='k')
 
     # Plot lines of constant velocity
@@ -182,8 +184,9 @@ def rad_panel(ax):
 
 def temp_panel(ax):
     """ Panel showing the temp evolution """
+    dt, temp, ltemp, utemp = load_temp()
     choose = np.logical_and(dt>1, dt<19)
-    axarr[2].errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k')
+    ax.errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k')
     m = -0.92
     b,berr = fit_pow(
             dt[choose], temp[choose], 
@@ -205,30 +208,47 @@ def temp_panel(ax):
             horizontalalignment='left', verticalalignment='center', 
             fontsize=14)
     ax.axhline(y=5000, c='k', ls='--', lw=0.5)
-    ax.text(0.5, 5000, "5000 K", fontsize=14)
+    ax.text(0.5, 4500, "5000 K", fontsize=14, verticalalignment='top')
+
+
+def lum_16asu(ax):
+    """ Plot the lum evolution of iPTF16asu for comparison """
+    dt = np.linspace(2,50,1000)
+    # model as an exponential for now
+    lum = 2E43 * np.exp(-(dt-3)/13.56)
+    ax.plot(dt, lum, c='grey', lw=2, alpha=0.5, label="iPTF16asu")
+
+
+def temp_16asu(ax):
+    """ Plot the lum evolution of iPTF16asu for comparison """
+    x = np.array([0, 18])
+    y = np.array([11000, 6000])
+    ax.plot(x, y, c='grey', lw=2, alpha=0.5)
+
+
+def rad_16asu(ax):
+    """ Plot the radius evolution of iPTF16asu for comparison """
+    x = np.array([0, 18])
+    y = np.array([0.1E16, 0.6E16])
+    ax.plot(x, y, c='grey', lw=2, alpha=0.5)
 
 
 def plot():
-    # Load the bolometric light curve
-    dt, lum, llum, ulum = load_lc()
-
-    # Load the radius
-    dt, rad, lrad, urad = load_radius()
-
-    # Load the temperature
-    dt, temp, ltemp, utemp = load_temp()
-
     # Initialize the figure
     fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
 
     # Luminosity panel
     lum_panel(axarr[0])
+    lum_16asu(axarr[0])
+    axarr[0].legend(fontsize=12)
 
     # Radius panel
     rad_panel(axarr[1])
+    rad_16asu(axarr[1])
 
     # Temperature panel
     temp_panel(axarr[2])
+    temp_16asu(axarr[2])
 
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
