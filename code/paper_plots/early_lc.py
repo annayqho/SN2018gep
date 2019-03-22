@@ -73,6 +73,17 @@ def full_lc():
             ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
             zorder=0)
 
+    # Plot the r-band non-detection, 32.5 min before the first det
+    rband = np.logical_and(instr=='P48+ZTF', filt=='r')
+    choose = np.logical_and(~det, rband)
+    xnondet = -32.5/60/24
+    ynondet = 21.25
+    ax.scatter(
+            xnondet, ynondet, color='grey', marker='_', label=None, s=20)
+    ax.arrow(
+            xnondet, ynondet, 0, 0.7, length_includes_head=True,
+            head_width=1, head_length=0.2, fc='grey', ec='grey')
+
     # Plot the g-band prog LC
     choose = np.logical_and(prog_det, prog_filter=='ztfg')
     ax.errorbar(

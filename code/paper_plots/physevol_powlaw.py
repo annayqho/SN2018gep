@@ -215,6 +215,8 @@ def plot():
     axarr[2].text(1, 2E4, '$t^{%s}$' %mstr,
             horizontalalignment='left', verticalalignment='center', 
             fontsize=14)
+    axarr[2].axhline(y=5000, c='k', ls='--', lw=0.5)
+    axarr[2].text(0.5, 5000, "5000 K", fontsize=14)
 
     # Formatting
     axarr[0].xaxis.label.set_visible(False)
