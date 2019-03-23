@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
+from astropy.io import ascii
 from astropy.cosmology import Planck15
 from astropy.time import Time
 
@@ -11,29 +12,28 @@ from astropy.time import Time
 def at2018gep(ax):
     distmod = Planck15.distmod(z=0.03154).value
     DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
+    t0 = 2458370.6473
 
     # For this, only use the P48 g & r forced photometry
     f = DATA_DIR + "/precursor.csv"
-    dat = np.loadtxt(f, dtype=str, delimiter=' ')
-    instr = dat[:,0]
-    jd = dat[:,1].astype(float)
-    filt = dat[:,2]
-    mag = dat[:,3].astype(float) 
-    emag = dat[:,4].astype(float)
-
-    det = np.logical_and(mag<99, ~np.isnan(mag))
-    nondet = np.logical_or(mag==99, np.isnan(mag))
-    zp = 2458370.6473
-    dt = jd-zp
+    prog = ascii.read(f)
+    mjd = prog['mjd']
+    jd = mjd + 2400000.5
+    dt = jd - t0
+    filt = prog['filter']
+    mag = prog['mag']
+    emag = prog['magerr']
+    code = prog['instrument']
+    det = np.logical_and.reduce((dt > 0, ~np.isnan(mag), code=='ZTF Camera'))
 
     # Interpolate everything onto the r-band light curve
-    band = filt == 'r'
+    band = filt == 'ztfr'
     choose = np.logical_and(det, band)
     order = np.argsort(dt[choose])
     dt_r = dt[choose][order]
     mag_r = mag[choose][order]
 
-    band = filt=='g'
+    band = filt=='ztfg'
     choose = np.logical_and(det, band)
     order = np.argsort(dt[choose])
     dt_g = dt[choose][order]
@@ -47,7 +47,8 @@ def at2018gep(ax):
     gr = g - r
     cb = ax.scatter(
             gr, g-distmod, c=tgrid, 
-            cmap='inferno', marker='o', zorder=5)
+            cmap='inferno', marker='o', zorder=5,
+            vmin=0, vmax=30)
     ax.plot(gr, g-distmod, c='k', ls='--')
     ax.scatter(
             0, 0, marker='o', c='k', label="ZTF18abukavn (SN2018gep)")
@@ -521,9 +522,9 @@ if __name__=="__main__":
     cbar.ax.tick_params(labelsize=12)
     ax.set_xlabel("$g-r$, observer frame", fontsize=16)
     ax.set_ylabel("Absolute $g$-band mag, observer frame", fontsize=16)
-    plt.xlim(-1, 1.5)
-    plt.ylim(-12.5, -21)
-    plt.legend(prop={'size':12})
+    plt.xlim(-0.7, 1.0)
+    plt.ylim(-15, -20.5)
+    plt.legend(prop={'size':14})
 
     plt.tight_layout()
 
