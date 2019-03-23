@@ -9,10 +9,11 @@ from astropy.time import Time
 
 
 def at2018gep(ax):
-    distmod = Planck15.distmod(z=0.033).value
+    distmod = Planck15.distmod(z=0.03154).value
     DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
 
-    f = DATA_DIR + "/ZTF18abukavn_opt_phot.dat"
+    # For this, only use the P48 g & r forced photometry
+    f = DATA_DIR + "/precursor.csv"
     dat = np.loadtxt(f, dtype=str, delimiter=' ')
     instr = dat[:,0]
     jd = dat[:,1].astype(float)
@@ -25,40 +26,29 @@ def at2018gep(ax):
     zp = 2458370.6473
     dt = jd-zp
 
-    dt_grid = np.arange(0,60,1)
+    # Interpolate everything onto the r-band light curve
+    band = filt == 'r'
+    choose = np.logical_and(det, band)
+    order = np.argsort(dt[choose])
+    dt_r = dt[choose][order]
+    mag_r = mag[choose][order]
 
     band = filt=='g'
     choose = np.logical_and(det, band)
     order = np.argsort(dt[choose])
-    g = np.interp(dt_grid, dt[choose][order], mag[choose][order])
+    dt_g = dt[choose][order]
+    mag_g = mag[choose][order]
 
-    # To get the uncertainties, for each dt point, choose the 5 points
-    # closest in time. Take the median uncertainty.
-    gerr = np.zeros(len(g))
-    for ii,gval in enumerate(g):
-        pts = np.argsort(np.abs(dt[choose]-dt_grid[ii]))[0:5]
-        gerr[ii] = np.median(emag[choose][pts])
+    tgrid = np.copy(dt_g)
 
-    # Later I should probably do a proper perturbation -> actual
-    # measurement of the uncertainty with a Monte Carlo,
-    # but I don't feel like doing that right now.
-
-    band = filt=='r'
-    choose = np.logical_and(det, band)
-    order = np.argsort(dt[choose])
-    r = np.interp(dt_grid, dt[choose][order], mag[choose][order])
-
-    rerr = np.zeros(len(r))
-    for ii,rval in enumerate(r):
-        pts = np.argsort(np.abs(dt[choose]-dt_grid[ii]))[0:5]
-        rerr[ii] = np.median(emag[choose][pts])
+    r = np.interp(tgrid, dt_r, mag_r)
+    g = np.interp(tgrid, dt_g, mag_g)
 
     gr = g - r
-    gr_err = np.sqrt(gerr**2+rerr**2)
-    cb = ax.errorbar(
-            gr, g-distmod, xerr=gr_err, yerr=gerr, c='k', fmt='.')
     cb = ax.scatter(
-            gr, g-distmod, c=dt_grid, cmap='inferno', marker='o', zorder=5)
+            gr, g-distmod, c=tgrid, 
+            cmap='inferno', marker='o', zorder=5)
+    ax.plot(gr, g-distmod, c='k', ls='--')
     ax.scatter(
             0, 0, marker='o', c='k', label="ZTF18abukavn (SN2018gep)")
     return cb
@@ -521,8 +511,8 @@ def sn2007ru(ax):
 if __name__=="__main__":
     fig,ax = plt.subplots(1,1,figsize=(7,5))
     cb = at2018gep(ax)
-    at2018cow(ax)
-    ksn2015k(ax)
+    #at2018cow(ax)
+    #ksn2015k(ax)
 
     # Formatting
     cbar = plt.colorbar(cb)
@@ -537,6 +527,6 @@ if __name__=="__main__":
 
     plt.tight_layout()
 
-    #plt.show()
-    plt.savefig("g_gr.png")
+    plt.show()
+    #plt.savefig("g_gr.png")
 
