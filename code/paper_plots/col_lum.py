@@ -45,14 +45,13 @@ def at2018gep(ax):
     g = np.interp(tgrid, dt_g, mag_g)
 
     gr = g - r
-    cb = ax.scatter(
-            gr, g-distmod, c=tgrid, 
-            cmap='inferno', marker='o', zorder=5,
-            vmin=0, vmax=30)
-    ax.plot(gr, g-distmod, c='k', ls='--')
-    ax.scatter(
-            0, 0, marker='o', c='k', label="ZTF18abukavn (SN2018gep)")
-    return cb
+    xdata = gr
+    ydata = g-distmod
+    ax.plot(xdata, ydata, c='k', zorder=5, lw=2)
+    ax.annotate('hi', xytext=(gr[0], ydata[0]),
+        xy=(xdata[1], ydata[1]),
+        arrowprops=dict(arrowstyle="->", color='k'),
+        size=12)
 
 
 def at2018cow(ax):
@@ -283,8 +282,7 @@ def sn2002bj(ax):
 
 def fbot():
     fig,ax = plt.subplots(1,1,figsize=(7,5))
-    cb = at2018gep(ax)
-    cbar = plt.colorbar(cb)
+    at2018gep(ax)
     at2018cow(ax)
     drout(ax)
     arcavi(ax)
@@ -516,10 +514,7 @@ if __name__=="__main__":
     #ksn2015k(ax)
 
     # Formatting
-    cbar = plt.colorbar(cb)
     ax.tick_params(axis='both', labelsize=14)
-    cbar.ax.set_ylabel("Days from some $t_0$", fontsize=14)
-    cbar.ax.tick_params(labelsize=12)
     ax.set_xlabel("$g-r$, observer frame", fontsize=16)
     ax.set_ylabel("Absolute $g$-band mag, observer frame", fontsize=16)
     plt.xlim(-0.7, 1.0)
