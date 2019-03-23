@@ -40,6 +40,9 @@ def at2018gep(ax):
     mag_g = mag[choose][order]
 
     tgrid = np.copy(dt_g)
+    # keep all the points below 1 days, and then only choose 1 pt per day
+    tgrid = np.hstack((tgrid[tgrid<1], np.arange(1,30,1)))
+    #tgrid = np.logspace(np.log10(tgrid[0]), np.log10(tgrid[-1]), 20)
 
     r = np.interp(tgrid, dt_r, mag_r)
     g = np.interp(tgrid, dt_g, mag_g)
@@ -48,14 +51,25 @@ def at2018gep(ax):
     xdata = gr
     ydata = g-distmod
     ax.plot(xdata, ydata, c='k', zorder=5, lw=2)
-    ax.annotate(s='', xy=(xdata[0], ydata[0]),
-            arrowprops=dict(arrowstyle='->', size=12))
 
-    # markt = np.array([1/24, 1, 10])
-    # for t in markt[0:1]:
-    #     ax.annotate('', 
-    #         xy=(np.interp(t, tgrid, xdata), np.interp(t, tgrid, ydata)),
-    #         arrowprops=dict(color='k', width=10, headlength=10), size=12)
+    markt = np.array([1/24, 1, 10, 20])
+    labs = np.array(["1 hour", "1 day", "10 days", "20 days"])
+    cols = np.array(['#f6d746', '#e55c30', '#84206b', '#140b34'])
+    for ii,t in enumerate(markt):
+        prevptx = np.interp(t-0.1, tgrid, xdata)#xdata[tgrid<t][-1]
+        prevpty = np.interp(t-0.1, tgrid, ydata)#ydata[tgrid<t][-1]
+        newptx = np.interp(t,tgrid,xdata)
+        newpty = np.interp(t,tgrid,ydata)
+        ax.annotate('', 
+            xytext=(prevptx, prevpty),
+            xy=(newptx, newpty),
+            arrowprops=dict(color=cols[ii], width=1, headlength=10),
+            label=labs[ii], zorder=10)
+        ax.scatter(0,0,marker='^',c=cols[ii],s=100, label=labs[ii])
+    ax.legend(loc='upper right')
+        # ax.text(newptx, newpty, "$\Delta t$= %s" %labs[ii], fontsize=12,
+        #         horizontalalignment='left', verticalalignment='top')
+    ax.text(0.3, -18.1, "SN2018gep", fontsize=14)
 
 
 def at2018cow(ax):
@@ -70,43 +84,42 @@ def at2018cow(ax):
 
     zp = 58285
     dt = jd-zp
+    print(dt)
 
-    dt_grid = np.arange(0,60,1)
+    tgrid = np.arange(dt[0],30,1)
 
     band = filt=='g'
     choose = band
     order = np.argsort(dt[choose])
-    g = np.interp(dt_grid, dt[choose][order], mag[choose][order])
-
-    # To get the uncertainties, for each dt point, choose the 5 points
-    # closest in time. Take the median uncertainty.
-    gerr = np.zeros(len(g))
-    for ii,gval in enumerate(g):
-        pts = np.argsort(np.abs(dt[choose]-dt_grid[ii]))[0:5]
-        gerr[ii] = np.median(emag[choose][pts])
-
-    # Later I should probably do a proper perturbation -> actual
-    # measurement of the uncertainty with a Monte Carlo,
-    # but I don't feel like doing that right now.
+    g = np.interp(tgrid, dt[choose][order], mag[choose][order])
 
     band = filt=='r'
     choose = band
     order = np.argsort(dt[choose])
-    r = np.interp(dt_grid, dt[choose][order], mag[choose][order])
-
-    rerr = np.zeros(len(r))
-    for ii,rval in enumerate(r):
-        pts = np.argsort(np.abs(dt[choose]-dt_grid[ii]))[0:5]
-        rerr[ii] = np.median(emag[choose][pts])
+    r = np.interp(tgrid, dt[choose][order], mag[choose][order])
 
     gr = g - r
-    gr_err = np.sqrt(gerr**2+rerr**2)
-    ax.errorbar(
-            gr, g-distmod, xerr=gr_err, yerr=gerr, c='k', fmt='.', zorder=0)
-    ax.scatter(
-            gr, g-distmod, c=dt_grid, cmap='inferno', marker='s', zorder=2)
-    ax.scatter(
-            0, 0, marker='s', c='k', label="AT2018cow")
+    xdata = gr
+    ydata = g-distmod
+    ax.plot(
+            xdata, ydata, c='k', ls='--', lw=2, zorder=2)
+    markt = np.array([1.8, 10, 20])
+    labs = np.array(["1 day", "10 days", "20 days"])
+    cols = np.array(['#e55c30', '#84206b', '#140b34'])
+    for ii,t in enumerate(markt):
+        prevptx = np.interp(t-0.1, tgrid, xdata)#xdata[tgrid<t][-1]
+        prevpty = np.interp(t-0.1, tgrid, ydata)#ydata[tgrid<t][-1]
+        newptx = np.interp(t,tgrid,xdata)
+        newpty = np.interp(t,tgrid,ydata)
+        ax.annotate('', 
+            xytext=(prevptx, prevpty),
+            xy=(newptx, newpty),
+            arrowprops=dict(color=cols[ii], width=1, headlength=10))
+        # ax.text(newptx, newpty, "$\Delta t$= %s" %labs[ii], fontsize=12,
+        #         horizontalalignment='left', verticalalignment='top')
+    ax.text(-0.14, -16.8, "AT2018cow", fontsize=14)
+
+
 
 
 def drout_all(ax):
@@ -195,8 +208,8 @@ def ksn2015k(ax):
     G = 20.01-diff
     ax.errorbar(
             gr, G, xerr=0.20, yerr=0.12, 
-            fmt='s', c='grey', mfc='white', ms=7, label=None)
-    ax.text(gr, G, "KSN2015K", fontsize=12,
+            fmt='v', c='#84206b', mfc='#84206b', ms=12, label=None)
+    ax.text(gr, G, "KSN2015K", fontsize=14,
             horizontalalignment='right', verticalalignment='bottom')
 
 
@@ -514,19 +527,19 @@ def sn2007ru(ax):
 if __name__=="__main__":
     fig,ax = plt.subplots(1,1,figsize=(7,5))
     cb = at2018gep(ax)
-    #at2018cow(ax)
-    #ksn2015k(ax)
+    at2018cow(ax)
+    ksn2015k(ax)
 
     # Formatting
     ax.tick_params(axis='both', labelsize=14)
     ax.set_xlabel("$g-r$, observer frame", fontsize=16)
     ax.set_ylabel("Absolute $g$-band mag, observer frame", fontsize=16)
     plt.xlim(-0.7, 1.0)
-    plt.ylim(-15, -20.5)
+    plt.ylim(-15.8, -20.7)
     plt.legend(prop={'size':14})
 
     plt.tight_layout()
 
-    plt.show()
-    #plt.savefig("g_gr.png")
+    #plt.show()
+    plt.savefig("g_gr.png")
 
