@@ -371,10 +371,10 @@ def spec_evol(ax):
         if ii == 1:
             smoothed = plot_smoothed_spec(
                     ax, wl, shifted, ivar, tel, dt, lw=1, c='darkorange')
-            sp = ["CIII", "CIV", "OII", "CII"]
+            sp = ["CIII", "CIV"]
             plot_species(ax, 45000, wl, smoothed, sp) 
         if ii == 3:
-            sp = ["CIII", "CIV", "OII", "CII"]
+            sp = ["CIII", "CIV"]
             plot_species(ax, 33000, wl, smoothed, sp)
         if ii == 7:
             smoothed = plot_smoothed_spec(
@@ -475,6 +475,6 @@ if __name__=="__main__":
         ax.get_yaxis().set_ticks([])
 
     plt.subplots_adjust(hspace=0.1)
-    plt.savefig("early_spectra.png")
-    #plt.show()
-    plt.close()
+    #plt.savefig("early_spectra.png")
+    plt.show()
+    #plt.close()
