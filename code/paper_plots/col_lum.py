@@ -48,10 +48,14 @@ def at2018gep(ax):
     xdata = gr
     ydata = g-distmod
     ax.plot(xdata, ydata, c='k', zorder=5, lw=2)
-    ax.annotate('hi', xytext=(gr[0], ydata[0]),
-        xy=(xdata[1], ydata[1]),
-        arrowprops=dict(arrowstyle="->", color='k'),
-        size=12)
+    ax.annotate(s='', xy=(xdata[0], ydata[0]),
+            arrowprops=dict(arrowstyle='->', size=12))
+
+    # markt = np.array([1/24, 1, 10])
+    # for t in markt[0:1]:
+    #     ax.annotate('', 
+    #         xy=(np.interp(t, tgrid, xdata), np.interp(t, tgrid, ydata)),
+    #         arrowprops=dict(color='k', width=10, headlength=10), size=12)
 
 
 def at2018cow(ax):
