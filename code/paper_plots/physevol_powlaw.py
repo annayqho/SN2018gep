@@ -270,8 +270,8 @@ def plot():
 
     plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    plt.show()
-    #plt.savefig("bbfit_log.png")
+    #plt.show()
+    plt.savefig("bbfit_log.png")
 
 
 if __name__=="__main__":
