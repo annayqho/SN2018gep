@@ -205,18 +205,22 @@ def get_lines(species, v):
     if species == "CIII":
         return np.array([4649, 5696])*(1-v/3E5+z)
     elif species == "CIV":
-        return np.array([5801])*(1-v/3E5+z)
+        return np.array([4658,5801])*(1-v/3E5+z)
     elif species == "CII":
         return np.array([3919,4267,6580])*(1-v/3E5+z)
     elif species == "SIV":
         return np.array([4110*(1-v/3E5+z)])
     elif species == "OII":
         return np.array([3727,4670,4350])*(1-v/3E5+z)
+    elif species == "OIII":
+        return np.array([3760])*(1-v/3E5+z)
+    elif species == "OIV":
+        return np.array([3730])*(1-v/3E5+z)
     else:
         print("I don't recognize this species!")
 
 
-def plot_lines(ax, y, v, species):
+def plot_lines(ax, y, v, species, offset):
     """ plot ionization lines, shifted by some velocity 
     
     Parameters
@@ -225,28 +229,40 @@ def plot_lines(ax, y, v, species):
     """
     markers = {}
     fc = {}
-    markers["CIII"] = 'v'
-    fc["CIII"] = 'k'
-    markers["CIV"] = '1'
-    fc["CIV"] = 'k'
-    markers["CII"] = 'v'
-    fc["CII"] = 'white'
-    markers["SIV"] = 'd'
-    fc["SIV"] = 'black'
+
+    # Singly ionized species are white
     markers["OII"] = 'd'
     fc["OII"] = 'white'
+    markers["CII"] = 'v'
+    fc["CII"] = 'white'
+
+    # Doubly ionized species are colored in black
+    markers["CIII"] = 'v'
+    fc["CIII"] = 'k'
+    markers["OIII"] = 'd'
+    fc["OIII"] = 'black'
+
+    # Triply ionized species are not filled in
+    markers["SIV"] = '+'
+    fc["SIV"] = 'black'
+    markers["OIV"] = 'x'
+    fc["OIV"] = 'black'
+    markers["CIV"] = '1'
+    fc["CIV"] = 'k'
+
     wl = get_lines(species, v)
+    # offset: sometimes you have to stack them
     ax.scatter(
-        wl, y, marker=markers[species], 
-        facecolor=fc[species], edgecolor='k', label=species)
+        wl, y*offset, marker=markers[species], 
+        facecolor=fc[species], edgecolor='k', label=species, zorder=20)
 
 
-def plot_species(ax, v, wl, smoothed, sp):
+def plot_species(ax, v, wl, smoothed, sp, offsets):
     """ Plot lines for a list of species """
-    for s in sp:
+    for ii,s in enumerate(sp):
         lines = get_lines(s, v)
         y = np.array([smoothed[wl<line][-1]+0.1 for line in lines])
-        plot_lines(ax, y, v, s)
+        plot_lines(ax, y, v, s, offsets[ii])
 
 
 def plot_gal_lines(ax, z, tel, dt):
@@ -371,23 +387,26 @@ def spec_evol(ax):
         if ii == 1:
             smoothed = plot_smoothed_spec(
                     ax, wl, shifted, ivar, tel, dt, lw=1, c='darkorange')
-            sp = ["CIII", "CIV"]
-            plot_species(ax, 45000, wl, smoothed, sp) 
+            sp = ["CIII", "OIII", "CIV", "OIV"]
+            offsets = [1, 1, 1.1, 1.1]
+            plot_species(ax, 45000, wl, smoothed, sp, offsets) 
         if ii == 3:
-            sp = ["CIII", "CIV"]
-            plot_species(ax, 33000, wl, smoothed, sp)
+            sp = ["CIII", "OIII", "CIV", "OIV"]
+            offsets = [0.8, 1, 1.1, 1.1]
+            plot_species(ax, 35000, wl, smoothed, sp, offsets)
         if ii == 7:
             smoothed = plot_smoothed_spec(
                     ax, wl, shifted, ivar, tel, dt, lw=1, c='purple')
             sp = ["CIII", "OII", "CII", "SIV"]
-            plot_species(ax, 30000, wl, smoothed, sp)
+            offsets = [0.95, 1, 1, 1]
+            plot_species(ax, 30000, wl, smoothed, sp, offsets)
     ax.set_xlim(3000, 8440)
     ax.set_ylim(-2,1.5)
     handles, labels = ax.get_legend_handles_labels()
     by_label = OrderedDict(zip(labels,handles))
     ax.legend(
             by_label.values(), by_label.keys(), 
-            loc='upper right', fontsize=12, ncol=2)
+            loc='upper right', fontsize=12, ncol=3)
     ax.set_ylabel(
         r"Scaled $F_{\lambda}$ + const.",
         fontsize=16)
@@ -475,6 +494,6 @@ if __name__=="__main__":
         ax.get_yaxis().set_ticks([])
 
     plt.subplots_adjust(hspace=0.1)
-    #plt.savefig("early_spectra.png")
-    plt.show()
-    #plt.close()
+    plt.savefig("early_spectra.png")
+    #plt.show()
+    plt.close()
