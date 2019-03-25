@@ -232,7 +232,7 @@ def lum_16asu(ax):
     ax.errorbar(
             dt, lum, xerr=0.17, yerr=elum, 
             marker='s', mec='grey', mfc='white', c='grey', 
-            label="iPTF16asu")
+            label="iPTF16asu", zorder=0)
 
 
 def temp_16asu(ax):
@@ -245,11 +245,11 @@ def temp_16asu(ax):
     dt = jd-t0
     temp = dat[:,1]
     etemp = dat[:,2]
-    rad = dat[:,3] * 1E2 # to cm
-    erad =dat[:,4] * 1E2
+    choose = etemp > 0
     ax.errorbar(
-            dt, temp, xerr=0.17, yerr=temp, 
-            marker='s', mec='grey', mfc='white', c='grey')
+            dt[choose], temp[choose], 
+            xerr=[0.17]*len(dt[choose]), yerr=temp[choose], 
+            marker='s', mec='grey', mfc='white', c='grey', zorder=0)
 
 
 def rad_16asu(ax):
@@ -260,11 +260,12 @@ def rad_16asu(ax):
         delimiter=" ")
     jd = dat[:,0]
     dt = jd-t0
-    rad = dat[:,3] * 1E2 # to cm
-    erad =dat[:,4] * 1E2
+    rad = dat[:,3] # to cm
+    erad =dat[:,4]
+    choose = erad > 0
     ax.errorbar(
-            dt, rad, xerr=0.17, yerr=erad, 
-            marker='s', mec='grey', mfc='white', c='grey')
+            dt[choose], rad[choose], xerr=0.17, yerr=erad[choose], 
+            marker='s', mec='grey', mfc='white', c='grey', zorder=0)
 
 
 def plot():
@@ -304,8 +305,8 @@ def plot():
 
     plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    plt.show()
-    #plt.savefig("bbfit_log.png")
+    #plt.show()
+    plt.savefig("bbfit_log.png")
 
 
 if __name__=="__main__":
