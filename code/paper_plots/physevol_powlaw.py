@@ -170,23 +170,26 @@ def lum_panel(ax):
 def rad_panel(ax):
     """ Panel showing the radius evolution """
     dt, rad, lrad, urad = load_radius()
-    ax.errorbar(dt, rad/1E15, yerr=[lrad,urad], fmt='o', c='k', lw=0.5)
+    ax.errorbar(
+            dt, rad/1E15, yerr=[lrad/1E15,urad/1E15], fmt='o', c='k', lw=0.5)
+    ax.plot(
+            dt, rad/1E15, lw=0.5, c='k')
 
     # Plot lines of constant velocity
     xvals = np.linspace(1E-3, 1E2, 1000)
 
     # v = 0.1c
     yvals = 0.1 * (3E10) * xvals * 86400
-    ax.plot(xvals, yvals, ls='--', lw=0.5, c='grey')
-    ax.text(8, 2E15, 'v=0.1c', fontsize=14, rotation=45)
+    ax.plot(xvals, yvals/1E15, ls='--', lw=0.5, c='grey')
+    ax.text(6.5, 2E15/1E15, 'v=0.1c', fontsize=14, rotation=30)
 
     ax.set_ylabel(r'$R_\mathrm{ph}$ ($10^{15}$ cm)', fontsize=16)
     ax.set_ylim(0,6)
 
     # v = 0.26c
-    #yvals = 0.26 * (3E10) * xvals * 86400
-    #axarr[1].plot(xvals, yvals, ls='--', c='grey')
-    #axarr[1].text(0.4, 7E14, 'v=0.26c', fontsize=14)
+    yvals = 0.26 * (3E10) * xvals * 86400
+    ax.plot(xvals, yvals/1E15, ls='--', c='grey', lw=0.5)
+    ax.text(4.2, 4, 'v=0.26c', fontsize=14, rotation=55)
 
 
 def temp_panel(ax):
@@ -194,6 +197,7 @@ def temp_panel(ax):
     dt, temp, ltemp, utemp = load_temp()
     choose = np.logical_and(dt>1, dt<19)
     ax.errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k', lw=0.5)
+    ax.plot(dt, temp, c='k', lw=0.5)
     # m = -0.92
     # b,berr = fit_pow(
     #         dt[choose], temp[choose], 
@@ -214,7 +218,7 @@ def temp_panel(ax):
     # ax.text(1, 2E4, '$t^{%s}$' %mstr,
     #         horizontalalignment='left', verticalalignment='center', 
     #         fontsize=14)
-    ax.axhline(y=5000, c='k', ls='--', lw=0.5)
+    ax.axhline(y=5000, c='grey', ls='--', lw=0.5)
     ax.text(0.5, 4500, "5000 K", fontsize=14, verticalalignment='top')
 
 
@@ -278,8 +282,8 @@ def plot():
 
     # Luminosity panel
     lum_panel(axarr[0])
-    #lum_16asu(axarr[0])
-    #axarr[0].legend(fontsize=12)
+    lum_16asu(axarr[0])
+    axarr[0].legend(fontsize=12)
     axarr[0].set_ylim(1E42, 1E45)
     axarr[0].set_yscale('log')
 
