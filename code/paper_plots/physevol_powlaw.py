@@ -9,9 +9,12 @@ import sys
 sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
 from scipy.optimize import curve_fit
 from astropy.io import ascii
+from astropy.time import Time
 from load_lum import load_lc
 from load_radius import load_radius
 from load_temp import load_temp
+
+datadir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
 
 
 def round_sig(x, sig=2):
@@ -212,25 +215,56 @@ def temp_panel(ax):
 
 
 def lum_16asu(ax):
-    """ Plot the lum evolution of iPTF16asu for comparison """
-    dt = np.linspace(2,50,1000)+5.25
-    # model as an exponential for now
-    lum = 2E43 * np.exp(-(dt-3)/13.56)
-    ax.plot(dt, lum, c='grey', lw=2, alpha=0.5, label="iPTF16asu")
+    """ 
+    Plot the lum evolution of iPTF16asu for comparison 
+    
+    Best-fit explosion time:
+    2016 May 10.53 +/- 0.17 days
+    """
+    t0 = Time("2016-05-10").jd + 0.53
+    et0 = 0.17
+    dat = np.loadtxt(datadir + "/bol_lc/iPTF16asu_bolometric_luminosity.txt",
+        delimiter=" ")
+    dt = dat[:,0]-t0 
+    lum = dat[:,1]
+    print(min(lum), max(lum))
+    elum = dat[:,2]
+    ax.errorbar(
+            dt, lum, xerr=0.17, yerr=elum, 
+            marker='s', mec='grey', mfc='white', c='grey', 
+            label="iPTF16asu")
 
 
 def temp_16asu(ax):
     """ Plot the lum evolution of iPTF16asu for comparison """
-    x = np.array([0, 18])+5.25
-    y = np.array([11000, 6000])
-    ax.plot(x, y, c='grey', lw=2, alpha=0.5)
+    t0 = Time("2016-05-10").jd + 0.53
+    et0 = 0.17
+    dat = np.loadtxt(datadir + "/bol_lc/iPTF16asu_Temp_Radius.txt",
+        delimiter=" ")
+    jd = dat[:,0]
+    dt = jd-t0
+    temp = dat[:,1]
+    etemp = dat[:,2]
+    rad = dat[:,3] * 1E2 # to cm
+    erad =dat[:,4] * 1E2
+    ax.errorbar(
+            dt, temp, xerr=0.17, yerr=temp, 
+            marker='s', mec='grey', mfc='white', c='grey')
 
 
 def rad_16asu(ax):
     """ Plot the radius evolution of iPTF16asu for comparison """
-    x = np.array([0, 18])+5.25
-    y = np.array([0.1E16, 0.6E16])
-    ax.plot(x, y, c='grey', lw=2, alpha=0.5)
+    t0 = Time("2016-05-10").jd + 0.53
+    et0 = 0.17
+    dat = np.loadtxt(datadir + "/bol_lc/iPTF16asu_Temp_Radius.txt",
+        delimiter=" ")
+    jd = dat[:,0]
+    dt = jd-t0
+    rad = dat[:,3] * 1E2 # to cm
+    erad =dat[:,4] * 1E2
+    ax.errorbar(
+            dt, rad, xerr=0.17, yerr=erad, 
+            marker='s', mec='grey', mfc='white', c='grey')
 
 
 def plot():
@@ -270,8 +304,8 @@ def plot():
 
     plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    #plt.show()
-    plt.savefig("bbfit_log.png")
+    plt.show()
+    #plt.savefig("bbfit_log.png")
 
 
 if __name__=="__main__":
