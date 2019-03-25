@@ -32,7 +32,7 @@ def load_lc():
     return dt, mag, emag, instr, filt, det
 
 
-def mag2lum(mag,emag):
+def mag2lum(mag):
     """ 
     Convert from mag to lum
     AB flux zero point for g-band is 3631 Jy or 1E-23 erg/cm2/s/Hz
@@ -40,29 +40,45 @@ def mag2lum(mag,emag):
     flux = 10**(-(mag + 48.6)/2.5)
     lum = 4 * np.pi * d**2 * flux
     # Uncertainty in magnitude is roughly the fractional uncertainty on the flux
+    return lum
+
+
+def emag2elum(mag,emag):
+    flux = 10**(-(mag + 48.6)/2.5)
     eflux = emag*flux
     elum = 4 * np.pi * d**2 * eflux
-    return lum,elum
+    return elum
 
 
-def get_fit_func():
+def get_t0():
     dt, mag, emag, instr, filt, det = load_lc()
-    lum,elum = mag2lum(mag, emag)
     gband = np.logical_and(instr=='P48+ZTF', filt=='g')
     choose = np.logical_and(det, gband)
     sec = dt[choose] < 3
 
-    out,cov = np.polyfit(
-            dt[choose][sec], lum[choose][sec], 
-            deg=2, w=1/elum[choose][sec], cov=True)
+    x = dt[choose][sec]
+    y = mag[choose][sec]
+    ey = emag[choose][sec]
 
-    return out, cov
+    npts = len(x)
+    ndraw = 10000
+    # make 10000 new versions of the y array
+    y_new = np.zeros((npts, ndraw))
+    for ii,yval in enumerate(y):
+        y_new[ii,:] = np.random.normal(loc=yval, scale=ey[ii], size=ndraw)
 
+    # For each version, fit for t0
+    t0s = np.zeros(ndraw)
+    for ii in np.arange(ndraw):
+        yconv = mag2lum(y_new[:,ii])
+        out = np.polyfit(x, yconv, deg=2)
+        t0s[ii] = (-out[1] + np.sqrt(out[1]**2-4*out[0]*out[1]))/(2*out[0])
 
-def get_t0():
-    out, cov = get_fit_func()
-    t0 = (-out[1] + np.sqrt(out[1]**2-4*out[0]*out[1]))/(2*out[0])
-    return t0
+    t0 = np.mean(t0s)
+    et0 = np.std(t0s)
+
+    return t0, et0
+
 
 
 def plot_firstmin(ax):
