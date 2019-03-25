@@ -69,7 +69,9 @@ def at2018gep(ax):
     ax.legend(loc='upper right')
         # ax.text(newptx, newpty, "$\Delta t$= %s" %labs[ii], fontsize=12,
         #         horizontalalignment='left', verticalalignment='top')
-    ax.text(0.3, -18.1, "SN2018gep", fontsize=14)
+    ax.text(
+            -0.3, -16, "SN2018gep", fontsize=14,
+            horizontalalignment='right')
 
 
 def at2018cow(ax):
@@ -117,9 +119,7 @@ def at2018cow(ax):
             arrowprops=dict(color=cols[ii], width=1, headlength=10))
         # ax.text(newptx, newpty, "$\Delta t$= %s" %labs[ii], fontsize=12,
         #         horizontalalignment='left', verticalalignment='top')
-    ax.text(-0.14, -16.8, "AT2018cow", fontsize=14)
-
-
+    ax.text(-0.37, -20.4, "AT2018cow", fontsize=14)
 
 
 def drout_all(ax):
@@ -522,8 +522,6 @@ def sn2007ru(ax):
             horizontalalignment='right')
 
 
-
-
 if __name__=="__main__":
     fig,ax = plt.subplots(1,1,figsize=(7,5))
     cb = at2018gep(ax)
@@ -540,6 +538,5 @@ if __name__=="__main__":
 
     plt.tight_layout()
 
-    #plt.show()
-    plt.savefig("g_gr.png")
-
+    plt.show()
+    #plt.savefig("g_gr.png")

@@ -125,8 +125,10 @@ def print_table():
 def lum_panel(ax):
     """ Panel showing the luminosity evolution """
     dt, lum, llum, ulum = load_lc()
-    ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k', lw=0.5, label="SN2018gep")
-    ax.plot(dt, lum, lw=0.5, c='k')
+    ax.errorbar(
+            dt, lum, yerr=[llum,ulum], 
+            fmt='o', c='k', lw=0.5, label="SN2018gep")
+    ax.plot(dt, lum, lw=1, c='k')
     # Fit power law to all points after 1 day
     # m = -5/3
     # mstr = '-5/3'
@@ -173,7 +175,7 @@ def rad_panel(ax):
     ax.errorbar(
             dt, rad/1E15, yerr=[lrad/1E15,urad/1E15], fmt='o', c='k', lw=0.5)
     ax.plot(
-            dt, rad/1E15, lw=0.5, c='k')
+            dt, rad/1E15, lw=1, c='k')
 
     # Plot lines of constant velocity
     xvals = np.linspace(1E-3, 1E2, 1000)
@@ -181,23 +183,27 @@ def rad_panel(ax):
     # v = 0.1c
     yvals = 0.1 * (3E10) * xvals * 86400
     ax.plot(xvals, yvals/1E15, ls='--', lw=0.5, c='grey')
-    ax.text(6.5, 2E15/1E15, 'v=0.1c', fontsize=14, rotation=30)
+    ax.text(26, 6.8, 'v=0.1c', fontsize=14, rotation=20)
 
     ax.set_ylabel(r'$R_\mathrm{ph}$ ($10^{15}$ cm)', fontsize=16)
-    ax.set_ylim(0,6)
+    ax.set_ylim(0,10)
 
     # v = 0.26c
     yvals = 0.26 * (3E10) * xvals * 86400
     ax.plot(xvals, yvals/1E15, ls='--', c='grey', lw=0.5)
-    ax.text(4.2, 4, 'v=0.26c', fontsize=14, rotation=55)
+    ax.text(12, 9.5, 'v=0.26c', fontsize=14, rotation=45)
 
 
 def temp_panel(ax):
     """ Panel showing the temp evolution """
     dt, temp, ltemp, utemp = load_temp()
-    choose = np.logical_and(dt>1, dt<19)
     ax.errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k', lw=0.5)
-    ax.plot(dt, temp, c='k', lw=0.5)
+    ax.plot(dt, temp, c='k', lw=1)
+
+    # add the early point
+    ax.scatter(0.05, 6928, facecolor='white', edgecolor='k')
+    ax.plot([0.05, dt[0]], [6928, temp[0]], c='k', lw=1)
+    
     # m = -0.92
     # b,berr = fit_pow(
     #         dt[choose], temp[choose], 
@@ -238,8 +244,10 @@ def lum_16asu(ax):
     elum = dat[:,2]
     ax.errorbar(
             dt, lum, xerr=0.17, yerr=elum, 
-            marker='s', mec='grey', mfc='white', c='grey', 
+            marker='s', mec='#e55c30', mfc='white', c='#e55c30', 
             label="iPTF16asu", zorder=0, ls='--', lw=0.5)
+    ax.plot(
+            dt, lum, c='#e55c30', zorder=0, ls='--', lw=1)
 
 
 def temp_16asu(ax):
@@ -256,8 +264,10 @@ def temp_16asu(ax):
     ax.errorbar(
             dt[choose], temp[choose],
             xerr=[0.17]*len(dt[choose]), yerr=temp[choose], 
-            marker='s', mec='grey', mfc='white', c='grey', 
+            marker='s', mec='#e55c30', mfc='white', c='#e55c30', 
             zorder=0, ls='--', lw=0.5)
+    ax.plot(
+            dt[choose], temp[choose], c='#e55c30', zorder=0, ls='--', lw=1)
 
 
 def rad_16asu(ax):
@@ -272,8 +282,11 @@ def rad_16asu(ax):
     erad =dat[:,4]
     choose = erad > 0
     ax.errorbar(
-            dt[choose], rad[choose], xerr=0.17, yerr=erad[choose], 
-            marker='s', mec='grey', mfc='white', c='grey', zorder=0)
+            dt[choose], rad[choose]/1E15, xerr=0.17, yerr=erad[choose]/1E15, 
+            marker='s', mec='#e55c30', mfc='white', c='#e55c30', 
+            zorder=0, ls='--', lw=0.5)
+    ax.plot(
+            dt[choose], rad[choose]/1E15, c='#e55c30', zorder=0, ls='--', lw=1)
 
 
 def plot():
@@ -289,14 +302,16 @@ def plot():
 
     # Radius panel
     rad_panel(axarr[1])
-    #rad_16asu(axarr[1])
+    rad_16asu(axarr[1])
 
     # Temperature panel
     temp_panel(axarr[2])
-    #temp_16asu(axarr[2])
+    temp_16asu(axarr[2])
+
+
     #axarr[2].set_ylim(0, 8E4)
     axarr[2].set_yscale('log')
-    axarr[2].set_xlim(0, 30)
+    axarr[2].set_xlim(-1, 30)
 
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
