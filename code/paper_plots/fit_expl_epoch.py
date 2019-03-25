@@ -72,13 +72,13 @@ def get_t0():
     for ii in np.arange(ndraw):
         yconv = mag2lum(y_new[:,ii])
         out = np.polyfit(x, yconv, deg=2)
-        t0s[ii] = (-out[1] + np.sqrt(out[1]**2-4*out[0]*out[1]))/(2*out[0])
+        a,b,c = out
+        t0s[ii] = (-b + np.sqrt(b**2-4*a*c))/(2*a)
 
     t0 = np.mean(t0s)
     et0 = np.std(t0s)
 
     return t0, et0
-
 
 
 def plot_firstmin(ax):
@@ -175,7 +175,8 @@ if __name__=="__main__":
 
     #plot_firstmin(axarr[0])
     #plot_full_lc(axarr[1])
-    t0 = get_t0()
+    t0,et0 = get_t0()
+    print("%s +/- %s minutes" %(t0*24*60, et0*24*60))
 
     out,cov = get_fit_func()
 
