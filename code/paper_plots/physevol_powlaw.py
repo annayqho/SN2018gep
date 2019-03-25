@@ -127,43 +127,43 @@ def lum_panel(ax):
     dt, lum, llum, ulum = load_lc()
     ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k', label="SN2018gep")
     # Fit power law to all points after 1 day
-    m = -5/3
-    mstr = '-5/3'
-    choose = dt > 1
-    b,berr = fit_pow(
-            dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose], m=m)
-    xfit = np.linspace(1, max(dt))
-    yfit = powlaw(xfit, b, m)
-    ax.plot(xfit, yfit, ls='--', c='#f98e09')
-    ax.text(1, 5E44, '$t^{%s}$' %mstr,
-            horizontalalignment='right', verticalalignment='center', 
-            fontsize=14)
-    ax.axvline(x=3.22, ls='--', c='k', lw=0.5, zorder=0)
-    ax.text(
-            3, 1E42, "$t_\mathrm{rise}<3.2\,$d", fontsize=14,
-            horizontalalignment='right')
+    # m = -5/3
+    # mstr = '-5/3'
+    # choose = dt > 1
+    # b,berr = fit_pow(
+    #         dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose], m=m)
+    # xfit = np.linspace(1, max(dt))
+    # yfit = powlaw(xfit, b, m)
+    # ax.plot(xfit, yfit, ls='--', c='#f98e09')
+    # ax.text(1, 5E44, '$t^{%s}$' %mstr,
+    #         horizontalalignment='right', verticalalignment='center', 
+    #         fontsize=14)
+    # ax.axvline(x=3.22, ls='--', c='k', lw=0.5, zorder=0)
+    # ax.text(
+    #         3, 1E42, "$t_\mathrm{rise}<3.2\,$d", fontsize=14,
+    #         horizontalalignment='right')
 
     # Fit another power law
-    m = -2
-    mstr = '-2'
-    choose = dt > 1
-    b,berr = fit_pow(
-            dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose], m=m)
-    xfit = np.linspace(1, max(dt))
-    yfit = powlaw(xfit, b, m)
-    ax.plot(xfit, yfit, ls='--', c='#57106e')
-    ax.text(2, 5E44, '$t^{%s}$' %mstr, fontsize=14,
-            horizontalalignment='left', verticalalignment='center')
+    # m = -2
+    # mstr = '-2'
+    # choose = dt > 1
+    # b,berr = fit_pow(
+    #         dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose], m=m)
+    # xfit = np.linspace(1, max(dt))
+    # yfit = powlaw(xfit, b, m)
+    # ax.plot(xfit, yfit, ls='--', c='#57106e')
+    # ax.text(2, 5E44, '$t^{%s}$' %mstr, fontsize=14,
+    #         horizontalalignment='left', verticalalignment='center')
 
-    # Fit a power law to points before 3.5 days
-    choose = dt <= 3.5
-    m,b = np.polyfit(np.log10(dt[choose]), np.log10(lum[choose]), deg=1)
-    xfit = np.linspace(0.3, 5)
-    yfit = 10**(m*np.log10(xfit)+b)
-    mstr = str(np.round(m, 1))
-    ax.plot(xfit, yfit, ls='--', c='grey')
-    ax.text(1, 1E44, '$t^{%s}$' %mstr, fontsize=14,
-            horizontalalignment='left', verticalalignment='center')
+    # # Fit a power law to points before 3.5 days
+    # choose = dt <= 3.5
+    # m,b = np.polyfit(np.log10(dt[choose]), np.log10(lum[choose]), deg=1)
+    # xfit = np.linspace(0.3, 5)
+    # yfit = 10**(m*np.log10(xfit)+b)
+    # mstr = str(np.round(m, 1))
+    # ax.plot(xfit, yfit, ls='--', c='grey')
+    # ax.text(1, 1E44, '$t^{%s}$' %mstr, fontsize=14,
+    #         horizontalalignment='left', verticalalignment='center')
 
 
 def rad_panel(ax):
@@ -190,26 +190,26 @@ def temp_panel(ax):
     dt, temp, ltemp, utemp = load_temp()
     choose = np.logical_and(dt>1, dt<19)
     ax.errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k')
-    m = -0.92
-    b,berr = fit_pow(
-            dt[choose], temp[choose], 
-            np.min((ltemp, utemp), axis=0)[choose], m=m)
-    xfit = np.linspace(1, max(dt))
-    yfit = 10**(m*np.log10(xfit)+b)
-    mstr = str(np.round(m, 1))
-    ax.plot(xfit, yfit, ls='--', c='#f98e09')
-    ax.text(10, 1E4, '$t^{%s}$' %mstr,
-            horizontalalignment='left', verticalalignment='center', 
-            fontsize=14)
-    choose = dt <= 3.5
-    m,b = np.polyfit(np.log10(dt[choose]), np.log10(temp[choose]), deg=1)
-    xfit = np.linspace(0.3, 5)
-    yfit = 10**(m*np.log10(xfit)+b)
-    mstr = str(np.round(m, 1))
-    ax.plot(xfit, yfit, ls='--', c='grey')
-    ax.text(1, 2E4, '$t^{%s}$' %mstr,
-            horizontalalignment='left', verticalalignment='center', 
-            fontsize=14)
+    # m = -0.92
+    # b,berr = fit_pow(
+    #         dt[choose], temp[choose], 
+    #         np.min((ltemp, utemp), axis=0)[choose], m=m)
+    # xfit = np.linspace(1, max(dt))
+    # yfit = 10**(m*np.log10(xfit)+b)
+    # mstr = str(np.round(m, 1))
+    # ax.plot(xfit, yfit, ls='--', c='#f98e09')
+    # ax.text(10, 1E4, '$t^{%s}$' %mstr,
+    #         horizontalalignment='left', verticalalignment='center', 
+    #         fontsize=14)
+    # choose = dt <= 3.5
+    # m,b = np.polyfit(np.log10(dt[choose]), np.log10(temp[choose]), deg=1)
+    # xfit = np.linspace(0.3, 5)
+    # yfit = 10**(m*np.log10(xfit)+b)
+    # mstr = str(np.round(m, 1))
+    # ax.plot(xfit, yfit, ls='--', c='grey')
+    # ax.text(1, 2E4, '$t^{%s}$' %mstr,
+    #         horizontalalignment='left', verticalalignment='center', 
+    #         fontsize=14)
     ax.axhline(y=5000, c='k', ls='--', lw=0.5)
     ax.text(0.5, 4500, "5000 K", fontsize=14, verticalalignment='top')
 
@@ -274,16 +274,16 @@ def plot():
 
     # Luminosity panel
     lum_panel(axarr[0])
-    lum_16asu(axarr[0])
-    axarr[0].legend(fontsize=12)
+    #lum_16asu(axarr[0])
+    #axarr[0].legend(fontsize=12)
 
     # Radius panel
-    rad_panel(axarr[1])
-    rad_16asu(axarr[1])
+    #rad_panel(axarr[1])
+    #rad_16asu(axarr[1])
 
     # Temperature panel
     temp_panel(axarr[2])
-    temp_16asu(axarr[2])
+    #temp_16asu(axarr[2])
 
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
@@ -292,12 +292,12 @@ def plot():
     axarr[0].tick_params(axis='y', labelsize=16)
     axarr[1].tick_params(axis='y', labelsize=16)
 
-    for ii in np.arange(0,3):
-        axarr[ii].set_yscale('log')
+    #for ii in np.arange(0,3):
+    #j    axarr[ii].set_yscale('log')
 
     axarr[1].set_ylim(1E14, 1E16)
     axarr[2].set_xlim(2E-1, 50)
-    axarr[2].set_xscale('log')
+    #axarr[2].set_xscale('log')
     axarr[2].set_xlabel(r'Days since $t_0$', fontsize=16)
     axarr[0].set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
     axarr[1].set_ylabel(r'$R_\mathrm{ph}$ (cm)', fontsize=16)
