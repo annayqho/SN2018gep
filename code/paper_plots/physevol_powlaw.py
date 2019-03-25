@@ -235,12 +235,11 @@ def lum_16asu(ax):
         delimiter=" ")
     dt = dat[:,0]-t0 
     lum = dat[:,1]
-    print(min(lum), max(lum))
     elum = dat[:,2]
     ax.errorbar(
             dt, lum, xerr=0.17, yerr=elum, 
             marker='s', mec='grey', mfc='white', c='grey', 
-            label="iPTF16asu", zorder=0)
+            label="iPTF16asu", zorder=0, ls='--', lw=0.5)
 
 
 def temp_16asu(ax):
@@ -255,9 +254,10 @@ def temp_16asu(ax):
     etemp = dat[:,2]
     choose = etemp > 0
     ax.errorbar(
-            dt[choose], temp[choose], 
+            dt[choose], temp[choose],
             xerr=[0.17]*len(dt[choose]), yerr=temp[choose], 
-            marker='s', mec='grey', mfc='white', c='grey', zorder=0)
+            marker='s', mec='grey', mfc='white', c='grey', 
+            zorder=0, ls='--', lw=0.5)
 
 
 def rad_16asu(ax):
