@@ -125,7 +125,8 @@ def print_table():
 def lum_panel(ax):
     """ Panel showing the luminosity evolution """
     dt, lum, llum, ulum = load_lc()
-    ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k', label="SN2018gep")
+    ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='o', c='k', lw=0.5, label="SN2018gep")
+    ax.plot(dt, lum, lw=0.5, c='k')
     # Fit power law to all points after 1 day
     # m = -5/3
     # mstr = '-5/3'
@@ -169,15 +170,18 @@ def lum_panel(ax):
 def rad_panel(ax):
     """ Panel showing the radius evolution """
     dt, rad, lrad, urad = load_radius()
-    ax.errorbar(dt, rad, yerr=[lrad,urad], fmt='o', c='k')
+    ax.errorbar(dt, rad/1E15, yerr=[lrad,urad], fmt='o', c='k', lw=0.5)
 
     # Plot lines of constant velocity
     xvals = np.linspace(1E-3, 1E2, 1000)
 
     # v = 0.1c
     yvals = 0.1 * (3E10) * xvals * 86400
-    ax.plot(xvals, yvals, ls='--', c='grey')
-    ax.text(1, 2E14, 'v=0.1c', fontsize=14)
+    ax.plot(xvals, yvals, ls='--', lw=0.5, c='grey')
+    ax.text(8, 2E15, 'v=0.1c', fontsize=14, rotation=45)
+
+    ax.set_ylabel(r'$R_\mathrm{ph}$ ($10^{15}$ cm)', fontsize=16)
+    ax.set_ylim(0,6)
 
     # v = 0.26c
     #yvals = 0.26 * (3E10) * xvals * 86400
@@ -189,7 +193,7 @@ def temp_panel(ax):
     """ Panel showing the temp evolution """
     dt, temp, ltemp, utemp = load_temp()
     choose = np.logical_and(dt>1, dt<19)
-    ax.errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k')
+    ax.errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k', lw=0.5)
     # m = -0.92
     # b,berr = fit_pow(
     #         dt[choose], temp[choose], 
@@ -276,14 +280,19 @@ def plot():
     lum_panel(axarr[0])
     #lum_16asu(axarr[0])
     #axarr[0].legend(fontsize=12)
+    axarr[0].set_ylim(1E42, 1E45)
+    axarr[0].set_yscale('log')
 
     # Radius panel
-    #rad_panel(axarr[1])
+    rad_panel(axarr[1])
     #rad_16asu(axarr[1])
 
     # Temperature panel
     temp_panel(axarr[2])
     #temp_16asu(axarr[2])
+    #axarr[2].set_ylim(0, 8E4)
+    axarr[2].set_yscale('log')
+    axarr[2].set_xlim(0, 30)
 
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
@@ -292,18 +301,11 @@ def plot():
     axarr[0].tick_params(axis='y', labelsize=16)
     axarr[1].tick_params(axis='y', labelsize=16)
 
-    #for ii in np.arange(0,3):
-    #j    axarr[ii].set_yscale('log')
-
-    axarr[1].set_ylim(1E14, 1E16)
-    axarr[2].set_xlim(2E-1, 50)
-    #axarr[2].set_xscale('log')
     axarr[2].set_xlabel(r'Days since $t_0$', fontsize=16)
     axarr[0].set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
-    axarr[1].set_ylabel(r'$R_\mathrm{ph}$ (cm)', fontsize=16)
     axarr[2].set_ylabel(r'$T_\mathrm{eff}$ (K)', fontsize=16)
 
-    plt.subplots_adjust(hspace=0)
+    #plt.subplots_adjust(hspace=0)
     plt.tight_layout()
     plt.show()
     #plt.savefig("bbfit_log.png")
