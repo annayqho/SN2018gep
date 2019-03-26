@@ -179,20 +179,17 @@ def plot():
         axarr[ii].set_yscale('log')
 
     axarr[1].set_ylim(1E14, 1E16)
-    axarr[2].set_xlim(0, 18)
+    axarr[2].set_xlim(-1, 18)
     #axarr[2].set_xscale('log')
     axarr[2].set_xlabel(r'Days since $t_0$', fontsize=16)
     axarr[0].set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
     axarr[1].set_ylabel(r'$R_\mathrm{ph}$ (cm)', fontsize=16)
     axarr[2].set_ylabel(r'$T_\mathrm{eff}$ (K)', fontsize=16)
 
-    axarr[0].axvline(x=1.1)
-    axarr[0].axvline(x=1.2)
-
     plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    plt.show()
-    #plt.savefig("modelfit.png")
+    #plt.show()
+    plt.savefig("modelfit.png")
 
 
 if __name__=="__main__":

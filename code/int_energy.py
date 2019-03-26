@@ -4,4 +4,4 @@ import numpy as np
 from load_lum import load_lc
 
 dt,lum,llum,ulum = load_lc()
-print(np.trapz(dt*86400, lum*dt*86400))
+print(np.trapz(dt*86400, lum))

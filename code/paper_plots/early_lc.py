@@ -42,7 +42,7 @@ def full_lc():
     det = np.logical_and(mag<99, ~np.isnan(mag))
 
     # Progenitor data
-    f = DATA_DIR + "/precursor.csv"
+    f = DATA_DIR + "/ZTF18abukavn.csv"
     prog = ascii.read(f)
     prog_mjd = prog['mjd']
     prog_jd = prog_mjd + 2400000.5
@@ -53,7 +53,7 @@ def full_lc():
     prog_limmag = prog['lim_mag']
     code = prog['instrument']
     prog_det = np.logical_and(prog_dt < 0, ~np.isnan(prog_mag))
-    prog_nondet = np.logical_and(code=='ZTF Deep Stacks', np.isnan(prog_mag))
+    prog_nondet = np.logical_and(code=='final photometry', np.isnan(prog_mag))
 
     # Initialize the figure
     fig,ax = plt.subplots(1,1,figsize=(5,3))
@@ -133,8 +133,8 @@ def full_lc():
     ax.legend(loc='lower right', fontsize=14)
 
     plt.tight_layout()
-    #plt.show()
-    plt.savefig("lc_full.png")
+    plt.show()
+    #plt.savefig("lc_full.png")
 
 
 def lc_zoom():

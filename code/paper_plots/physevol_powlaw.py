@@ -181,7 +181,7 @@ def rad_panel(ax):
     xvals = np.linspace(1E-3, 1E2, 1000)
 
     # v = 0.1c
-    yvals = 0.1 * (3E10) * xvals * 86400
+    yvals = 3E14 + 0.1 * (3E10) * xvals * 86400
     ax.plot(xvals, yvals/1E15, ls='--', lw=0.5, c='grey')
     ax.text(26, 6.8, 'v=0.1c', fontsize=14, rotation=20)
 
@@ -189,9 +189,9 @@ def rad_panel(ax):
     ax.set_ylim(0,10)
 
     # v = 0.26c
-    yvals = 0.26 * (3E10) * xvals * 86400
-    ax.plot(xvals, yvals/1E15, ls='--', c='grey', lw=0.5)
-    ax.text(12, 9.5, 'v=0.26c', fontsize=14, rotation=45)
+    # yvals = 3E14 + 0.26 * (3E10) * xvals * 86400
+    # ax.plot(xvals, yvals/1E15, ls='--', c='grey', lw=0.5)
+    # ax.text(12, 9.5, 'v=0.26c', fontsize=14, rotation=45)
 
 
 def temp_panel(ax):
@@ -201,8 +201,8 @@ def temp_panel(ax):
     ax.plot(dt, temp, c='k', lw=1)
 
     # add the early point
-    ax.scatter(0.05, 6928, facecolor='white', edgecolor='k')
-    ax.plot([0.05, dt[0]], [6928, temp[0]], c='k', lw=1)
+    #ax.scatter(0.05, 6928, facecolor='white', edgecolor='k')
+    #ax.plot([0.05, dt[0]], [6928, temp[0]], c='k', lw=1)
     
     # m = -0.92
     # b,berr = fit_pow(
@@ -307,9 +307,6 @@ def plot():
     # Temperature panel
     temp_panel(axarr[2])
     temp_16asu(axarr[2])
-
-
-    #axarr[2].set_ylim(0, 8E4)
     axarr[2].set_yscale('log')
     axarr[2].set_xlim(-1, 30)
 
@@ -326,8 +323,8 @@ def plot():
 
     #plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    plt.show()
-    #plt.savefig("bbfit_log.png")
+    #plt.show()
+    plt.savefig("bbfit_log.png")
 
 
 if __name__=="__main__":
