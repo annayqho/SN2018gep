@@ -179,9 +179,11 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
         axins.set_xlabel(r"Minutes since ZTF discovery", fontsize=12)
 
         axins.text(
-                0.05, 0.8, "1.3 mag/hr", fontsize=12, 
+                0.55, 0.3, "1.3 mag/hr", fontsize=12, 
                 transform=axins.transAxes)
-        axins.axvline(x=-25, ls='--', lw=0.5)
+        axins.axvline(x=-25, ls='--', lw=0.5, c='k')
+        axins.text(
+                -22, 19, "$t_0$", horizontalalignment='left', fontsize=12)
     
     else:
         ax.legend(loc='upper left', fontsize=14)
@@ -195,8 +197,8 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
     ax.invert_yaxis()
 
     plt.tight_layout()
-    plt.show()
-    #plt.savefig(figname)
+    #plt.show()
+    plt.savefig(figname)
 
 
 def lc_fit():
