@@ -7,6 +7,8 @@ plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
 import sys
 sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 from scipy.optimize import curve_fit
 from astropy.io import ascii
 from astropy.time import Time
@@ -154,26 +156,40 @@ def rad_panel(ax):
             dt, rad/1E15, lw=1, c='k')
 
     # Plot lines of constant velocity
-    xvals = np.linspace(1E-3, 1E2, 1000)
+    xvals = np.linspace(-1, 1E2, 1000)
 
     # v = 0.1c
     yvals = 3E14 + 0.1 * (3E10) * xvals * 86400
     ax.plot(xvals, yvals/1E15, ls='--', lw=0.5, c='grey')
     ax.text(26, 6.8, 'v=0.1c', fontsize=14, rotation=20)
 
+    # Inset showing the first few days
+    axins = inset_axes(
+            ax, 1.5, 1, loc=2)
+    axins.errorbar(
+            dt, rad/1E15, yerr=[lrad/1E15,urad/1E15], fmt='o', c='k', lw=0.5)
+    axins.plot(
+            dt, rad/1E15, lw=1, c='k')
+    axins.plot(xvals, yvals/1E15, ls='--', lw=0.5, c='grey')
+    axins.set_xlim(-0.5,3)
+    axins.set_ylim(0,1.5)
+    axins.tick_params(labelsize=12)
+    axins.yaxis.tick_right()
+    #axins.set_ylabel("($10^{14}$\,cm)", rotation=270, fontsize=12)
+    axins.yaxis.set_label_position("right")
+    mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
+
     ax.set_ylabel(r'$R_\mathrm{ph}$ ($10^{15}$ cm)', fontsize=16)
     ax.set_ylim(0,10)
 
     ax2 = ax.twinx()
     ax2.set_ylabel(
-            r"$(L_\odot$)", 
+            r"(AU)", 
             fontsize=16, rotation=270, labelpad=15.0)
-    y_f = lambda y_i: y_i/3.839E33
+    y_f = lambda y_i: y_i*1E15/1.496E13
     ymin, ymax = ax.get_ylim()
     ax2.set_ylim((y_f(ymin), y_f(ymax)))
     ax2.plot([],[])
-    ax2.set_yscale('log')
-    ax.set_ylim(1E42, 1E45)
     ax.tick_params(axis='both', labelsize=16)
     ax2.tick_params(axis='both', labelsize=16)
 
@@ -183,31 +199,7 @@ def temp_panel(ax):
     dt, temp, ltemp, utemp = load_temp()
     ax.errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k', lw=0.5)
     ax.plot(dt, temp, c='k', lw=1)
-
-    # add the early point
-    #ax.scatter(0.05, 6928, facecolor='white', edgecolor='k')
-    #ax.plot([0.05, dt[0]], [6928, temp[0]], c='k', lw=1)
-    
-    # m = -0.92
-    # b,berr = fit_pow(
-    #         dt[choose], temp[choose], 
-    #         np.min((ltemp, utemp), axis=0)[choose], m=m)
-    # xfit = np.linspace(1, max(dt))
-    # yfit = 10**(m*np.log10(xfit)+b)
-    # mstr = str(np.round(m, 1))
-    # ax.plot(xfit, yfit, ls='--', c='#f98e09')
-    # ax.text(10, 1E4, '$t^{%s}$' %mstr,
-    #         horizontalalignment='left', verticalalignment='center', 
-    #         fontsize=14)
-    # choose = dt <= 3.5
-    # m,b = np.polyfit(np.log10(dt[choose]), np.log10(temp[choose]), deg=1)
-    # xfit = np.linspace(0.3, 5)
-    # yfit = 10**(m*np.log10(xfit)+b)
-    # mstr = str(np.round(m, 1))
-    # ax.plot(xfit, yfit, ls='--', c='grey')
-    # ax.text(1, 2E4, '$t^{%s}$' %mstr,
-    #         horizontalalignment='left', verticalalignment='center', 
-    #         fontsize=14)
+    ax.tick_params(axis='both', labelsize=16)
     ax.axhline(y=5000, c='grey', ls='--', lw=0.5)
     ax.text(0.5, 4500, "5000 K", fontsize=14, verticalalignment='top')
 
@@ -271,6 +263,9 @@ def rad_16asu(ax):
             zorder=0, ls='--', lw=0.5)
     ax.plot(
             dt[choose], rad[choose]/1E15, c='#e55c30', zorder=0, ls='--', lw=1)
+
+    # make an inset showing the first few days
+
 
 
 def plot():
