@@ -46,18 +46,17 @@ def get_forced_phot():
     dat = ascii.read(f)
     mjd = dat['mjd']
     jd = mjd + 2400000.5
-    dt = jd - t0
     filt = dat['filter']
     mag = dat['mag']
     emag = dat['magerr']
     limmag = dat['lim_mag']
     code = dat['instrument']
-    sn_det = np.logical_and.reduce(
-            (code=='ZTF Camera', dt > -1, ~np.isnan(mag)))
-    prog_det = np.logical_and.reduce(
-            (code=='final photometry', dt < 0, ~np.isnan(mag)))
-    prog_nondet = np.logical_and(code=='final photometry', np.isnan(mag))
-    return dt, filt, mag, emag, limmag, sn_det, prog_det, prog_nondet
+    # sn_det = np.logical_and.reduce(
+    #         (code=='ZTF Camera', dt > -1, ~np.isnan(mag)))
+    # prog_det = np.logical_and.reduce(
+    #         (code=='final photometry', dt < 0, ~np.isnan(mag)))
+    # prog_nondet = np.logical_and(code=='final photometry', np.isnan(mag))
+    return jd, filt, mag, emag, limmag, code
 
 
 def get_lc():

@@ -37,9 +37,12 @@ def emag2elum(mag,emag):
 
 
 def get_t0():
-    dt, filt, mag, emag, limmag, sn_det, prog_det, prog_nondet = get_forced_phot()
-    choose = np.logical_and(sn_det, filt=='ztfg')
-    sec = dt[choose] < 3
+    jd, filt, mag, emag, limmag, code = get_forced_phot()
+    # first detection was 2458370.6634
+    dt = jd-2458370.6634
+    choose = np.logical_and.reduce(
+            (code=='ZTF Camera', filt=='ztfg', ~np.isnan(mag)))
+    sec = np.logical_and(dt[choose] < 3, dt[choose] > 0)
 
     x = dt[choose][sec]
     y = mag[choose][sec]

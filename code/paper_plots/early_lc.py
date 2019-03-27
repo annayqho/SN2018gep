@@ -181,7 +181,7 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
         axins.text(
                 0.05, 0.8, "1.3 mag/hr", fontsize=12, 
                 transform=axins.transAxes)
-        axins.axvline(x=-23, ls='--', lw=0.5)
+        axins.axvline(x=-25, ls='--', lw=0.5)
     
     else:
         ax.legend(loc='upper left', fontsize=14)
