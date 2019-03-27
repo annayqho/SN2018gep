@@ -28,8 +28,7 @@ def mag_to_flux(mag, emag):
     return np.array(lum), np.array(elum)
 
 
-def full_lc():
-    """ Plot the full LC in g and r, showing all the progenitor detections """
+def get_data():
     DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
 
     # Full light curve from Danny
@@ -46,24 +45,33 @@ def full_lc():
     sn_det = np.logical_and.reduce(
             (code=='ZTF Camera', dt > -1, ~np.isnan(mag)))
     prog_det = np.logical_and.reduce(
-            (code=='final photometry', dt < -1, ~np.isnan(mag)))
+            (code=='final photometry', dt < 0, ~np.isnan(mag)))
     prog_nondet = np.logical_and(code=='final photometry', np.isnan(mag))
+    return dt, filt, mag, emag, limmag, sn_det, prog_det, prog_nondet
+
+
+def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
+    """ Plot the full LC in g and r, showing all the progenitor detections """
+    dt, filt, mag, emag, limmag, sn_det, prog_det, prog_nondet = get_data()
 
     # Initialize the figure
-    fig,ax = plt.subplots(1,1,figsize=(10,3))
+    fig,ax = plt.subplots(1,1,figsize=(figx, figy))
 
     # Plot the g-band LC
     choose = np.logical_and(sn_det, filt=='ztfg')
+    gcol = '#140b34'
     ax.errorbar(
             dt[choose], mag[choose], yerr=emag[choose], 
-            c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
+            c=gcol, ms=5, fmt='s', label="P48 $g$, single images", 
+            zorder=3, lw=0.5)
 
-    # Plot the r-band detections
+    # Plot the r-band LC
     choose = np.logical_and(sn_det, filt=='ztfr')
+    rcol = '#e55c30'
     ax.errorbar(
             dt[choose], mag[choose], yerr=emag[choose], 
-            ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
-            zorder=0)
+            ms=5, fmt='o', mfc=rcol, mec=rcol, label="P48 $r$, single images", 
+            c=rcol, zorder=2, lw=0.5)
 
     # Plot the r-band non-detection, 32.5 min before the first det
     # rband = np.logical_and(instr=='P48+ZTF', filt=='r')
@@ -80,29 +88,32 @@ def full_lc():
     choose = np.logical_and(prog_det, filt=='ztfg')
     ax.errorbar(
             dt[choose], mag[choose], yerr=emag[choose], 
-            c='k', ms=5, fmt='s', label=None, zorder=2)
+            c=gcol, mec=gcol, mfc='white', ms=5, fmt='s', zorder=1,
+            label="P48 $g$, 3-day stacks")
 
     # Plot the g-band prog non-detections
     choose = np.logical_and(prog_nondet, filt=='ztfg')
     ax.scatter(
             dt[choose], limmag[choose], 
-            color='k', 
-            s=20, marker='_', label=None, zorder=2)
+            color=gcol, 
+            s=20, marker='_', label=None, zorder=0, lw=0.5)
 
     # Plot the r-band prog LC
     choose = np.logical_and(prog_det, filt=='ztfr')
     ax.errorbar(
             dt[choose], mag[choose], yerr=emag[choose], 
-            ms=5, fmt='o', mfc='white', mec='grey', label=None, c='grey',
-            zorder=0)
+            ms=5, fmt='o', mfc='white', mec=rcol, c=rcol,
+            zorder=1, lw=0.5,
+            label="P48 $r$, 3-day stacks")
 
     # Plot the r-band prog non-detections
     choose = np.logical_and(prog_nondet, filt=='ztfr')
     ax.scatter(
             dt[choose], limmag[choose], 
-            color='grey', 
-            s=10, marker='_', label=None, zorder=2)
+            color=rcol, 
+            s=10, marker='_', label=None, zorder=0)
 
+    ax.set_ylim(ymin, ymax)
     # Add an axis on the right-hand side showing the absolute mag
     ax2 = ax.twinx()
     ax2.set_ylabel(
@@ -115,47 +126,70 @@ def full_lc():
     ax2.tick_params(axis='both', labelsize=14)
     ax2.invert_yaxis()
 
+    if annotations:
+        # a bunch of stuff showing our follow-up timeline
+        textor = 'vertical' # textorientation
+        ax.axvline(x=0.48, lw=0.5, c='grey') # UVOT
+        ax.text(
+                0.48, 17, 'Swift', fontsize=14, horizontalalignment='center',
+                rotation=textor)
+        ax.axvline(x=0.7, lw=0.5, c='grey') # LT
+        ax.text(
+                0.7, 22, 'LT', fontsize=14, horizontalalignment='center',
+                rotation=textor)
+        ax.axvline(x=1.0, lw=0.5, c='grey') # P200/P60
+        ax.text(
+                1.0, 20, 'P200', fontsize=14, horizontalalignment='center',
+                rotation=textor) 
+        ax.text(1.0, 18, 'P60', fontsize=14, horizontalalignment='center',
+                rotation=textor)
+        ax.axvline(x=1.7, lw=0.5, c='grey') # LT
+        ax.text(1.7, 22, 'LT', fontsize=14, horizontalalignment='center',
+                rotation=textor)
+        ax.axvline(x=2.0, lw=0.5, c='grey') # P200
+        ax.text(2.0, 20, 'P200', fontsize=14, horizontalalignment='center',
+                rotation=textor)
+
+        # and an inset
+        axins = inset_axes(
+                ax, 2, 1, loc=1,
+                bbox_to_anchor=(0.87,0.98),
+                bbox_transform=ax.transAxes) 
+
+        # Plot the g-band LC
+        choose = np.logical_and(sn_det, filt=='ztfg')
+        gcol = '#140b34'
+        axins.errorbar(
+                dt[choose], mag[choose], yerr=emag[choose], 
+                c=gcol, ms=5, fmt='s', label="P48 $g$, single images", 
+                zorder=3, lw=0.5)
+
+        # Plot the r-band LC
+        choose = np.logical_and(sn_det, filt=='ztfr')
+        rcol = '#e55c30'
+        axins.errorbar(
+                dt[choose], mag[choose], yerr=emag[choose], 
+                ms=5, fmt='o', mfc=rcol, mec=rcol, label="P48 $r$, single images", 
+                c=rcol, zorder=2, lw=0.5)
+
     # Format this box
-    ax.set_xlim(-175, 33)
+    ax.set_xlim(xmin, xmax)
     ax.set_ylabel(r"Apparent Mag", fontsize=16)
-    ax.set_xlabel("Days since $t_0$", fontsize=16)
+    ax.set_xlabel("Days since ZTF discovery", fontsize=16)
     ax.yaxis.set_tick_params(labelsize=14)
     ax.xaxis.set_tick_params(labelsize=14)
     ax.invert_yaxis()
-    ax.legend(loc='lower right', fontsize=14)
+    ax.legend(loc='upper left', fontsize=14)
 
     plt.tight_layout()
-    plt.show()
-    #plt.savefig("lc_full.png")
+    #plt.show()
+    plt.savefig(figname)
 
 
-def lc_zoom():
+def lc_fit():
     """ Plot the zoomed LC in luminosity """
-    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
-    f = DATA_DIR + "/ZTF18abukavn_opt_phot.dat"
-    dat = np.loadtxt(f, dtype=str, delimiter=' ')
-    instr = dat[:,0]
-    jd = dat[:,1].astype(float)
-    dt = jd-t0
-    filt = dat[:,2]
-    mag = dat[:,3].astype(float)
-    emag = dat[:,4].astype(float)
-    det = np.logical_and(mag<99, ~np.isnan(mag))
+    dt, filt, mag, emag, limmag, sn_det, prog_det, prog_nondet = get_data()
     lum, elum = mag_to_flux(mag, emag)
-
-    # Progenitor data
-    f = DATA_DIR + "/precursor.csv"
-    prog = ascii.read(f)
-    prog_mjd = prog['mjd']
-    prog_jd = prog_mjd + 2400000.5
-    prog_dt = prog_jd - t0
-    prog_filter = prog['filter']
-    prog_mag = prog['mag']
-    prog_emag = prog['magerr']
-    prog_limmag = prog['lim_mag']
-    code = prog['instrument']
-    prog_det = np.logical_and(prog_dt < 0, ~np.isnan(prog_mag))
-    prog_nondet = np.logical_and(code=='ZTF Deep Stacks', np.isnan(prog_mag))
     progf, progef = mag_to_flux(prog_mag, prog_emag)
 
     # Initialize the figure
@@ -174,7 +208,7 @@ def lc_zoom():
     ax.errorbar(
             dt[choose], lum[choose]/1E28, yerr=elum[choose]/1E28, 
             ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
-            zorder=0)
+            zorder=2)
 
     # Plot the g-band prog LC
     choose = np.logical_and(prog_det, prog_filter=='ztfg')
@@ -206,7 +240,7 @@ def lc_zoom():
     # Format this box
     ax.set_xlim(-10, 3)
     ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
-    ax.set_xlabel("Days since $t_0$", fontsize=16)
+    ax.set_xlabel("Days since ZTF discovery", fontsize=16)
     ax.set_yscale('log')
     ax.yaxis.set_tick_params(labelsize=14)
     ax.xaxis.set_tick_params(labelsize=14)
@@ -217,4 +251,5 @@ def lc_zoom():
  
 
 if __name__=="__main__":
-    full_lc()
+    #full_lc(10, 3, -175, 35, 15.5, 23, "full_gr.png")
+    full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.png", annotations=True)
