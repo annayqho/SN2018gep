@@ -129,6 +129,20 @@ def lum_panel(ax):
             dt, lum, yerr=[llum,ulum], 
             fmt='o', c='k', lw=0.5, label="SN2018gep")
     ax.plot(dt, lum, lw=1, c='k')
+    ax.set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
+    ax.set_yscale('log')
+    ax2 = ax.twinx()
+    ax2.set_ylabel(
+            r"$(L_\odot$)", 
+            fontsize=16, rotation=270, labelpad=15.0)
+    y_f = lambda y_i: y_i/3.839E33
+    ymin, ymax = ax.get_ylim()
+    ax2.set_ylim((y_f(ymin), y_f(ymax)))
+    ax2.plot([],[])
+    ax2.set_yscale('log')
+    ax.set_ylim(1E42, 1E45)
+    ax.tick_params(axis='both', labelsize=16)
+    ax2.tick_params(axis='both', labelsize=16)
 
 
 def rad_panel(ax):
@@ -150,10 +164,18 @@ def rad_panel(ax):
     ax.set_ylabel(r'$R_\mathrm{ph}$ ($10^{15}$ cm)', fontsize=16)
     ax.set_ylim(0,10)
 
-    # v = 0.26c
-    # yvals = 3E14 + 0.26 * (3E10) * xvals * 86400
-    # ax.plot(xvals, yvals/1E15, ls='--', c='grey', lw=0.5)
-    # ax.text(12, 9.5, 'v=0.26c', fontsize=14, rotation=45)
+    ax2 = ax.twinx()
+    ax2.set_ylabel(
+            r"$(L_\odot$)", 
+            fontsize=16, rotation=270, labelpad=15.0)
+    y_f = lambda y_i: y_i/3.839E33
+    ymin, ymax = ax.get_ylim()
+    ax2.set_ylim((y_f(ymin), y_f(ymax)))
+    ax2.plot([],[])
+    ax2.set_yscale('log')
+    ax.set_ylim(1E42, 1E45)
+    ax.tick_params(axis='both', labelsize=16)
+    ax2.tick_params(axis='both', labelsize=16)
 
 
 def temp_panel(ax):
@@ -253,14 +275,12 @@ def rad_16asu(ax):
 
 def plot():
     # Initialize the figure
-    fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
+    fig,axarr = plt.subplots(3,1, figsize=(7,8), sharex=True)
 
     # Luminosity panel
     lum_panel(axarr[0])
     lum_16asu(axarr[0])
-    axarr[0].legend(fontsize=12)
-    axarr[0].set_ylim(1E42, 1E45)
-    axarr[0].set_yscale('log')
+    axarr[0].legend(fontsize=12) # wait until after 16asu
 
     # Radius panel
     rad_panel(axarr[1])
@@ -275,18 +295,16 @@ def plot():
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
 
-    axarr[2].tick_params(axis='both', labelsize=16)
     axarr[0].tick_params(axis='y', labelsize=16)
     axarr[1].tick_params(axis='y', labelsize=16)
 
     axarr[2].set_xlabel(r'Days since $t_0$', fontsize=16)
-    axarr[0].set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
     axarr[2].set_ylabel(r'$T_\mathrm{eff}$ (K)', fontsize=16)
 
     #plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    #plt.show()
-    plt.savefig("bbfit_log.png")
+    plt.show()
+    #plt.savefig("bbfit_log.png")
 
 
 if __name__=="__main__":
