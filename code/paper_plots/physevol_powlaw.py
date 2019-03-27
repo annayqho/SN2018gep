@@ -129,44 +129,6 @@ def lum_panel(ax):
             dt, lum, yerr=[llum,ulum], 
             fmt='o', c='k', lw=0.5, label="SN2018gep")
     ax.plot(dt, lum, lw=1, c='k')
-    # Fit power law to all points after 1 day
-    # m = -5/3
-    # mstr = '-5/3'
-    # choose = dt > 1
-    # b,berr = fit_pow(
-    #         dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose], m=m)
-    # xfit = np.linspace(1, max(dt))
-    # yfit = powlaw(xfit, b, m)
-    # ax.plot(xfit, yfit, ls='--', c='#f98e09')
-    # ax.text(1, 5E44, '$t^{%s}$' %mstr,
-    #         horizontalalignment='right', verticalalignment='center', 
-    #         fontsize=14)
-    # ax.axvline(x=3.22, ls='--', c='k', lw=0.5, zorder=0)
-    # ax.text(
-    #         3, 1E42, "$t_\mathrm{rise}<3.2\,$d", fontsize=14,
-    #         horizontalalignment='right')
-
-    # Fit another power law
-    # m = -2
-    # mstr = '-2'
-    # choose = dt > 1
-    # b,berr = fit_pow(
-    #         dt[choose], lum[choose], np.min((llum, ulum), axis=0)[choose], m=m)
-    # xfit = np.linspace(1, max(dt))
-    # yfit = powlaw(xfit, b, m)
-    # ax.plot(xfit, yfit, ls='--', c='#57106e')
-    # ax.text(2, 5E44, '$t^{%s}$' %mstr, fontsize=14,
-    #         horizontalalignment='left', verticalalignment='center')
-
-    # # Fit a power law to points before 3.5 days
-    # choose = dt <= 3.5
-    # m,b = np.polyfit(np.log10(dt[choose]), np.log10(lum[choose]), deg=1)
-    # xfit = np.linspace(0.3, 5)
-    # yfit = 10**(m*np.log10(xfit)+b)
-    # mstr = str(np.round(m, 1))
-    # ax.plot(xfit, yfit, ls='--', c='grey')
-    # ax.text(1, 1E44, '$t^{%s}$' %mstr, fontsize=14,
-    #         horizontalalignment='left', verticalalignment='center')
 
 
 def rad_panel(ax):
