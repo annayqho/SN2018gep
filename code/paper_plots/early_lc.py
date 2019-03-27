@@ -96,7 +96,7 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
     ax.scatter(
             dt[choose], limmag[choose], 
             color=gcol, 
-            s=20, marker='_', label=None, zorder=0, lw=0.5)
+            s=30, marker='_', label=None, zorder=0, lw=1.0)
 
     # Plot the r-band prog LC
     choose = np.logical_and(prog_det, filt=='ztfr')
@@ -111,7 +111,7 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
     ax.scatter(
             dt[choose], limmag[choose], 
             color=rcol, 
-            s=10, marker='_', label=None, zorder=0)
+            s=30, marker='_', label=None, zorder=0, lw=1.0)
 
     ax.set_ylim(ymin, ymax)
     # Add an axis on the right-hand side showing the absolute mag
@@ -129,38 +129,36 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
     if annotations:
         # a bunch of stuff showing our follow-up timeline
         textor = 'vertical' # textorientation
-        ax.axvline(x=0.48, lw=0.5, c='grey') # UVOT
+        ax.axvline(x=0.48, ymin=0, ymax=0.2, lw=0.5, c='grey') # UVOT
         ax.text(
-                0.48, 17, 'Swift', fontsize=14, horizontalalignment='center',
+                0.48, 20.2, 'Swift', fontsize=12, horizontalalignment='center',
                 rotation=textor)
-        ax.axvline(x=0.7, lw=0.5, c='grey') # LT
+        ax.axvline(x=0.7, ymin=0, ymax=0.05, lw=0.5, c='grey') # LT
         ax.text(
-                0.7, 22, 'LT', fontsize=14, horizontalalignment='center',
+                0.73, 22, 'LT', fontsize=12, horizontalalignment='center',
                 rotation=textor)
-        ax.axvline(x=1.0, lw=0.5, c='grey') # P200/P60
+        ax.axvline(x=1.0, ymin=0, ymax=0.1, lw=0.5, c='grey') # P200/P60
         ax.text(
-                1.0, 20, 'P200', fontsize=14, horizontalalignment='center',
+                1.0, 19.7, 'P200, P60', fontsize=12, horizontalalignment='center',
                 rotation=textor) 
-        ax.text(1.0, 18, 'P60', fontsize=14, horizontalalignment='center',
+        ax.axvline(x=1.7, ymin=0, ymax=0.05, lw=0.5, c='grey') # LT
+        ax.text(1.7, 22, 'LT', fontsize=12, horizontalalignment='center',
                 rotation=textor)
-        ax.axvline(x=1.7, lw=0.5, c='grey') # LT
-        ax.text(1.7, 22, 'LT', fontsize=14, horizontalalignment='center',
-                rotation=textor)
-        ax.axvline(x=2.0, lw=0.5, c='grey') # P200
-        ax.text(2.0, 20, 'P200', fontsize=14, horizontalalignment='center',
+        ax.axvline(x=2.0, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        ax.text(2.0, 20.3, 'P200', fontsize=12, horizontalalignment='center',
                 rotation=textor)
 
         # and an inset
         axins = inset_axes(
                 ax, 2, 1, loc=1,
-                bbox_to_anchor=(0.87,0.98),
+                bbox_to_anchor=(0.57,0.98),
                 bbox_transform=ax.transAxes) 
 
         # Plot the g-band LC
         choose = np.logical_and(sn_det, filt=='ztfg')
         gcol = '#140b34'
         axins.errorbar(
-                dt[choose], mag[choose], yerr=emag[choose], 
+                dt[choose]*24*60, mag[choose], yerr=emag[choose], 
                 c=gcol, ms=5, fmt='s', label="P48 $g$, single images", 
                 zorder=3, lw=0.5)
 
@@ -168,9 +166,25 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
         choose = np.logical_and(sn_det, filt=='ztfr')
         rcol = '#e55c30'
         axins.errorbar(
-                dt[choose], mag[choose], yerr=emag[choose], 
+                dt[choose]*24*60, mag[choose], yerr=emag[choose], 
                 ms=5, fmt='o', mfc=rcol, mec=rcol, label="P48 $r$, single images", 
                 c=rcol, zorder=2, lw=0.5)
+
+        # Format the inset
+        axins.set_xlim(-50,160)
+        axins.set_ylim(18,21.5)
+        axins.invert_yaxis()
+        axins.tick_params(axis='both', labelsize=12)
+        axins.set_ylabel(r"Apparent Mag", fontsize=12)
+        axins.set_xlabel(r"Minutes since ZTF discovery", fontsize=12)
+
+        axins.text(
+                0.05, 0.8, "1.3 mag/hr", fontsize=12, 
+                transform=axins.transAxes)
+        axins.axvline(x=-23, ls='--', lw=0.5)
+    
+    else:
+        ax.legend(loc='upper left', fontsize=14)
 
     # Format this box
     ax.set_xlim(xmin, xmax)
@@ -179,11 +193,10 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
     ax.yaxis.set_tick_params(labelsize=14)
     ax.xaxis.set_tick_params(labelsize=14)
     ax.invert_yaxis()
-    ax.legend(loc='upper left', fontsize=14)
 
     plt.tight_layout()
-    #plt.show()
-    plt.savefig(figname)
+    plt.show()
+    #plt.savefig(figname)
 
 
 def lc_fit():
