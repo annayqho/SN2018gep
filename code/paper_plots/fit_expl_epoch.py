@@ -10,26 +10,12 @@ from matplotlib import rc
 rc("font", family="serif")
 rc("text", usetex=True)
 from astropy.cosmology import Planck15
+import sys
+sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
+from load_lc import get_forced_phot
 
 
 d = Planck15.luminosity_distance(z=0.03154).cgs.value
-
-
-def load_lc():
-    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
-    f = DATA_DIR + "/ZTF18abukavn_opt_phot.dat"
-    dat = np.loadtxt(f, dtype=str, delimiter=' ')
-    instr = dat[:,0]
-    jd = dat[:,1].astype(float)
-    filt = dat[:,2]
-    mag = dat[:,3].astype(float)
-    emag = dat[:,4].astype(float)
-
-    det = np.logical_and(mag<99, ~np.isnan(mag))
-    # JD of first (r-band) detection
-    t0 = 2458370.6634
-    dt = jd-t0
-    return dt, mag, emag, instr, filt, det
 
 
 def mag2lum(mag):
@@ -51,9 +37,8 @@ def emag2elum(mag,emag):
 
 
 def get_t0():
-    dt, mag, emag, instr, filt, det = load_lc()
-    gband = np.logical_and(instr=='P48+ZTF', filt=='g')
-    choose = np.logical_and(det, gband)
+    dt, filt, mag, emag, limmag, sn_det, prog_det, prog_nondet = get_forced_phot()
+    choose = np.logical_and(sn_det, filt=='ztfg')
     sec = dt[choose] < 3
 
     x = dt[choose][sec]

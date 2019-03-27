@@ -2,9 +2,11 @@
 
 import numpy as np
 from astropy.cosmology import Planck15
+from astropy.io import ascii
 
 zp = 2458370.6473
 d = Planck15.luminosity_distance(z=0.03154).cgs.value
+
 
 def get_uv_lc():
     DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/uv"
@@ -34,6 +36,28 @@ def get_uv_lc():
     dt = jd-zp
 
     return dt, filt, fnu_mjy, efnu_mjy
+
+
+def get_forced_phot():
+    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
+
+    # Full light curve from Danny
+    f = DATA_DIR + "/ZTF18abukavn.csv"
+    dat = ascii.read(f)
+    mjd = dat['mjd']
+    jd = mjd + 2400000.5
+    dt = jd - t0
+    filt = dat['filter']
+    mag = dat['mag']
+    emag = dat['magerr']
+    limmag = dat['lim_mag']
+    code = dat['instrument']
+    sn_det = np.logical_and.reduce(
+            (code=='ZTF Camera', dt > -1, ~np.isnan(mag)))
+    prog_det = np.logical_and.reduce(
+            (code=='final photometry', dt < 0, ~np.isnan(mag)))
+    prog_nondet = np.logical_and(code=='final photometry', np.isnan(mag))
+    return dt, filt, mag, emag, limmag, sn_det, prog_det, prog_nondet
 
 
 def get_lc():
