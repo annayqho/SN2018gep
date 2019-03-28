@@ -339,7 +339,7 @@ def plot_10vgv(ax, scale):
     x = dat[:,0]
     y = dat[:,1]
     ax.plot(
-            x, y/scale, lw=0.5, c='k', alpha=0.5, ls='-', 
+            x, y/scale, lw=0.5, c='#84206b', alpha=1, ls='-', 
             label="PTF10vgv, +2d")
 
 
@@ -348,7 +348,7 @@ def plot_12gzk(ax, scale):
     x = dat[:,0]
     y = dat[:,1]
     ax.plot(
-            x, y/scale-0.1, lw=0.5, c='green', ls='-', 
+            x, y/scale-0.1, lw=0.5, c='#f6c746', ls='-', 
             label="PTF12gzk, +3d", zorder=5)
 
 
@@ -386,7 +386,7 @@ def spec_evol(ax):
         # Line identifications for dt=2
         if ii == 1:
             smoothed = plot_smoothed_spec(
-                    ax, wl, shifted, ivar, tel, dt, lw=1, c='darkorange')
+                    ax, wl, shifted, ivar, tel, dt, lw=1, c='#e55c30')
             sp = ["CIII", "OIII", "CIV", "OIV"]
             offsets = [1, 1, 1.1, 1.1]
             plot_species(ax, 45000, wl, smoothed, sp, offsets) 
@@ -396,7 +396,7 @@ def spec_evol(ax):
             plot_species(ax, 35000, wl, smoothed, sp, offsets)
         if ii == 7:
             smoothed = plot_smoothed_spec(
-                    ax, wl, shifted, ivar, tel, dt, lw=1, c='purple')
+                    ax, wl, shifted, ivar, tel, dt, lw=1, c='#e55c30')
             sp = ["CIII", "OII", "CII", "SIV"]
             offsets = [0.95, 1, 1, 1]
             plot_species(ax, 30000, wl, smoothed, sp, offsets)
@@ -428,7 +428,7 @@ def early_comparison(ax):
     smoothed = plot_smoothed_spec(
         ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
         label='SN2018gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000),
-        c='darkorange')
+        c='#e55c30')
     plot_18cow(ax, 1.6E-14)
     plot_10vgv(ax, 0.6)
     plot_12gzk(ax, 1E-15)
@@ -453,19 +453,19 @@ def w_comparison(ax):
     plot_spec(ax, wl, flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
         ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
-        label='SN2018gep, +4.2d, $T=20$\,kK', c='purple')
+        label='SN2018gep, +4.2d, $T=20$\,kK', c='#e55c30')
     dat = np.loadtxt(SPEC_DIR + "/2008d.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
     ext = fitzpatrick99(x+100, 0.63)
     ax.plot(
-            x+60, y/0.1+ext-2.0, lw=0.5, c='k', 
+            x+60, y/0.1+ext-2.0, lw=0.5, c='#84206b', 
             label="SN2008D, +1.4d, $T=11$\,kK")
     dat = np.loadtxt(SPEC_DIR + "/ptf12dam.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
     ax.plot(
-            x-600, y/2+0.2, lw=0.5, c='k', ls=':', 
+            x-600, y/2+0.2, lw=1, c='#f6d746', ls='-', 
             label="PTF12dam, -25d, $T=15$--20\,kK")
     ax.legend(fontsize=12, loc='upper right')
     ax.set_ylim(-0.4,2.5)
