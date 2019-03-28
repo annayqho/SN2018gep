@@ -18,7 +18,7 @@ def plot_14gqr():
     """
     datadir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
     dat = np.loadtxt("%s/bol_lc/iPTF14gqr_bbLCRT.txt" %datadir)
-    dt = dat[:,0]
+    dt = dat[:,0]+0.58
     lum = dat[:,1]
     elum = dat[:,2]
     plt.errorbar(
@@ -125,12 +125,12 @@ if __name__=="__main__":
     kappa = 0.2
     Mc = 0.23 # solar mass
     E = 1E52
-    Re = 7E12
+    Re = 6E12
     Me = 0.5
     x, y = fit(t, kappa, Mc, E/1E51, Re, Me)
     plt.plot(
             x, y, c='#140b34', ls='-',
-            label=r"$M_\mathrm{sh}=0.5\,M_\odot$,$R_\mathrm{sh}=7 \times 10^{12}$\,cm,$E_K=10^{52}\,$erg")
+            label=r"$M_\mathrm{sh}=0.5\,M_\odot$,$R_\mathrm{sh}=6 \times 10^{12}$\,cm,$E_K=10^{52}\,$erg")
 
     # What about iPTF16asu?
     # leave this out for now...
@@ -148,5 +148,5 @@ if __name__=="__main__":
     plt.ylabel("$L_\mathrm{bol}$ (erg/s)", fontsize=16)
     plt.yscale('log')
     plt.legend(loc='upper right', fontsize=12)
-    plt.show()
-    #plt.savefig("piro_models.png")
+    #plt.show()
+    plt.savefig("piro_models.png")
