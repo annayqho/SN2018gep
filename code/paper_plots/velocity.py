@@ -49,7 +49,7 @@ def plot_16asu():
             [28.3, 29.5, 25.7, 21.6, 22.0])*1000/1E3
     evel = np.array(
             [1.3, 1.4, 0.3, 0.4, 1.3])*1000/1E3
-    plt.errorbar(dt, vel, yerr=evel, marker='.', c='purple', fmt='--')
+    plt.errorbar(dt, vel, yerr=evel, marker='.', c='#84206b', fmt='--')
     plt.text(dt[1]*1.1, vel[1], 'iPTF16asu',
             horizontalalignment='center', fontsize=12,
             verticalalignment='bottom')
@@ -162,7 +162,7 @@ def plot_icbl():
 
     plt.fill_between(
             dt_mean, (vel_mean-evel_mean)/1E3, (vel_mean+evel_mean)/1E3,
-            color='purple', alpha=0.5, label="Ic-BL SNe")
+            color='#84206b', alpha=0.5, label="Ic-BL SNe")
 
 
 def plot_ic():
@@ -208,7 +208,7 @@ def plot_ic():
             dt_mean[vel_mean>0], 
             (vel_mean[vel_mean>0]-evel_mean[vel_mean>0])/1E3, 
             (vel_mean[vel_mean>0]+evel_mean[vel_mean>0])/1E3,
-            color='orange', alpha=0.5, label="Ic SNe")
+            color='#f6d746', alpha=0.5, label="Ic SNe")
 
 
 def plot_12gzk():
@@ -229,7 +229,7 @@ def plot_12gzk():
     # to add a sort of uncertainty to the dt, so offset would be 16 +/- 4 days
     dt = phase+16
     plt.errorbar(
-            dt, vel/1E3, yerr=evel/1E3, fmt='.', ls='--', c='orange')
+            dt, vel/1E3, yerr=evel/1E3, fmt='.', ls='--', c='#f6d746')
     plt.text(dt[1], vel[1]/1E3, 'PTF12gzk',
             horizontalalignment='right', fontsize=12,
             verticalalignment='bottom')

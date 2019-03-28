@@ -197,8 +197,8 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
     ax.invert_yaxis()
 
     plt.tight_layout()
-    #plt.show()
-    plt.savefig(figname)
+    plt.show()
+    #plt.savefig(figname)
 
 
 def lc_fit():
