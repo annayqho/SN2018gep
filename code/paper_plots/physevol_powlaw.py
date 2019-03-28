@@ -167,17 +167,16 @@ def rad_panel(ax):
     axins = inset_axes(
             ax, 1.5, 1, loc=2)
     axins.errorbar(
-            dt, rad/1E15, yerr=[lrad/1E15,urad/1E15], fmt='o', c='k', lw=0.5)
+            dt, rad/1.496E13, yerr=[lrad/1E15,urad/1E15], fmt='o', c='k', lw=0.5)
     axins.plot(
-            dt, rad/1E15, lw=1, c='k')
-    axins.plot(xvals, yvals/1E15, ls='--', lw=0.5, c='grey')
+            dt, rad/1.496E13, lw=1, c='k')
+    axins.plot(xvals, yvals/1.496E13, ls='--', lw=0.5, c='grey')
     axins.set_xlim(-0.5,3)
-    axins.set_ylim(0,1.5)
+    axins.set_ylim(10,90)
     axins.tick_params(labelsize=12)
     axins.yaxis.tick_right()
     #axins.set_ylabel("($10^{14}$\,cm)", rotation=270, fontsize=12)
     axins.yaxis.set_label_position("right")
-    mark_inset(ax, axins, loc1=2, loc2=4, fc="none", ec="0.5")
 
     ax.set_ylabel(r'$R_\mathrm{ph}$ ($10^{15}$ cm)', fontsize=16)
     ax.set_ylim(0,10)
@@ -298,8 +297,8 @@ def plot():
 
     #plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    plt.show()
-    #plt.savefig("bbfit_log.png")
+    #plt.show()
+    plt.savefig("bbfit_log.png")
 
 
 if __name__=="__main__":
