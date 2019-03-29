@@ -340,10 +340,10 @@ if __name__=="__main__":
 
     plot_18gep()
     plot_grbsne()
-    plot_16asu()
+    #plot_16asu()
     plot_icbl()
     plot_ic()
-    plot_12gzk()
+    #plot_12gzk()
 
     # Formatting
     plt.legend(fontsize=14, loc='upper right', ncol=2)
@@ -357,5 +357,5 @@ if __name__=="__main__":
     plt.tick_params(axis='both', labelsize=16)
     plt.tight_layout()
 
-    #plt.show()
-    plt.savefig("vel.png")
+    plt.show()
+    #plt.savefig("vel.png")
