@@ -142,7 +142,6 @@ def lum_panel(ax):
     ax2.set_ylim((y_f(ymin), y_f(ymax)))
     ax2.plot([],[])
     ax2.set_yscale('log')
-    ax.set_ylim(1E42, 1E45)
     ax.tick_params(axis='both', labelsize=16)
     ax2.tick_params(axis='both', labelsize=16)
 
@@ -267,7 +266,7 @@ def rad_16asu(ax):
 
 
 
-def plot():
+def plot(scale='loglinear'):
     # Initialize the figure
     fig,axarr = plt.subplots(3,1, figsize=(7,8), sharex=True)
 
@@ -275,6 +274,10 @@ def plot():
     lum_panel(axarr[0])
     lum_16asu(axarr[0])
     axarr[0].legend(fontsize=12) # wait until after 16asu
+    if scale=='loglinear':
+        axarr[0].set_ylim(1E42, 1E45)
+    elif scale=='loglog':
+        axarr[0].set_ylim(5E41, 1E45)
 
     # Radius panel
     rad_panel(axarr[1])
@@ -284,7 +287,11 @@ def plot():
     temp_panel(axarr[2])
     temp_16asu(axarr[2])
     axarr[2].set_yscale('log')
-    axarr[2].set_xlim(-1, 30)
+    if scale=='loglog':
+        axarr[2].set_xscale('log')
+        axarr[2].set_xlim(0.03, 100)
+    elif scale=='loglinear':
+        axarr[2].set_xlim(-1, 30)
 
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
@@ -298,8 +305,8 @@ def plot():
     #plt.subplots_adjust(hspace=0)
     plt.tight_layout()
     #plt.show()
-    plt.savefig("bbfit_log.png")
+    plt.savefig("bbfit_%s.png" %scale)
 
 
 if __name__=="__main__":
-    plot()
+    plot(scale='loglog')
