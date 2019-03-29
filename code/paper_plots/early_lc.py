@@ -50,7 +50,7 @@ def get_data():
     return dt, filt, mag, emag, limmag, sn_det, prog_det, prog_nondet
 
 
-def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
+def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=False):
     """ Plot the full LC in g and r, showing all the progenitor detections """
     dt, filt, mag, emag, limmag, sn_det, prog_det, prog_nondet = get_data()
 
@@ -126,7 +126,7 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
     ax2.tick_params(axis='both', labelsize=14)
     ax2.invert_yaxis()
 
-    if annotations:
+    if timeline:
         # a bunch of stuff showing our follow-up timeline
         textor = 'vertical' # textorientation
         ax.axvline(x=0.48, ymin=0, ymax=0.2, lw=0.5, c='grey') # UVOT
@@ -147,7 +147,23 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
         ax.axvline(x=2.0, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
         ax.text(2.0, 20.3, 'P200', fontsize=12, horizontalalignment='center',
                 rotation=textor)
+        ax.axvline(x=2.7, ymin=0, ymax=0.05, lw=0.5, c='grey') # LT
+        ax.text(2.73, 22, 'LT', fontsize=12, horizontalalignment='center',
+                rotation=textor)
+        ax.axvline(x=3.1, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        ax.text(3.1, 20.3, 'P200', fontsize=12, horizontalalignment='center',
+                rotation=textor)
+        ax.axvline(x=4.0, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        ax.text(4.0, 20.3, 'P200', fontsize=12, horizontalalignment='center',
+                rotation=textor)
+        ax.axvline(x=4.2, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        ax.text(4.2, 20, 'LRIS', fontsize=12, 
+                horizontalalignment='center', rotation=textor)
+        ax.axvline(x=4.8, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        ax.text(4.8, 20.3, 'DCT', fontsize=12, 
+                horizontalalignment='center', rotation=textor)
 
+    if inset:
         # and an inset
         axins = inset_axes(
                 ax, 2, 1, loc=1,
@@ -185,7 +201,7 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, annotations=False):
         axins.text(
                 -22, 19, "$t_0$", horizontalalignment='left', fontsize=12)
     
-    else:
+    if inset is False and timeline is False:
         ax.legend(loc='upper left', fontsize=14)
 
     # Format this box
@@ -267,4 +283,5 @@ def lc_fit():
 
 if __name__=="__main__":
     #full_lc(10, 3, -175, 35, 15.5, 23, "full_gr.png")
-    full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.png", annotations=True)
+    #full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.png", annotations=True)
+    full_lc(5, 3, -0.5, 5, 15.5, 22.5, "zoom_gr.png", timeline=True)
