@@ -9,6 +9,7 @@ from astropy.table import Table
 from astropy.cosmology import Planck15
 sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
 from load_lum import load_lc
+from calc_nickel import get_qdep
 
 
 # Where the bolometric light curve compilation lives
@@ -19,7 +20,7 @@ def at2018gep(ax):
     """ Bolometric LC of AT2018gep """
     dt, lum, llum, ulum = load_lc()
     ax.errorbar(dt, lum, yerr=[llum,ulum], fmt='s', c='k', zorder=10,
-            label="ZTF18abukavn (AT2018gep)")
+            label="SN2018gep")
     # ax.text(dt[4]/1.05, lum[4], 'AT2018gep', fontsize=14,
     #         horizontalalignment='right', verticalalignment='center')
 
@@ -33,7 +34,7 @@ def llgrb(ax):
     dt = dat['col1']
     lum = dat['col2']
     #ax.scatter(dt, lum, marker='.', c=col)
-    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5, label="LLGRB-SNe")
+    ax.plot(dt, lum, c=col, ls='-', lw=2, alpha=0.5, label="Ic-BL")
     # ax.text(dt[-1]*1.01, lum[-1], 'SN1998bw', fontsize=14, 
     #         horizontalalignment='left',
     #         verticalalignment='center')
@@ -79,7 +80,7 @@ def fbot(ax):
         [val.split('^')[1].split('_')[0] for val in lum_raw]).astype(float))
     llum = lsun*(np.array(
         [val.split('^')[1].split('_')[1] for val in lum_raw]).astype(float))
-    ax.plot(dt, lum, c='grey', ls='-', lw=2, alpha=0.5, label="FBOT (18cow)")
+    ax.plot(dt, lum, c='grey', ls='-', lw=2, alpha=0.5, label="AT2018cow")
     # ax.text(dt[4]*1.05, lum[4], 'AT2018cow', fontsize=14,
     #         horizontalalignment='left',
     #         verticalalignment='center')
@@ -120,6 +121,14 @@ if __name__=="__main__":
     llgrb(ax)
     at2018gep(ax)
     ax.legend(fontsize=12)
+
+    # Show the nickel decay line
+    x = np.linspace(15,40)
+    t0 = 30 
+    mni = 0.28
+    y = get_qdep(x, t0, mni)
+    ax.plot(x, y, ls='--', lw=0.5, c='k')
+    ax.text(26, 3E42, "$M_\mathrm{Ni} = 0.28\,M_\odot$", fontsize=11)
 
     ax = axarr[1]
     at2018gep(ax)

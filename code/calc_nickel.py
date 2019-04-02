@@ -27,8 +27,6 @@ def qpos(t, mni):
 
 def get_qdep(t, t0, mni):
     """ The total energy deposition rate
-    
-
     """
     return qgamma(t, mni) * (1-np.exp(-(t0/t)**2)) + qpos(t, mni)
 
