@@ -6,6 +6,9 @@ from scipy.integrate import cumtrapz
 import sys
 sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
 import matplotlib.pyplot as plt
+from matplotlib import rc
+rc("font", family="serif")
+rc("text", usetex=True)
 from load_lum import load_lc
 
 
@@ -48,9 +51,15 @@ if __name__=="__main__":
         dt_qdep = np.linspace(0,100,10000)
         qdep = get_qdep(dt_qdep, t0, mni)
         qdep_ratio = qdep / cumtrapz(qdep*dt_qdep, dt_qdep, initial=0)
-        plt.plot(dt_qdep, dt_qdep**(2.5) * qdep_ratio, label="t0=%s" %t0) 
+        plt.plot(dt_qdep, dt_qdep**(2.5) * qdep_ratio, label="$t_0=%s$" %t0) 
 
-    plt.ylim(0,10)
+    plt.ylim(0,6)
     plt.xlim(0,50)
-    plt.legend()
-    plt.show()
+    plt.tick_params(axis='both', labelsize=16)
+    plt.ylabel(r"$t^{2.5} L_\mathrm{bol} / \int dt t L_\mathrm{bol}$ [day$^{0.5}$]", fontsize=16)
+    plt.xlabel(r"time since explosion (days)", fontsize=16)
+    plt.legend(fontsize=14)
+    plt.tight_layout()
+    plt.savefig("wygoda.png")
+    plt.close()
+    #plt.show()

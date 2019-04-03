@@ -124,7 +124,7 @@ if __name__=="__main__":
 
     # Show the nickel decay line
     x = np.linspace(15,40)
-    t0 = 30 
+    t0 = 30
     mni = 0.28
     y = get_qdep(x, t0, mni)
     ax.plot(x, y, ls='--', lw=0.5, c='k')
@@ -146,5 +146,5 @@ if __name__=="__main__":
 
     plt.subplots_adjust(wspace=0)
 
-    #plt.show()
-    plt.savefig("bol_lc_comparison.png")
+    plt.show()
+    #plt.savefig("bol_lc_comparison.png")

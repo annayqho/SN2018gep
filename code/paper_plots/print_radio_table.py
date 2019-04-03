@@ -86,8 +86,16 @@ for ii in np.arange(nrows):
     lum = fval * 1E-6 * 1E-23 * 4 * np.pi * d**2 
     if '<' in f[ii]:
         lumstr = "$<%s$" %round_sig(lum,2)
+        lumstr = "%s \\times 10^{%s}$" %(
+            lumstr.split('e+')[0], lumstr.split('e+')[1][0:-1])
     else:
-        lumstr = round_sig(lum, 2)
+        print(lum)
+        lumstr = str(round_sig(lum, 2))
+        print(lumstr)
+        lumstr = "$%s \\times 10^{%s}$" %(
+            lumstr.split('e+')[0], lumstr.split('e+')[1])
+        print(lumstr)
+    # reformat the lumstr into an actual exponential
     # Print row
     row = rowstr %(
             datestr, dt, tel[ii], nu[ii], fstr, lumstr, 
