@@ -75,10 +75,29 @@ def iptf16asu(axarr):
             head_width=0.4, head_length=1E44/5, fc='k')
 
 
+def ps1(axarr):
+    """ equivalent rise times, bol lum for the PS1 sample
+
+    extracted from Fig 7 of Drout+14
+    they say that if they used a pseubolometric correction,
+    the luminosities would be a factor of 2 higher
+    """
+    t12 = np.array([6.706972119044536, 10.84536995642165, 12.04667856053548,
+        7.718257367165403, 5.769891242129365, 7.939867719009442, 
+        10.923585374719543, 5.716243487271193, 8.477348029364208, 
+        8.711492903371369])
+    lum = np.array([2.4992169158787695e+43, 2.4586509528158067e+43, 
+        1.261169269861789e+43, 1.0022730413557269e+43, 4.622323136168413e+42,
+        4.2361218340535585e+42, 1.5844083921328312e+42, 3.0314287872197434e+43,
+        2.77862997924052e+43, 7.567893474912679e+42])
+    axarr[1].scatter(t12, 2*lum)
+
+
 fig,axarr = plt.subplots(1,2,figsize=(10,5), sharex=True)
 sn2018gep(axarr)
 at2018cow(axarr)
 iptf16asu(axarr)
+ps1(axarr)
 
 ax = axarr[0]
 ax.set_ylabel("Observed $M_g$", fontsize=16)
