@@ -5,6 +5,8 @@ plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
 import numpy as np
 from astropy.cosmology import Planck15
+from matplotlib.patches import Rectangle
+from matplotlib.collections import PatchCollection
 
 
 def sn2018gep(axarr):
@@ -80,7 +82,9 @@ def ps1(axarr):
 
     extracted from Fig 7 of Drout+14
     they say that if they used a pseubolometric correction,
-    the luminosities would be a factor of 2 higher
+    the luminosities would be roughly a factor of 2 higher
+    I think the more accurate thing is to show the real points,
+    and then put an arrow
     """
     t12 = np.array([6.706972119044536, 10.84536995642165, 12.04667856053548,
         7.718257367165403, 5.769891242129365, 7.939867719009442, 
@@ -90,7 +94,22 @@ def ps1(axarr):
         1.261169269861789e+43, 1.0022730413557269e+43, 4.622323136168413e+42,
         4.2361218340535585e+42, 1.5844083921328312e+42, 3.0314287872197434e+43,
         2.77862997924052e+43, 7.567893474912679e+42])
-    axarr[1].scatter(t12, 2*lum)
+    # show a box around these
+    xwidth = max(t12)-min(t12)
+    xcenter = 10**(np.average([max(np.log10(t12)), min(np.log10(t12))]))
+    ywidth = max(lum)-min(lum)
+    ycenter = 10**(np.average([max(np.log10(lum)), min(np.log10(lum))]))
+    rect = Rectangle(
+            xy=(min(t12), min(lum)),
+            width=xwidth, height=ywidth)
+    pc = PatchCollection([rect], facecolor='grey', alpha=0.5, edgecolor='k')
+    axarr[1].add_collection(pc)
+    axarr[1].arrow(
+            xcenter, max(lum), 0, 3E43, length_includes_head=True,
+            head_width=2, head_length=1E44/7, fc='k')
+    axarr[1].text(
+        xcenter, ycenter, "PS1", fontsize=12, 
+        horizontalalignment='center', verticalalignment='center')
 
 
 fig,axarr = plt.subplots(1,2,figsize=(10,5), sharex=True)
