@@ -87,17 +87,6 @@ axarr[0].set_xlabel(
 axarr[1].set_xlabel(
     r"Observed $t_{1/2}$ [days]", fontsize=16)
 
-# ax = axarr[1]
-# plum = 1E42
-# trise = 0.5
-# ax.scatter(
-#         trise, plum, 
-#         marker='o', s=100, facecolor='black', edgecolor='black')
-# ax.text(
-#         trise, plum, "AT2017gfo", fontsize=12, 
-#         verticalalignment='bottom', 
-#         horizontalalignment='left')
-
 ax = axarr[1]
 ax.set_ylim(1E41, 1E45)
 ax.set_yscale('log')
