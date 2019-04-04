@@ -7,22 +7,22 @@ import numpy as np
 from astropy.cosmology import Planck15
 
 
-def at2018gep():
-    trise = 1391.0399966526045 / 86400 # convert from seconds to days
-    plum = 3E44
-    ax.scatter(
-            trise, plum, marker='*', s=300, 
-            facecolors='black', edgecolors='black')
-    ax.text(
-            trise*1.1, plum, "AT2018gep", fontsize=14, 
-            verticalalignment='bottom', 
-            horizontalalignment='left')
-    ax.arrow(
-            trise, plum, -0.006, 0, length_includes_head=True,
-            head_width=plum/5, head_length=0.001, fc='k')
+def sn2018gep(axarr):
+    trise = [3, 0.2]
+    plum = [-20, 3E44]
+
+    # left panel: rise to max g-band 
+    for ii,ax in enumerate(axarr):
+        ax.scatter(
+                trise[ii], plum[ii], marker='*', s=300, 
+                facecolors='black', edgecolors='black')
+        ax.text(
+                trise[ii]*1.1, plum[ii], "SN2018gep", fontsize=14, 
+                verticalalignment='bottom', 
+                horizontalalignment='left')
 
 
-def at2018cow():
+def at2018cow(ax):
     # peak bol from Margutti 2018
     # rise time from Perley 2018: 2-3 days
     trise = 2.5
@@ -35,11 +35,23 @@ def at2018cow():
             verticalalignment='bottom', 
             horizontalalignment='left')
 
-fig,ax = plt.subplots(1,1,figsize=(6,5))
 
-at2018gep()
-at2018cow()
+fig,axarr = plt.subplots(1,2,figsize=(10,5), sharex=True)
+sn2018gep(axarr)
 
+
+axarr[0].set_ylabel("$M_g$", fontsize=16)
+axarr[0].set_xlabel(
+    r"$t_2$ [days]", fontsize=16)
+
+# Right panel: peak bolometric luminosity
+axarr[0].set_xlabel(
+    r"$t_{1/2}$ [days]", fontsize=16)
+
+
+#at2018cow(ax)
+
+ax = axarr[1]
 # iPTF16asu
 # peak bol from Whitesides 2017
 # this is a strict lower limit
@@ -68,18 +80,19 @@ ax.text(
         horizontalalignment='left')
 
 
-
 ax.set_ylim(1E41, 1E45)
-ax.set_xlim(0.005, 100)
 ax.set_yscale('log')
 ax.set_xscale('log')
-ax.set_ylabel("Peak Bolometric Luminosity $L_\mathrm{bol}$", fontsize=16)
-ax.set_xlabel(
-        r"Days from Explosion to Peak $L_\mathrm{bol}$", fontsize=16)
-ax.yaxis.set_tick_params(labelsize=14)
-ax.xaxis.set_tick_params(labelsize=14)
+ax.set_ylabel("$L_\mathrm{bol}$", fontsize=16)
 ax.legend(loc='upper right', fontsize=12)
 
-plt.tight_layout()
+
+
+for ax in axarr:
+    ax.set_xlim(0.05, 100)
+    ax.xaxis.set_tick_params(labelsize=14)
+    ax.yaxis.set_tick_params(labelsize=14)
+
+fig.tight_layout()
 #plt.savefig("lum_rise.png")
 plt.show()

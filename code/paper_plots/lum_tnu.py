@@ -241,5 +241,5 @@ ax2.set_xlim(2,3000)
 plt.tight_layout()
 
 
-#plt.show()
-plt.savefig("lum_tnu.pdf")
+plt.show()
+#plt.savefig("lum_tnu.pdf")
