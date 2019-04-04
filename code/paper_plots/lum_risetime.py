@@ -179,8 +179,8 @@ def IIPL(axarr):
 
 fig,axarr = plt.subplots(1,2,figsize=(10,5), sharex=True)
 sn2018gep(axarr)
-at2018cow(axarr)
-iptf16asu(axarr)
+#at2018cow(axarr)
+#iptf16asu(axarr)
 #ps1(axarr)
 #snia(axarr)
 #slsn(axarr)
