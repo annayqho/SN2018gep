@@ -48,26 +48,8 @@ def tp_mag(dt, mag, z):
     return trise, Mpeak
 
 
-def sn2018gep(axarr):
-    """ Rise time and peak mag, peak lbol, for SN2018gep """
-    # for the left panel, load the U-band light curve from UVOT
-    z = 0.03154
-    dt, filt, mag, emag = get_lc() 
-    choose = filt == 'U'
-    trise, Mpeak = tp_mag(dt[choose], mag[choose], z=0.03154)
-
-    axarr[0].scatter(trise, Mpeak, marker='*', s=300,
-            facecolors='black', edgecolors='black')
-
-    axarr[0].text(
-            trise*1.1, Mpeak, "SN2018gep", fontsize=14, 
-            verticalalignment='bottom', 
-            horizontalalignment='left')
-
-    # next, load in the bolometric light curve
-    dt, lum, llum, ulum = load_lc()
-
-    # get the peak lum
+def tp_lum(dt, lum, z):
+    """ get t12 peak and peak lum from a LC """
     ipeak = np.argmax(lum)
     lpeak = lum[ipeak]
 
@@ -85,64 +67,73 @@ def sn2018gep(axarr):
     # find t1/2
     trise = (tend-tstart)/(1+z)
 
+    return trise, lpeak
+
+
+def sn2018gep(axarr):
+    """ Rise time and peak mag, peak lbol, for SN2018gep """
+    # for the left panel, load the U-band light curve from UVOT
+    z = 0.03154
+    dt, filt, mag, emag = get_lc() 
+    choose = filt == 'U'
+    trise, Mpeak = tp_mag(dt[choose], mag[choose], z=0.03154)
+    
+    axarr[0].scatter(trise, Mpeak, marker='*', s=300,
+            facecolors='black', edgecolors='black')
+
+    axarr[0].text(
+            trise*1.1, Mpeak, "SN2018gep", fontsize=14, 
+            verticalalignment='bottom', 
+            horizontalalignment='left')
+    
+    # next, load in the bolometric light curve
+    dt, lum, llum, ulum = load_lc()
+    trise, lpeak = tp_lum(dt, lum, z)
+
     # plot the right panel
     axarr[1].scatter(trise, lpeak, marker='*', s=300,
             facecolors='black', edgecolors='black')
 
     axarr[1].text(
-            trise*1.1, lpeak, "SN2018gep", fontsize=14, 
+            trise, lpeak*1.1, "SN2018gep", fontsize=14, 
             verticalalignment='bottom', 
-            horizontalalignment='left')
+            horizontalalignment='center')
 
 
 def at2018cow(axarr):
     """ Rise time and peak mag, peak lbol, for AT2018cow """
-    # rise time will be upper limit in both cases 
-    trise = np.array([2, 2.5])
-    plum = np.array([-20.5, 3.5E44])
-    eplum = np.array([0.03, 3.5E44*(6E9/8.5E10)])
-    apos = trise/3
-    hw = np.array([0.02, 1E44])
+    trise, Mpeak = tp_mag(
+            np.array([-0.87, 2.15]), np.array([18.4, 12.9]), z=0.014)
+    axarr[0].scatter(
+            trise, Mpeak, marker='o', c='k')
+    axarr[0].text(
+            trise, Mpeak, "AT2018cow", fontsize=12, 
+            verticalalignment='bottom', 
+            horizontalalignment='left')
 
-    for ii,ax in enumerate(axarr):
-        ax.errorbar(
-                trise[ii], plum[ii], yerr=eplum[ii], fmt='o', ms=10, c='k')
-        ax.text(
-                trise[ii], plum[ii], "AT2018cow", fontsize=12, 
-                verticalalignment='bottom', 
-                horizontalalignment='left')
-        ax.arrow(
-                trise[ii], plum[ii], -apos[ii], 0, length_includes_head=True,
-                head_width=hw[ii], head_length=apos[ii]/3, fc='k')
-
+    trise = 58288.44-58284.13
+    lpeak = 3.5E44
+    axarr[1].scatter(
+            trise, lpeak, marker='o', c='k')
+    axarr[1].text(
+            trise, lpeak, "AT2018cow", fontsize=12, 
+            verticalalignment='center', 
+            horizontalalignment='left')
+    
 
 def iptf16asu(axarr):
     """ 
     rise time, peak Mg, peak Lbol for iPTF16asu
+    Using the observed g-band filter, which is 3909 rest-frame
     """
-    # rise time to Mg is a lower limit because we only observe it
-    # rising by 1 mag, not by 2 mag
-    # we do resolve the bolometric rise
-    trise = [1.71, 1.4]
-
-    # we do resolve Mg, but Lbol is a strict lower limit
-    plum = [-20.4, 3.4E43]
-    eplum = [0.09, 0.3E43]
-
-    for ii, ax in enumerate(axarr):
-        ax.errorbar(
-                trise[ii], plum[ii], yerr=eplum[ii],
-                fmt='o', ms=10, mfc='black', mec='black', c='k')
-        ax.text(
-                trise[ii], plum[ii], "iPTF16asu", fontsize=12, 
+    dt = np.array([-2.46, -2.43, -1.61, -1.58, -1.56])
+    mag = np.array([19.8, 19.69, 19.34, 19.25, 19.28])
+    trise, Mpeak = tp_mag(dt, mag, z=0.187)
+    # the Mpeak here is probably a lower limit
+    axarr[0].scatter(trise, Mpeak, marker='o', c='k')
+    axarr[0].text(trise, Mpeak, "iPTF16asu", fontsize=12, 
                 verticalalignment='bottom', 
                 horizontalalignment='left')
-    axarr[0].arrow(
-            trise[0], plum[0], -0.8, 0, length_includes_head=True,
-            head_width=0.02, head_length=0.2, fc='k')
-    axarr[1].arrow(
-            trise[1], plum[1], 0, 5E43, length_includes_head=True,
-            head_width=0.4, head_length=1E44/5, fc='k')
 
 
 def ps1(axarr):
@@ -247,8 +238,8 @@ def IIPL(axarr):
 
 fig,axarr = plt.subplots(1,2,figsize=(10,5), sharex=True)
 sn2018gep(axarr)
-#at2018cow(axarr)
-#iptf16asu(axarr)
+at2018cow(axarr)
+iptf16asu(axarr)
 #ps1(axarr)
 #snia(axarr)
 #slsn(axarr)
@@ -258,6 +249,7 @@ sn2018gep(axarr)
 
 ax = axarr[0]
 ax.set_ylabel("Abs. Mag. (Rest-frame 3000\,\AA)", fontsize=16)
+ax.set_ylim(-21.5, -19)
 ax.invert_yaxis()
 ax.set_xlabel(
     r"Rest-frame $t_\mathrm{1/2, rise}$ [days]", fontsize=16)
