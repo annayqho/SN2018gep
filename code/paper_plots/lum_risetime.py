@@ -20,6 +20,9 @@ from astropy.cosmology import Planck15
 from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
 
+datadir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
+
+
 
 def tp_mag(dt, mag, z):
     """ get t1/2,peak and peak absolute mag from a LC 
@@ -125,50 +128,98 @@ def iptf16asu(axarr):
     """ 
     rise time, peak Mg, peak Lbol for iPTF16asu
     Using the observed g-band filter, which is 3909 rest-frame
+
+    and pseudo-bolometric luminosity, which is also certainly
+    a lower limit
     """
     dt = np.array([-2.46, -2.43, -1.61, -1.58, -1.56])
     mag = np.array([19.8, 19.69, 19.34, 19.25, 19.28])
     trise, Mpeak = tp_mag(dt, mag, z=0.187)
-    # the Mpeak here is probably a lower limit
     axarr[0].scatter(trise, Mpeak, marker='o', c='k')
     axarr[0].text(trise, Mpeak, "iPTF16asu", fontsize=12, 
                 verticalalignment='bottom', 
                 horizontalalignment='left')
 
+    # get 16asu LC
+    dat = np.loadtxt(datadir + "/bol_lc/iPTF16asu_bolometric_luminosity.txt",
+        delimiter=" ")  
+    dt = dat[:,0]
+    lum = dat[:,1]
+    elum = dat[:,2]
+    trise, lpeak = tp_lum(dt, lum, z=0.187)
+    axarr[1].scatter(trise, lpeak, marker='o', c='k')
+    axarr[1].text(trise, lpeak, "iPTF16asu", fontsize=12, 
+                verticalalignment='bottom', 
+                horizontalalignment='left')
+    
+
+
 
 def ps1(axarr):
-    """ equivalent rise times, bol lum for the PS1 sample
-
-    extracted from Fig 7 of Drout+14
-    they say that if they used a pseubolometric correction,
-    the luminosities would be roughly a factor of 2 higher
-    I think the more accurate thing is to show the real points,
-    and then put an arrow
+    """ 
+    Taken from Table 4 of Drout et al. (2014)
+    use the g-band ones, since that's the closest to rest-frame 3000 AA
+    only use the gold sample
     """
-    t12 = np.array([6.706972119044536, 10.84536995642165, 12.04667856053548,
-        7.718257367165403, 5.769891242129365, 7.939867719009442, 
-        10.923585374719543, 5.716243487271193, 8.477348029364208, 
-        8.711492903371369])
-    lum = np.array([2.4992169158787695e+43, 2.4586509528158067e+43, 
-        1.261169269861789e+43, 1.0022730413557269e+43, 4.622323136168413e+42,
-        4.2361218340535585e+42, 1.5844083921328312e+42, 3.0314287872197434e+43,
-        2.77862997924052e+43, 7.567893474912679e+42])
+    trise = []
+    Mpeak = []
+    lpeak = []
+
+    # PS1-10ah
+    z = 0.074
+    trise.append(1.0 / (1+z))
+    Mpeak.append(-17.59)
+    lpeak.append(4E42)
+
+    # PS1-10bjp
+    z = 0.113
+    trise.append(1.0 / (1+z))
+    Mpeak.append(-18.34)
+    lpeak.append(8E42)
+
+    # PS1-11qr
+    z = 0.324
+    trise.append(2.8/(1+z))
+    Mpeak.append(-19.84)
+    lpeak.append(3E43)
+
+    # PS1-12bb
+    z = 0.101
+    trise.append(1.8/(1+z))
+    Mpeak.append(-16.97)
+    lpeak.append(2E42)
+
+    # PS1-12bv
+    z = 0.405
+    trise.append(3.4/(1+z))
+    Mpeak.append(-19.68)
+    lpeak.append(2.5E43)
+
+    # PS1-12brf
+    z = 0.275
+    trise.append(0.9/(1+z))
+    Mpeak.append(-18.84)
+    lpeak.append(1E43)
+
+    axarr[0].scatter(trise, Mpeak, marker='x', c='k', label="PS1 Gold")
+    axarr[1].scatter(trise, lpeak, marker='x', c='k', label="PS1 Gold")
+
     # show a box around these
-    xwidth = max(t12)-min(t12)
-    xcenter = 10**(np.average([max(np.log10(t12)), min(np.log10(t12))]))
-    ywidth = max(lum)-min(lum)
-    ycenter = 10**(np.average([max(np.log10(lum)), min(np.log10(lum))]))
-    rect = Rectangle(
-            xy=(min(t12), min(lum)),
-            width=xwidth, height=ywidth)
-    pc = PatchCollection([rect], facecolor='grey', alpha=0.5, edgecolor='k')
-    axarr[1].add_collection(pc)
-    axarr[1].arrow(
-            xcenter, max(lum), 0, 3E43, length_includes_head=True,
-            head_width=2, head_length=1E44/7, fc='k')
-    axarr[1].text(
-        xcenter, ycenter, "PS1", fontsize=12, 
-        horizontalalignment='center', verticalalignment='center')
+    # xwidth = max(t12)-min(t12)
+    # xcenter = 10**(np.average([max(np.log10(t12)), min(np.log10(t12))]))
+    # ywidth = max(lum)-min(lum)
+    # ycenter = 10**(np.average([max(np.log10(lum)), min(np.log10(lum))]))
+    # rect = Rectangle(
+    #         xy=(min(t12), min(lum)),
+    #         width=xwidth, height=ywidth)
+    # pc = PatchCollection([rect], facecolor='grey', alpha=0.5, edgecolor='k')
+    #axarr[1].add_collection(pc)
+    #axarr[1].arrow(
+    #        xcenter, max(lum), 0, 3E43, length_includes_head=True,
+    #        head_width=2, head_length=1E44/7, fc='k')
+    #axarr[1].text(
+    #    xcenter, ycenter, "PS1", fontsize=12, 
+    #    horizontalalignment='center', verticalalignment='center')
 
 
 def snia(axarr):
@@ -240,7 +291,7 @@ fig,axarr = plt.subplots(1,2,figsize=(10,5), sharex=True)
 sn2018gep(axarr)
 at2018cow(axarr)
 iptf16asu(axarr)
-#ps1(axarr)
+ps1(axarr)
 #snia(axarr)
 #slsn(axarr)
 #Ibc(axarr)
@@ -248,11 +299,12 @@ iptf16asu(axarr)
 #IIPL(axarr)
 
 ax = axarr[0]
-ax.set_ylabel("Abs. Mag. (Rest-frame 3000\,\AA)", fontsize=16)
-ax.set_ylim(-21.5, -19)
+ax.set_ylabel("Absolute Magnitude", fontsize=16)
+ax.set_ylim(-21.5, -17)
 ax.invert_yaxis()
 ax.set_xlabel(
     r"Rest-frame $t_\mathrm{1/2, rise}$ [days]", fontsize=16)
+ax.legend(loc='lower right', fontsize=12)
 
 ax = axarr[1]
 ax.set_ylim(1E41, 1E45)
