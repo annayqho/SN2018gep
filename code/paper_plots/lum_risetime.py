@@ -80,12 +80,11 @@ sn2018gep(axarr)
 at2018cow(axarr)
 iptf16asu(axarr)
 
-axarr[0].set_ylabel("Observed $M_g$", fontsize=16)
-axarr[0].invert_yaxis()
-axarr[0].set_xlabel(
+ax = axarr[0]
+ax.set_ylabel("Observed $M_g$", fontsize=16)
+ax.invert_yaxis()
+ax.set_xlabel(
     r"Observed $t_2$ [days]", fontsize=16)
-axarr[1].set_xlabel(
-    r"Observed $t_{1/2}$ [days]", fontsize=16)
 
 ax = axarr[1]
 ax.set_ylim(1E41, 1E45)
@@ -93,8 +92,8 @@ ax.set_yscale('log')
 ax.set_xscale('log')
 ax.set_ylabel("$L_\mathrm{bol}$", fontsize=16)
 ax.legend(loc='upper right', fontsize=12)
-
-
+ax.set_xlabel(
+    r"Observed $t_{1/2}$ [days]", fontsize=16)
 
 for ax in axarr:
     ax.set_xlim(0.05, 100)
