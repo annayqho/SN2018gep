@@ -21,25 +21,22 @@ from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
 
 
-def sn2018gep(axarr):
-    """ Rise time and peak mag, peak lbol, for SN2018gep """
-    z = 0.03154
-
-    # for the left panel, load the U-band light curve from UVOT
-    dt, filt, mag, emag = get_lc() 
-    choose = filt == 'U'
-
+def tp_mag(dt, mag, z):
+    """ get t1/2,peak and peak absolute mag from a LC 
+    dt: times in days
+    M: apparent mag
+    """
     # get the peak absolute mag
-    ipeak = np.argmin(mag[choose])
-    mpeak = mag[choose][ipeak]
-    Mpeak = mpeak - Planck15.distmod(z=z).value
+    ipeak = np.argmin(mag)
+    mpeak = mag[ipeak]
+    Mpeak = mpeak - Planck15.distmod(z).value
 
     # get the time of peak mag
-    tend = dt[choose][ipeak]
+    tend = dt[ipeak]
 
     # now only keep the rise
-    xrise = dt[choose][0:ipeak]
-    yrise = mag[choose][0:ipeak]
+    xrise = dt[0:ipeak]
+    yrise = mag[0:ipeak]
 
     # interpolate to get the time at which m=mmax+0.75
     order = np.argsort(yrise)
@@ -47,6 +44,17 @@ def sn2018gep(axarr):
 
     # find the time it takes to go from half-peak to peak
     trise = (tend-tstart)/(1+z)
+
+    return trise, Mpeak
+
+
+def sn2018gep(axarr):
+    """ Rise time and peak mag, peak lbol, for SN2018gep """
+    # for the left panel, load the U-band light curve from UVOT
+    z = 0.03154
+    dt, filt, mag, emag = get_lc() 
+    choose = filt == 'U'
+    trise, Mpeak = tp_mag(dt[choose], mag[choose], z=0.03154)
 
     axarr[0].scatter(trise, Mpeak, marker='*', s=300,
             facecolors='black', edgecolors='black')
