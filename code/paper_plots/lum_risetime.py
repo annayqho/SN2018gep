@@ -121,10 +121,60 @@ def snia(axarr):
     lum = dat[:,1]
     xcenter = 10**(np.average([max(np.log10(t12)), min(np.log10(t12))]))
     ycenter = 10**(np.average([max(np.log10(lum)), min(np.log10(lum))]))
-    axarr[1].scatter(t12, lum, alpha=0.5, c='#e55c30', lw=0)
+    axarr[1].scatter(t12, lum, alpha=0.5, s=50, c='#e55c30', lw=0)
     axarr[1].text(
-        xcenter, ycenter, "SN Ia", fontsize=12, 
+        xcenter, ycenter, "SN Ia", fontsize=12,
         horizontalalignment='center', verticalalignment='center')
+
+
+def slsn(axarr):
+    """ stolen from Fig 7 of Drout+ 14 """
+    dat = np.loadtxt(
+            "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/slsn.csv", 
+            delimiter=',')
+    t12 = dat[:,0]
+    lum = dat[:,1]
+    xcenter = 10**(np.average([max(np.log10(t12)), min(np.log10(t12))]))
+    ycenter = 10**(np.average([max(np.log10(lum)), min(np.log10(lum))]))
+    axarr[1].scatter(t12, lum, alpha=0.5, s=50, c='#f6d746', lw=0)
+    axarr[1].text(
+        xcenter, ycenter, "SLSN-I", fontsize=12,
+        horizontalalignment='center', verticalalignment='center')
+
+
+def Ibc(axarr):
+    """ stolen from Fig 7 of Drout+ 14 """
+    dat = np.loadtxt(
+            "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/Ibc.csv", 
+            delimiter=',')
+    t12 = dat[:,0]
+    lum = dat[:,1]
+    xcenter = 10**(np.average([max(np.log10(t12)), min(np.log10(t12))]))
+    ycenter = 10**(np.average([max(np.log10(lum)), min(np.log10(lum))]))
+    axarr[1].scatter(t12*2, lum, marker='s', alpha=0.5, s=50, c='#84206b', lw=0, label="Ibc")
+
+
+def IIn(axarr):
+    """ stolen from Fig 7 of Drout+ 14 """
+    dat = np.loadtxt(
+            "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/IIn.csv", 
+            delimiter=',')
+    t12 = dat[:,0]
+    lum = dat[:,1]
+    xcenter = 10**(np.average([max(np.log10(t12)), min(np.log10(t12))]))
+    ycenter = 10**(np.average([max(np.log10(lum)), min(np.log10(lum))]))
+    axarr[1].scatter(t12*2, lum, marker='D', alpha=0.5, s=50, c='grey', lw=0, label="IIn")
+
+def IIPL(axarr):
+    """ stolen from Fig 7 of Drout+ 14 """
+    dat = np.loadtxt(
+            "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/IIPn.csv", 
+            delimiter=',')
+    t12 = dat[:,0]
+    lum = dat[:,1]
+    xcenter = 10**(np.average([max(np.log10(t12)), min(np.log10(t12))]))
+    ycenter = 10**(np.average([max(np.log10(lum)), min(np.log10(lum))]))
+    axarr[1].scatter(t12*2, lum, marker='x', alpha=1, s=50, c='k', lw=1, label="II(P/L)")
 
 
 fig,axarr = plt.subplots(1,2,figsize=(10,5), sharex=True)
@@ -133,6 +183,10 @@ at2018cow(axarr)
 iptf16asu(axarr)
 ps1(axarr)
 snia(axarr)
+slsn(axarr)
+Ibc(axarr)
+IIn(axarr)
+IIPL(axarr)
 
 ax = axarr[0]
 ax.set_ylabel("Observed $M_g$", fontsize=16)
@@ -145,12 +199,12 @@ ax.set_ylim(1E41, 1E45)
 ax.set_yscale('log')
 ax.set_xscale('log')
 ax.set_ylabel("$L_\mathrm{bol}$", fontsize=16)
-ax.legend(loc='upper right', fontsize=12)
+ax.legend(loc='lower left', fontsize=12)
 ax.set_xlabel(
     r"Observed $t_{1/2}$ [days]", fontsize=16)
 
 for ax in axarr:
-    ax.set_xlim(0.05, 100)
+    ax.set_xlim(0.05, 1000)
     ax.xaxis.set_tick_params(labelsize=14)
     ax.yaxis.set_tick_params(labelsize=14)
 
