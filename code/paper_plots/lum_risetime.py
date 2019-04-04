@@ -1,9 +1,21 @@
-""" A luminosity/risetime plot """
+""" A luminosity/risetime plot 
+
+In the left panel, show the t_{1/2,rise} in a single band
+that is close to 3000 AA in the rest frame.
+You can either do this in flux space,
+or in magnitude space, in which case it's the time
+to increase by 0.75 mag.
+
+"""
 
 import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
 import numpy as np
+import sys
+sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
+from load_lc import get_uv_lc, get_lc
+from load_lum import load_lc
 from astropy.cosmology import Planck15
 from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
@@ -11,20 +23,68 @@ from matplotlib.collections import PatchCollection
 
 def sn2018gep(axarr):
     """ Rise time and peak mag, peak lbol, for SN2018gep """
-    # left panel is g-band mag
-    # right panel is bolometric luminosity
-    trise = [3, 0.2]
-    plum = [-20, 3E44]
+    z = 0.03154
 
-    # left panel: rise to max g-band 
-    for ii,ax in enumerate(axarr):
-        ax.scatter(
-                trise[ii], plum[ii], marker='*', s=300, 
-                facecolors='black', edgecolors='black')
-        ax.text(
-                trise[ii]*1.1, plum[ii], "SN2018gep", fontsize=14, 
-                verticalalignment='bottom', 
-                horizontalalignment='left')
+    # for the left panel, load the U-band light curve from UVOT
+    dt, filt, mag, emag = get_lc() 
+    choose = filt == 'U'
+
+    # get the peak absolute mag
+    ipeak = np.argmin(mag[choose])
+    mpeak = mag[choose][ipeak]
+    Mpeak = mpeak - Planck15.distmod(z=z).value
+
+    # get the time of peak mag
+    tend = dt[choose][ipeak]
+
+    # now only keep the rise
+    xrise = dt[choose][0:ipeak]
+    yrise = mag[choose][0:ipeak]
+
+    # interpolate to get the time at which m=mmax+0.75
+    order = np.argsort(yrise)
+    tstart = np.interp(mpeak+1, yrise[order], xrise[order])
+
+    # find the time it takes to go from half-peak to peak
+    trise = (tend-tstart)/(1+z)
+
+    axarr[0].scatter(trise, Mpeak, marker='*', s=300,
+            facecolors='black', edgecolors='black')
+
+    axarr[0].text(
+            trise*1.1, Mpeak, "SN2018gep", fontsize=14, 
+            verticalalignment='bottom', 
+            horizontalalignment='left')
+
+    # next, load in the bolometric light curve
+    dt, lum, llum, ulum = load_lc()
+
+    # get the peak lum
+    ipeak = np.argmax(lum)
+    lpeak = lum[ipeak]
+
+    # get the time of peak lum
+    tend = dt[ipeak]
+
+    # now only keep the rise
+    xrise = dt[0:ipeak]
+    yrise = lum[0:ipeak]
+
+    # interpolate to get the time at which lum = lpeak/2
+    order = np.argsort(yrise)
+    tstart = np.interp(lpeak/2, yrise[order], xrise[order])
+
+    # find t1/2
+    trise = (tend-tstart)/(1+z)
+
+    # plot the right panel
+    axarr[1].scatter(trise, lpeak, marker='*', s=300,
+            facecolors='black', edgecolors='black')
+
+    axarr[1].text(
+            trise*1.1, lpeak, "SN2018gep", fontsize=14, 
+            verticalalignment='bottom', 
+            horizontalalignment='left')
 
 
 def at2018cow(axarr):
@@ -189,7 +249,7 @@ sn2018gep(axarr)
 #IIPL(axarr)
 
 ax = axarr[0]
-ax.set_ylabel("Absolute Magnitude", fontsize=16)
+ax.set_ylabel("Abs. Mag. (Rest-frame 3000\,\AA)", fontsize=16)
 ax.invert_yaxis()
 ax.set_xlabel(
     r"Rest-frame $t_\mathrm{1/2, rise}$ [days]", fontsize=16)
