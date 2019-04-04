@@ -181,18 +181,18 @@ fig,axarr = plt.subplots(1,2,figsize=(10,5), sharex=True)
 sn2018gep(axarr)
 at2018cow(axarr)
 iptf16asu(axarr)
-ps1(axarr)
-snia(axarr)
-slsn(axarr)
-Ibc(axarr)
-IIn(axarr)
-IIPL(axarr)
+#ps1(axarr)
+#snia(axarr)
+#slsn(axarr)
+#Ibc(axarr)
+#IIn(axarr)
+#IIPL(axarr)
 
 ax = axarr[0]
-ax.set_ylabel("Observed $M_g$", fontsize=16)
+ax.set_ylabel("Absolute Magnitude", fontsize=16)
 ax.invert_yaxis()
 ax.set_xlabel(
-    r"Observed $t_2$ [days]", fontsize=16)
+    r"Rest-frame $t_\mathrm{1/2, rise}$ [days]", fontsize=16)
 
 ax = axarr[1]
 ax.set_ylim(1E41, 1E45)
@@ -201,7 +201,7 @@ ax.set_xscale('log')
 ax.set_ylabel("$L_\mathrm{bol}$", fontsize=16)
 ax.legend(loc='lower left', fontsize=12)
 ax.set_xlabel(
-    r"Observed $t_{1/2}$ [days]", fontsize=16)
+    r"Rest-frame $t_\mathrm{1/2, rise}$ [days]", fontsize=16)
 
 for ax in axarr:
     ax.set_xlim(0.05, 1000)
