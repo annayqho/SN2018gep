@@ -112,11 +112,27 @@ def ps1(axarr):
         horizontalalignment='center', verticalalignment='center')
 
 
+def snia(axarr):
+    """ stolen from Fig 7 of Drout+ 14 """
+    dat = np.loadtxt(
+            "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/snia.txt", 
+            delimiter=',')
+    t12 = dat[:,0]
+    lum = dat[:,1]
+    xcenter = 10**(np.average([max(np.log10(t12)), min(np.log10(t12))]))
+    ycenter = 10**(np.average([max(np.log10(lum)), min(np.log10(lum))]))
+    axarr[1].scatter(t12, lum, alpha=0.5, c='#e55c30', lw=0)
+    axarr[1].text(
+        xcenter, ycenter, "SN Ia", fontsize=12, 
+        horizontalalignment='center', verticalalignment='center')
+
+
 fig,axarr = plt.subplots(1,2,figsize=(10,5), sharex=True)
 sn2018gep(axarr)
 at2018cow(axarr)
 iptf16asu(axarr)
 ps1(axarr)
+snia(axarr)
 
 ax = axarr[0]
 ax.set_ylabel("Observed $M_g$", fontsize=16)
