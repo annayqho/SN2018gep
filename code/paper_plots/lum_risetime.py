@@ -104,7 +104,10 @@ def sn2018gep(axarr):
 
 
 def at2018cow(axarr):
-    """ Rise time and peak mag, peak lbol, for AT2018cow """
+    """ Rise time and peak mag, peak lbol, for AT2018cow 
+    
+    using g-band filter
+    """
     trise, Mpeak = tp_mag(
             np.array([-0.87, 2.15]), np.array([18.4, 12.9]), z=0.014)
     axarr[0].scatter(
@@ -204,22 +207,27 @@ def ps1(axarr):
     axarr[0].scatter(trise, Mpeak, marker='x', c='k', label="PS1 Gold")
     axarr[1].scatter(trise, lpeak, marker='x', c='k', label="PS1 Gold")
 
-    # show a box around these
-    # xwidth = max(t12)-min(t12)
-    # xcenter = 10**(np.average([max(np.log10(t12)), min(np.log10(t12))]))
-    # ywidth = max(lum)-min(lum)
-    # ycenter = 10**(np.average([max(np.log10(lum)), min(np.log10(lum))]))
-    # rect = Rectangle(
-    #         xy=(min(t12), min(lum)),
-    #         width=xwidth, height=ywidth)
-    # pc = PatchCollection([rect], facecolor='grey', alpha=0.5, edgecolor='k')
-    #axarr[1].add_collection(pc)
-    #axarr[1].arrow(
-    #        xcenter, max(lum), 0, 3E43, length_includes_head=True,
-    #        head_width=2, head_length=1E44/7, fc='k')
-    #axarr[1].text(
-    #    xcenter, ycenter, "PS1", fontsize=12, 
-    #    horizontalalignment='center', verticalalignment='center')
+
+def des(axarr):
+    """ Dark Energy Survey transients, gold sample
+    
+    rise times are strongly upper limits
+    """
+    trise = np.array([2.6, 12.1, 6.4, 8.6, 9, 5.2, 5.4, 9.2, 3.3, 6.5, 4.9, 5.8, 7.7, 9.7, 3.8, 4.3, 3.5, 6.2, 4.5, 5.0])
+    Mpeak = np.array([-19.42, -19.66, -19.69, -16.19, -15.76, -18.98, -16.91, -19.84, -17.30, -19.74, -19.76, -18.23, -19.64, -19.46, -18.41, -22.24, -19.84, -16.04, -20.97, -19.62])
+    lpeak = 1E43 * np.array([2.16, 3.05, 1.01, 0.11, 0.08, 2.69, 0.22, 6.71, 0.35, 5.10, 3.56, 2.06, 2.85, 2.37, 1.09, 41.41, 3.87, 0.12, 9.24, 3.29])
+    axarr[0].scatter(trise, Mpeak, marker='s', facecolor='white', edgecolor='k', label="DES Gold")
+    axarr[1].scatter(trise, lpeak, marker='s', facecolor='white', edgecolor='k', label="DES Gold")
+
+
+def subaru(axarr):
+    """ Subaru rapidly rising transients
+    """
+    dat = np.loadtxt(datadir + "/subaru.txt", delimiter=',')
+    Mpeak = dat[:,1] 
+    daymag = dat[:,0] # day per mag
+    t12 = 0.75*daymag
+    axarr[0].scatter(t12, Mpeak, marker='D', edgecolor='k', facecolor='white', label="Subaru/HSC")
 
 
 def snia(axarr):
@@ -292,11 +300,8 @@ sn2018gep(axarr)
 at2018cow(axarr)
 iptf16asu(axarr)
 ps1(axarr)
-#snia(axarr)
-#slsn(axarr)
-#Ibc(axarr)
-#IIn(axarr)
-#IIPL(axarr)
+des(axarr)
+subaru(axarr)
 
 ax = axarr[0]
 ax.set_ylabel("Absolute Magnitude", fontsize=16)
@@ -316,10 +321,10 @@ ax.set_xlabel(
     r"Rest-frame $t_\mathrm{1/2, rise}$ [days]", fontsize=16)
 
 for ax in axarr:
-    ax.set_xlim(0.05, 1000)
+    ax.set_xlim(0.05, 100)
     ax.xaxis.set_tick_params(labelsize=14)
     ax.yaxis.set_tick_params(labelsize=14)
 
 fig.tight_layout()
-#plt.savefig("lum_rise.png")
-plt.show()
+plt.savefig("lum_rise.png")
+#plt.show()
