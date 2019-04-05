@@ -45,7 +45,7 @@ def get_data():
     sn_det = np.logical_and.reduce(
             (code=='ZTF Camera', dt > -1, ~np.isnan(mag)))
     prog_det = np.logical_and.reduce(
-            (code=='final photometry', dt < 0, ~np.isnan(mag)))
+            (code=='final photometry', np.logical_or(dt < -2, dt>100), ~np.isnan(mag)))
     prog_nondet = np.logical_and(code=='final photometry', np.isnan(mag))
     return dt, filt, mag, emag, limmag, sn_det, prog_det, prog_nondet
 
@@ -148,20 +148,20 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
         ax.text(2.0, 20.3, 'P200', fontsize=12, horizontalalignment='center',
                 rotation=textor)
         ax.axvline(x=2.7, ymin=0, ymax=0.05, lw=0.5, c='grey') # LT
-        ax.text(2.73, 22, 'LT', fontsize=12, horizontalalignment='center',
-                rotation=textor)
-        ax.axvline(x=3.1, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
-        ax.text(3.1, 20.3, 'P200', fontsize=12, horizontalalignment='center',
-                rotation=textor)
-        ax.axvline(x=4.0, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
-        ax.text(4.0, 20.3, 'P200', fontsize=12, horizontalalignment='center',
-                rotation=textor)
-        ax.axvline(x=4.2, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
-        ax.text(4.2, 20, 'LRIS', fontsize=12, 
-                horizontalalignment='center', rotation=textor)
-        ax.axvline(x=4.8, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
-        ax.text(4.8, 20.3, 'DCT', fontsize=12, 
-                horizontalalignment='center', rotation=textor)
+        # ax.text(2.73, 22, 'LT', fontsize=12, horizontalalignment='center',
+        #         rotation=textor)
+        # ax.axvline(x=3.1, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        # ax.text(3.1, 20.3, 'P200', fontsize=12, horizontalalignment='center',
+        #         rotation=textor)
+        # ax.axvline(x=4.0, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        # ax.text(4.0, 20.3, 'P200', fontsize=12, horizontalalignment='center',
+        #         rotation=textor)
+        # ax.axvline(x=4.2, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        # ax.text(4.2, 20, 'LRIS', fontsize=12, 
+        #         horizontalalignment='center', rotation=textor)
+        # ax.axvline(x=4.8, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        # ax.text(4.8, 20.3, 'DCT', fontsize=12, 
+        #         horizontalalignment='center', rotation=textor)
 
     if inset:
         # and an inset
@@ -282,6 +282,7 @@ def lc_fit():
  
 
 if __name__=="__main__":
-    #full_lc(10, 3, -175, 35, 15.5, 23, "full_gr.png")
-    #full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.png", annotations=True)
-    full_lc(5, 3, -0.5, 5, 15.5, 22.5, "zoom_gr.png", timeline=True)
+    #full_lc(10, 3, -175, 200, 15.5, 23, "full_gr.png")
+    #full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.png", timeline=True, inset=True)
+    #full_lc(5, 3, -0.5, 5, 15.5, 22.5, "zoom_gr.png", timeline=True)
+    full_lc(10, 3, 0, 200, 15.5, 23, "full_gr.png")
