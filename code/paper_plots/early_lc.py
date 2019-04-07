@@ -213,8 +213,8 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
     ax.invert_yaxis()
 
     plt.tight_layout()
-    plt.show()
-    #plt.savefig(figname)
+    #plt.show()
+    plt.savefig(figname)
 
 
 def lc_fit():
@@ -285,4 +285,4 @@ if __name__=="__main__":
     #full_lc(10, 3, -175, 200, 15.5, 23, "full_gr.png")
     #full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.png", timeline=True, inset=True)
     #full_lc(5, 3, -0.5, 5, 15.5, 22.5, "zoom_gr.png", timeline=True)
-    full_lc(10, 3, 0, 200, 15.5, 23, "full_gr.png")
+    full_lc(10, 3, -25, 34, 15.5, 23, "full_gr.png")
