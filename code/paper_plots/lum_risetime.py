@@ -27,7 +27,7 @@ def sn2018gep(axarr):
     """ Rise time and peak mag, peak lbol, for SN2018gep """
     # left panel is g-band mag
     # right panel is bolometric luminosity
-    trise = [3, 0.2]
+    trise = [3, 2]
     plum = [-20, 3E44]
 
     # left panel: rise to max g-band 
@@ -98,7 +98,7 @@ def margutti2018(axarr):
 
 
 fig,axarr = plt.subplots(1,2,figsize=(10,5))
-sn2018gep(axarr)
+#sn2018gep(axarr)
 at2018cow(axarr)
 iptf16asu(axarr)
 rest2018(axarr)
@@ -114,11 +114,12 @@ ax.set_xlabel(
     r"Rise Time [rest frame days]", fontsize=16)
 
 ax = axarr[1]
+ax.set_xlim(1,100)
 ax.set_ylim(1E41, 1E45)
 ax.set_yscale('log')
 ax.set_xscale('log')
 ax.set_ylabel("Peak Bolometric Luminosity", fontsize=16)
-ax.legend(loc='lower left', fontsize=12)
+#ax.legend(loc='lower left', fontsize=12)
 ax.set_xlabel(
     r"Rise Time [rest frame days]", fontsize=16)
 
@@ -127,5 +128,5 @@ for ax in axarr:
     ax.yaxis.set_tick_params(labelsize=14)
 
 fig.tight_layout()
-plt.savefig("lum_rise.png")
+plt.savefig("lum_rise_withfbots.png")
 #plt.show()

@@ -71,21 +71,25 @@ def get_t0():
 
 def plot_firstmin(ax):
     """ Plot the first few minutes """
-    dt, mag, emag, instr, filt, det = load_lc()
-    lum,elum = mag2lum(mag, emag)
-    gband = np.logical_and(instr=='P48+ZTF', filt=='g')
-    choose = np.logical_and(det, gband)
+    #dt, mag, emag, instr, filt, det = load_lc()
+    jd, filt, mag, emag, limmag, code = get_forced_phot()
+    t0 = 2458370.6634
+    dt = jd-t0
+    lum = mag2lum(mag)
+    elum = emag2elum(mag, emag)
+    choose = np.logical_and.reduce(
+            (code=='ZTF Camera', filt=='ztfg', ~np.isnan(mag)))
     ax.errorbar(
             dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
             c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
-    out,cov = get_fit_func()
-    xlab = np.linspace(-1,2)
-    ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
-    ax.plot(xlab*24*60, ylab/1E28, c='k', ls='--')
+    #out,cov = get_fit_func()
+    #xlab = np.linspace(-1,2)
+    #ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
+    #ax.plot(xlab*24*60, ylab/1E28, c='k', ls='--')
 
     # Plot the r-band detections
-    rband = np.logical_and(instr=='P48+ZTF', filt=='r')
-    choose = np.logical_and(det, rband)
+    choose = np.logical_and.reduce(
+            (code=='ZTF Camera', filt=='ztfr', ~np.isnan(mag)))
     ax.errorbar(
             dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
             ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
@@ -159,23 +163,14 @@ def plot_full_lc(ax):
 
 if __name__=="__main__":
     # Initialize the figure
-    #fig,axarr = plt.subplots(2,1,figsize=(4,6))
+    fig,axarr = plt.subplots(2,1,figsize=(4,6))
 
-    #plot_firstmin(axarr[0])
+    plot_firstmin(axarr[0])
     #plot_full_lc(axarr[1])
     t0,et0 = get_t0()
     print("%s +/- %s minutes" %(t0*24*60, et0*24*60))
 
-    out,cov = get_fit_func()
-
-    # Print fitting parameters
-    a = out[0]
-    ea = np.sqrt(cov[0][0])
-    b = out[1]
-    eb = np.sqrt(cov[1][1])
-    c = out[2]
-    ec = np.sqrt(cov[2][2])
-
-    #plt.tight_layout()
+    plt.tight_layout()
+    plt.show()
     #plt.savefig("early_data.png")
     #plt.show()
