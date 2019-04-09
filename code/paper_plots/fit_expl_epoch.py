@@ -66,10 +66,10 @@ def get_t0():
     t0 = np.mean(t0s)
     et0 = np.std(t0s)
 
-    return t0, et0
+    return t0, et0, (a,b,c)
 
 
-def plot_firstmin(ax):
+def plot_firstmin_flux(ax):
     """ Plot the first few minutes """
     #dt, mag, emag, instr, filt, det = load_lc()
     jd, filt, mag, emag, limmag, code = get_forced_phot()
@@ -92,14 +92,49 @@ def plot_firstmin(ax):
             (code=='ZTF Camera', filt=='ztfr', ~np.isnan(mag)))
     ax.errorbar(
             dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
-            ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
+            ms=5, fmt='o', mfc='#e55c30', mec='#e55c30', label="P48 $r$", c='#e55c30',
             zorder=0)
 
     # Format this box
-    ax.set_xlim(-25, 80)
-    ax.set_ylim(0, 0.35)
+    ax.set_xlim(-50, 150)
+    ax.set_ylim(0, 0.45)
     ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
     ax.set_xlabel("Minutes since first detection", fontsize=16)
+    ax.yaxis.set_tick_params(labelsize=14)
+    ax.xaxis.set_tick_params(labelsize=14)
+    ax.legend(loc='lower right', fontsize=14)
+
+
+def plot_firstmin_mag(ax):
+    """ Plot the first few minutes """
+    #dt, mag, emag, instr, filt, det = load_lc()
+    jd, filt, mag, emag, limmag, code = get_forced_phot()
+    t0 = 2458370.6634
+    dt = jd-t0
+    choose = np.logical_and.reduce(
+            (code=='ZTF Camera', filt=='ztfg', ~np.isnan(mag)))
+    ax.errorbar(
+            dt[choose]*24*60, mag[choose], yerr=emag[choose], 
+            c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
+    #out,cov = get_fit_func()
+    #xlab = np.linspace(-1,2)
+    #ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
+    #ax.plot(xlab*24*60, ylab/1E28, c='k', ls='--')
+
+    # Plot the r-band detections
+    choose = np.logical_and.reduce(
+            (code=='ZTF Camera', filt=='ztfr', ~np.isnan(mag)))
+    ax.errorbar(
+            dt[choose]*24*60, mag[choose], yerr=emag[choose], 
+            ms=5, fmt='o', mfc='#e55c30', mec='#e55c30', 
+            label="P48 $r$", c='#e55c30', zorder=0)
+
+    # Format this box
+    #ax.set_xlim(-50, 150)
+    ax.set_ylim(18, 21.5)
+    ax.invert_yaxis()
+    ax.set_ylabel(r"Apparent Mag", fontsize=16)
+    #ax.set_xlabel("Minutes since first detection", fontsize=16)
     ax.yaxis.set_tick_params(labelsize=14)
     ax.xaxis.set_tick_params(labelsize=14)
     ax.legend(loc='lower right', fontsize=14)
@@ -163,11 +198,18 @@ def plot_full_lc(ax):
 
 if __name__=="__main__":
     # Initialize the figure
-    fig,axarr = plt.subplots(2,1,figsize=(4,6))
+    fig,axarr = plt.subplots(2,1,figsize=(4,5),sharex=True)
 
-    plot_firstmin(axarr[0])
-    #plot_full_lc(axarr[1])
-    t0,et0 = get_t0()
+    # top left panel: the rise in mag space
+    plot_firstmin_mag(axarr[0])
+
+    # bottom left panel: the fit in flux space
+    plot_firstmin_flux(axarr[1])
+    t0,et0,fitparams = get_t0()
+    xm = np.linspace(-50,150)
+    xd = xm/(60*24)
+    yd = fitparams[0]*xd**2 + fitparams[1]*xd + fitparams[2]
+    axarr[1].plot(xm, yd, c='k', lw=0.5)
     print("%s +/- %s minutes" %(t0*24*60, et0*24*60))
 
     plt.tight_layout()

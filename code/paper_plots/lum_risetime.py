@@ -65,9 +65,9 @@ def iptf16asu(axarr):
     eplum = [0.09, 0.3E43]
 
     for ii, ax in enumerate(axarr):
-        ax.errorbar(
-                trise[ii], plum[ii], yerr=eplum[ii],
-                fmt='o', mfc='black', mec='black', c='k')
+        ax.scatter(
+                trise[0], plum[1], marker='D', edgecolor='#84206b', 
+                facecolor='white', label="Ibc")
 
 
 def rest2018(axarr):
@@ -111,22 +111,22 @@ ax.set_ylim(-21, -16)
 ax.set_xscale('log')
 ax.invert_yaxis()
 ax.set_xlabel(
-    r"Rise Time [rest frame days]", fontsize=16)
+    r"Rise Time (rest frame days)", fontsize=16)
 
 ax = axarr[1]
-ax.set_xlim(1,100)
+ax.set_xlim(0.48,100)
 ax.set_ylim(1E41, 1E45)
 ax.set_yscale('log')
 ax.set_xscale('log')
-ax.set_ylabel("Peak Bolometric Luminosity", fontsize=16)
+ax.set_ylabel("Peak Bolometric Luminosity (erg/s)", fontsize=16)
 #ax.legend(loc='lower left', fontsize=12)
 ax.set_xlabel(
-    r"Rise Time [rest frame days]", fontsize=16)
+    r"Rise Time (rest frame days)", fontsize=16)
 
 for ax in axarr:
     ax.xaxis.set_tick_params(labelsize=14)
     ax.yaxis.set_tick_params(labelsize=14)
 
 fig.tight_layout()
-plt.savefig("lum_rise_withfbots.png")
+plt.savefig("lum_rise_wo18gep.png")
 #plt.show()
