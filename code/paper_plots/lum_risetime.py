@@ -128,5 +128,6 @@ for ax in axarr:
     ax.yaxis.set_tick_params(labelsize=14)
 
 fig.tight_layout()
-plt.savefig("lum_rise_wo18gep.png")
+plt.savefig("lum_rise_wo18gep.eps", format='eps', dpi=1000)
+
 #plt.show()
