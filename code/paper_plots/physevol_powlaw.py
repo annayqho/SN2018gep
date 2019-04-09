@@ -291,7 +291,7 @@ def plot(scale='loglinear'):
         axarr[2].set_xscale('log')
         axarr[2].set_xlim(0.03, 100)
     elif scale=='loglinear':
-        axarr[2].set_xlim(-1, 30)
+        axarr[2].set_xlim(-1, 40)
 
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
@@ -309,4 +309,4 @@ def plot(scale='loglinear'):
 
 
 if __name__=="__main__":
-    plot(scale='loglog')
+    plot(scale='loglinear')
