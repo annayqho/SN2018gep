@@ -34,7 +34,7 @@ def plot_18gep():
 
     plt.plot(
         np.hstack((dt_early, dt)), np.hstack((vel_early, vel)), 
-        c='k', ls='--')
+        c='k', ls='-', lw=3, zorder=5)
 
 
 def plot_16asu():
@@ -52,27 +52,96 @@ def plot_16asu():
     evel = np.array(
             [1.3, 1.4, 0.3, 0.4, 1.3])*1000/1E3
     plt.errorbar(
-            dt, vel, xerr=0.17, yerr=evel, 
-            marker='o', c='#84206b', fmt='-', lw=1)
+            dt, vel, xerr=0.17, yerr=evel, ms=10,
+            marker='o', c='#84206b', fmt='-', lw=3, zorder=10)
     plt.text(dt[1]*1.1, vel[1], 'iPTF16asu',
             horizontalalignment='left', fontsize=12,
             verticalalignment='bottom')
 
 
-def plot_grbsne():
-    """ Modjaz et al. 2016 """
+def plot_1998bw():
+    """ Modjaz et al. 2016
+    offset from Galama 1998 """
     dat = np.loadtxt(DATA_DIR + "/modjaz_vel.txt", dtype=str, delimiter=';')
-    n = np.array(['sn1998bw', 'sn2006aj', 'sn2003lw', 'sn2010bh'])
-
     names = np.array([val.strip() for val in dat[:,0]])
-    is_grbsn = np.array([val in n for val in names])
 
-    name = names[is_grbsn]
-    phase = dat[:,1][is_grbsn].astype(float)
-    dt = np.zeros(len(phase))
+    name = 'sn1998bw'
+    choose = names==name
+    phase = dat[:,1][choose].astype(float)
+    vel = dat[:,2][choose].astype(float)*-1
+    evel = dat[:,3][choose].astype(float)
+    offset = 2450945.7-2450929.41
+    dt = phase+offset
+    #plt.errorbar(dt, vel/1E3, yerr=evel/1E3, marker='v', c='#f6d746')
+    plt.plot(dt, vel/1E3, c='#f6d746', lw=3, alpha=0.5)
+    plt.text(
+            dt[8], vel[8]/1E3, 'SN1998bw', fontsize=12,
+            verticalalignment='bottom', horizontalalignment='left')
 
-    vel = dat[:,2][is_grbsn].astype(float)*-1
-    evel = dat[:,3][is_grbsn].astype(float)
+
+def plot_2006aj():
+    """ Modjaz et al. 2016
+    offset from Campana 2006 """
+    dat = np.loadtxt(DATA_DIR + "/modjaz_vel.txt", dtype=str, delimiter=';')
+    names = np.array([val.strip() for val in dat[:,0]])
+
+    name = 'sn2006aj'
+    choose = names==name
+    phase = dat[:,1][choose].astype(float)
+    vel = dat[:,2][choose].astype(float)*-1
+    evel = dat[:,3][choose].astype(float)
+    offset = 2453794.7-2453784.649
+    dt = phase+offset
+    plt.plot(
+            dt, vel/1E3, c='#f6d746', lw=3, alpha=0.5)
+    plt.text(
+            dt[0], vel[0]/1E3/1.05, 'SN2006aj', fontsize=12,
+            verticalalignment='top', horizontalalignment='center')
+
+
+def plot_2010bh():
+    """ Modjaz et al. 2016
+    offset from Bufano 2012 """
+    dat = np.loadtxt(DATA_DIR + "/modjaz_vel.txt", dtype=str, delimiter=';')
+    names = np.array([val.strip() for val in dat[:,0]])
+
+    name = 'sn2010bh'
+    choose = names==name
+    phase = dat[:,1][choose].astype(float)
+    vel = dat[:,2][choose].astype(float)*-1
+    evel = dat[:,3][choose].astype(float)
+    offset = 8 
+    dt = phase+offset
+    #plt.errorbar(
+    #        dt, vel/1E3, yerr=evel/1E3, marker='D', c='#f6d746', alpha=0.3)
+    plt.errorbar(
+            dt, vel/1E3, c='#f6d746', alpha=0.5, lw=3)
+    plt.text(
+            dt[3], vel[3]/1E3, 'SN2010bh', fontsize=12,
+            verticalalignment='bottom', horizontalalignment='left')
+
+
+def plot_2003lw():
+    """ Modjaz et al. 2016
+    offset from Malesani 2014"""
+    dat = np.loadtxt(DATA_DIR + "/modjaz_vel.txt", dtype=str, delimiter=';')
+    names = np.array([val.strip() for val in dat[:,0]])
+
+    name = 'sn2003lw'
+    choose = names==name
+    phase = dat[:,1][choose].astype(float)
+    vel = dat[:,2][choose].astype(float)*-1
+    evel = dat[:,3][choose].astype(float)
+    offset = 8 
+    dt = phase+offset
+    plt.plot(
+            dt, vel/1E3, c='#f6d746', lw=3, alpha=0.5)
+    #plt.errorbar(
+    #        dt, vel/1E3, yerr=evel/1E3, marker='D', c='#f6d746', alpha=0.3)
+    plt.text(
+            dt[0], vel[0]/1E3, 'SN2003lw', fontsize=12,
+            verticalalignment='bottom', horizontalalignment='left',
+            label="LLGRB-SNe")
 
 
 def grb171205a():
@@ -81,8 +150,8 @@ def grb171205a():
             DATA_DIR + "/grb171205a_vel.txt", dtype=float, delimiter=',')
     dt = dat[:,0]
     vel = dat[:,1]/1E3
-    plt.scatter(dt, vel, marker='o', c='grey')
-    plt.plot(dt, vel, ls='-', c='grey')
+    #plt.scatter(dt, vel, marker='o', c='grey', alpha=0.5)
+    plt.plot(dt, vel, ls='-', c='#f6d746', lw=3, alpha=0.5, label="LLGRB-SN")
     plt.text(dt[0], vel[0], 'SN2017iuk', fontsize=12)
 
 
@@ -211,27 +280,28 @@ def plot_population():
 
 
 if __name__=="__main__":
-    fig,ax = plt.subplots(1, 1, figsize=(6,4))
+    fig,ax = plt.subplots(1, 1, figsize=(6,5))
 
     plot_18gep()
     plot_16asu()
     grb171205a()
-    #plot_grbsne()
-    #plot_icbl()
-    #plot_ic()
+    plot_1998bw()
+    plot_2006aj()
+    plot_2003lw()
+    plot_2010bh()
     #plot_12gzk()
 
     # Formatting
-    plt.legend(fontsize=14, loc='upper right', ncol=2)
+    plt.legend(fontsize=14, loc='upper right', ncol=1)
     plt.xlabel(r"Time since explosion (days)", fontsize=16)
     plt.ylabel(
             r"Fe II Velocity ($10^3$ km/s)", fontsize=16)
     plt.yscale('log')
     #plt.xscale('log')
-    plt.xlim(0, 33)
-    plt.ylim(17, 100)
+    plt.xlim(0, 25)
+    plt.ylim(10, 100)
     plt.tick_params(axis='both', labelsize=16)
     plt.tight_layout()
 
-    plt.show()
-    #plt.savefig("vel.png")
+    #plt.show()
+    plt.savefig("vel.eps", format='eps', dpi=1000)
