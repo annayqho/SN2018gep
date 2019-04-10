@@ -127,9 +127,18 @@ def print_table():
 def lum_panel(ax):
     """ Panel showing the luminosity evolution """
     dt, lum, llum, ulum = load_lc()
+
+    # choose just the optical points
+    opt = np.logical_or(dt < 0.1, np.logical_and(dt > 0.5, dt < 3.22))
     ax.errorbar(
-            dt, lum, yerr=[llum,ulum], 
-            fmt='o', c='k', lw=0.5, label="SN2018gep")
+            dt[opt], lum[opt], yerr=[llum[opt],ulum[opt]], 
+            fmt='o', c='lightgrey', lw=0.5)
+
+    # UV + opt points
+    ax.errorbar(
+            dt[~opt], lum[~opt], yerr=[llum[~opt],ulum[~opt]], ms=8,
+            fmt='o', mec='k', mfc='lightgrey', lw=0.5, c='k', 
+            label="SN2018gep")
     ax.plot(dt, lum, lw=1, c='k')
     ax.set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
     ax.set_yscale('log')
@@ -149,8 +158,13 @@ def lum_panel(ax):
 def rad_panel(ax):
     """ Panel showing the radius evolution """
     dt, rad, lrad, urad = load_radius()
+    opt = np.logical_or(dt < 0.1, np.logical_and(dt > 0.5, dt < 3.22))
     ax.errorbar(
-            dt, rad/1E15, yerr=[lrad/1E15,urad/1E15], fmt='o', c='k', lw=0.5)
+            dt[opt], rad[opt]/1E15, yerr=[lrad[opt]/1E15,urad[opt]/1E15], 
+            fmt='o', mfc='lightgrey', c='lightgrey', lw=0.5)
+    ax.errorbar(
+            dt[~opt], rad[~opt]/1E15, yerr=[lrad[~opt]/1E15,urad[~opt]/1E15], 
+            fmt='o', c='k', lw=0.5, ms=8, mec='k', mfc='lightgrey')
     ax.plot(
             dt, rad/1E15, lw=1, c='k')
 
@@ -166,7 +180,12 @@ def rad_panel(ax):
     axins = inset_axes(
             ax, 1.5, 1, loc=2)
     axins.errorbar(
-            dt, rad/1.496E13, yerr=[lrad/1E15,urad/1E15], fmt='o', c='k', lw=0.5)
+            dt[opt], rad[opt]/1.496E13, yerr=[lrad[opt]/1E15,urad[opt]/1E15], 
+            fmt='o', c='lightgrey', lw=0.5)
+    axins.errorbar(
+            dt[~opt], rad[~opt]/1.496E13, 
+            yerr=[lrad[~opt]/1E15,urad[~opt]/1E15], 
+            fmt='o', mec='k', mfc='lightgrey', ms=8, lw=0.5)
     axins.plot(
             dt, rad/1.496E13, lw=1, c='k')
     axins.plot(xvals, yvals/1.496E13, ls='--', lw=0.5, c='grey')
@@ -195,7 +214,13 @@ def rad_panel(ax):
 def temp_panel(ax):
     """ Panel showing the temp evolution """
     dt, temp, ltemp, utemp = load_temp()
-    ax.errorbar(dt, temp, yerr=[ltemp,utemp], fmt='o', c='k', lw=0.5)
+    opt = np.logical_or(dt < 0.1, np.logical_and(dt > 0.5, dt < 3.22))
+    ax.errorbar(
+            dt[opt], temp[opt], yerr=[ltemp[opt],utemp[opt]], 
+            fmt='o', c='lightgrey', lw=0.5)
+    ax.errorbar(
+            dt[~opt], temp[~opt], yerr=[ltemp[~opt],utemp[~opt]], 
+            fmt='o', mec='k', c='k', mfc='lightgrey', lw=0.5)
     ax.plot(dt, temp, c='k', lw=1)
     ax.tick_params(axis='both', labelsize=16)
     ax.axhline(y=5000, c='grey', ls='--', lw=0.5)
@@ -305,7 +330,7 @@ def plot(scale='loglinear'):
     #plt.subplots_adjust(hspace=0)
     plt.tight_layout()
     #plt.show()
-    plt.savefig("bbfit_%s.png" %scale)
+    plt.savefig("bbfit_%s.eps" %scale, format='eps', dpi=1000)
 
 
 if __name__=="__main__":
