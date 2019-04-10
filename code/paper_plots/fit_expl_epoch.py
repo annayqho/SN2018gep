@@ -108,7 +108,7 @@ def plot_firstmin_flux(ax):
     ax.set_xlim(-50, 150)
     ax.set_ylim(0, 0.45)
     ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
-    ax.set_xlabel("Minutes since first detection", fontsize=16)
+    ax.set_xlabel("Minutes since ZTF discovery", fontsize=16)
     ax.yaxis.set_tick_params(labelsize=14)
     ax.xaxis.set_tick_params(labelsize=14)
     ax.legend(loc='lower right', fontsize=14)
@@ -252,17 +252,19 @@ if __name__=="__main__":
     #fig,axarr = plt.subplots(2,1,figsize=(4,5),sharex=True)
 
     # top left panel: the rise in mag space
-    # plot_firstmin_mag(axarr[0])
+    fig,ax = plt.subplots(1,1,figsize=(4,3))
+    plot_firstmin_mag(ax)
 
     # bottom left panel: the fit in flux space
-    # plot_firstmin_flux(axarr[1])
+
+    #plot_firstmin_flux(axarr[1])
     # print("%s +/- %s minutes" %(t0*24*60, et0*24*60))
+    #plt.savefig("first_mins.eps", format='eps', dpi=1000)
 
     # now a tall panel showing the fit in flux space in the first 2 days
-    fig,ax = plt.subplots(1,1,figsize=(4,5),sharex=True)
+    #fig,ax = plt.subplots(1,1,figsize=(4,5),sharex=True)
+    #plot_firstdays_flux(ax)
 
-    plot_firstdays_flux(ax)
     plt.tight_layout()
-    #plt.show()
-    plt.savefig("first_days.png")
-    #plt.show()
+    #plt.savefig("first_days.eps", format='eps', dpi=1000)
+    plt.show()

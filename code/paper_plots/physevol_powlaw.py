@@ -11,10 +11,12 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 from scipy.optimize import curve_fit
 from astropy.io import ascii
+from astropy.table import Table
 from astropy.time import Time
 from load_lum import load_lc
 from load_radius import load_radius
 from load_temp import load_temp
+from load_model import load
 
 datadir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
 
@@ -124,7 +126,7 @@ def print_table():
     outputf.close()
 
 
-def lum_panel(ax):
+def lum_panel(ax, lines=True):
     """ Panel showing the luminosity evolution """
     dt, lum, llum, ulum = load_lc()
 
@@ -139,7 +141,9 @@ def lum_panel(ax):
             dt[~opt], lum[~opt], yerr=[llum[~opt],ulum[~opt]], ms=8,
             fmt='o', mec='k', mfc='lightgrey', lw=0.5, c='k', 
             label="SN2018gep")
-    ax.plot(dt, lum, lw=1, c='k')
+
+    if lines:
+        ax.plot(dt, lum, lw=1, c='k')
     ax.set_ylabel(r'$L_\mathrm{bol}$ (erg/s)', fontsize=16)
     ax.set_yscale('log')
     ax2 = ax.twinx()
@@ -155,7 +159,7 @@ def lum_panel(ax):
     ax2.tick_params(axis='both', labelsize=16)
 
 
-def rad_panel(ax):
+def rad_panel(ax, lines=True):
     """ Panel showing the radius evolution """
     dt, rad, lrad, urad = load_radius()
     opt = np.logical_or(dt < 0.1, np.logical_and(dt > 0.5, dt < 3.22))
@@ -165,39 +169,41 @@ def rad_panel(ax):
     ax.errorbar(
             dt[~opt], rad[~opt]/1E15, yerr=[lrad[~opt]/1E15,urad[~opt]/1E15], 
             fmt='o', c='k', lw=0.5, ms=8, mec='k', mfc='lightgrey')
-    ax.plot(
-            dt, rad/1E15, lw=1, c='k')
+
+    if lines:
+        ax.plot(
+                dt, rad/1E15, lw=1, c='k')
 
     # Plot lines of constant velocity
     xvals = np.linspace(-1, 1E2, 1000)
 
     # v = 0.1c
-    yvals = 3E14 + 0.1 * (3E10) * xvals * 86400
-    ax.plot(xvals, yvals/1E15, ls='--', lw=0.5, c='grey')
-    ax.text(26, 6.8, 'v=0.1c', fontsize=14, rotation=20)
+    # yvals = 3E14 + 0.1 * (3E10) * xvals * 86400
+    # ax.plot(xvals, yvals/1E15, ls='--', lw=0.5, c='grey')
+    # ax.text(26, 6.8, 'v=0.1c', fontsize=14, rotation=20)
 
     # Inset showing the first few days
-    axins = inset_axes(
-            ax, 1.5, 1, loc=2)
-    axins.errorbar(
-            dt[opt], rad[opt]/1.496E13, yerr=[lrad[opt]/1E15,urad[opt]/1E15], 
-            fmt='o', c='lightgrey', lw=0.5)
-    axins.errorbar(
-            dt[~opt], rad[~opt]/1.496E13, 
-            yerr=[lrad[~opt]/1E15,urad[~opt]/1E15], 
-            fmt='o', mec='k', mfc='lightgrey', ms=8, lw=0.5)
-    axins.plot(
-            dt, rad/1.496E13, lw=1, c='k')
-    axins.plot(xvals, yvals/1.496E13, ls='--', lw=0.5, c='grey')
-    axins.set_xlim(-0.5,3)
-    axins.set_ylim(10,90)
-    axins.tick_params(labelsize=12)
-    axins.yaxis.tick_right()
-    #axins.set_ylabel("($10^{14}$\,cm)", rotation=270, fontsize=12)
-    axins.yaxis.set_label_position("right")
+    # axins = inset_axes(
+    #         ax, 1.5, 1, loc=2)
+    # axins.errorbar(
+    #         dt[opt], rad[opt]/1.496E13, yerr=[lrad[opt]/1E15,urad[opt]/1E15], 
+    #         fmt='o', c='lightgrey', lw=0.5)
+    # axins.errorbar(
+    #         dt[~opt], rad[~opt]/1.496E13, 
+    #         yerr=[lrad[~opt]/1E15,urad[~opt]/1E15], 
+    #         fmt='o', mec='k', mfc='lightgrey', ms=8, lw=0.5)
+    # axins.plot(
+    #         dt, rad/1.496E13, lw=1, c='k')
+    # axins.plot(xvals, yvals/1.496E13, ls='--', lw=0.5, c='grey')
+    # axins.set_xlim(-0.5,3)
+    # axins.set_ylim(10,90)
+    # axins.tick_params(labelsize=12)
+    # axins.yaxis.tick_right()
+    # #axins.set_ylabel("($10^{14}$\,cm)", rotation=270, fontsize=12)
+    # axins.yaxis.set_label_position("right")
 
     ax.set_ylabel(r'$R_\mathrm{ph}$ ($10^{15}$ cm)', fontsize=16)
-    ax.set_ylim(0,10)
+    ax.set_ylim(0.1,10)
 
     ax2 = ax.twinx()
     ax2.set_ylabel(
@@ -211,7 +217,7 @@ def rad_panel(ax):
     ax2.tick_params(axis='both', labelsize=16)
 
 
-def temp_panel(ax):
+def temp_panel(ax, lines=True):
     """ Panel showing the temp evolution """
     dt, temp, ltemp, utemp = load_temp()
     opt = np.logical_or(dt < 0.1, np.logical_and(dt > 0.5, dt < 3.22))
@@ -221,7 +227,8 @@ def temp_panel(ax):
     ax.errorbar(
             dt[~opt], temp[~opt], yerr=[ltemp[~opt],utemp[~opt]], 
             fmt='o', mec='k', c='k', mfc='lightgrey', lw=0.5)
-    ax.plot(dt, temp, c='k', lw=1)
+    if lines:
+        ax.plot(dt, temp, c='k', lw=1)
     ax.tick_params(axis='both', labelsize=16)
     ax.axhline(y=5000, c='grey', ls='--', lw=0.5)
     ax.text(0.5, 4500, "5000 K", fontsize=14, verticalalignment='top')
@@ -290,42 +297,78 @@ def rad_16asu(ax):
     # make an inset showing the first few days
 
 
+def model(axarr): 
+    """ Add in David Khatami's model """
+    # add in the model
+    mdt, ml, mr, mt = load()
+    axarr[0].plot(mdt, ml, c='k', lw=1, ls="--", label="Model")
 
-def plot(scale='loglinear'):
+    # add in the SN
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/bol_lc"
+    dat = Table.read(ddir + "/sn2010bh.dat", format='ascii.fast_no_header')
+    sndt = dat['col1']
+    snlum = dat['col2']
+    xsn = sndt
+    ysn = snlum*2
+    axarr[0].plot(xsn, ysn, c='k', ls=':', lw=1, label='SN2010bh, x2')
+
+    # plot the total
+    ysn_grid = np.interp(mdt, xsn, ysn) # put SN LC onto model grid
+    tot = ysn_grid + ml
+    axarr[0].plot(
+            mdt, tot, c='k', ls='-', lw=1, label="Model + SN2010bhx2")
+
+    axarr[0].legend(fontsize=14)
+
+    axarr[1].plot(mdt, mr/1E15, c='k', lw=1, ls='--', label="Model")
+    axarr[1].legend(fontsize=14, loc='lower right')
+
+    tsn = (tot/(4*np.pi*mr**2*5.67E-5))**0.25
+    axarr[2].plot(mdt, mt, c='k', lw=1, ls='--', label="Model")
+    axarr[2].plot(
+            mdt, tsn, c='k', lw=1, ls='-',
+            label=r"$L_\mathrm{bol} / (4\pi R^2 \sigma)$")
+    axarr[2].legend(fontsize=14, loc='upper right')
+
+
+def plot(scale='loglinear', lines=True, xmin=0, xmax=40):
     # Initialize the figure
     fig,axarr = plt.subplots(3,1, figsize=(7,8), sharex=True)
 
     # Luminosity panel
-    lum_panel(axarr[0])
-    lum_16asu(axarr[0])
-    axarr[0].legend(fontsize=12) # wait until after 16asu
-    if scale=='loglinear':
-        axarr[0].set_ylim(1E42, 1E45)
-    elif scale=='loglog':
-        axarr[0].set_ylim(5E41, 1E45)
+    lum_panel(axarr[0], lines=lines)
+    #lum_16asu(axarr[0])
+    #axarr[0].legend(fontsize=12) # wait until after 16asu
+    #if scale=='loglinear':
+    #    axarr[0].set_ylim(1E42, 1E45)
+    #elif scale=='loglog':
+    #    axarr[0].set_ylim(5E41, 1E45)
 
     # Radius panel
-    rad_panel(axarr[1])
-    rad_16asu(axarr[1])
+    rad_panel(axarr[1], lines=lines)
+    #rad_16asu(axarr[1])
 
     # Temperature panel
-    temp_panel(axarr[2])
-    temp_16asu(axarr[2])
+    temp_panel(axarr[2], lines=lines)
+    #temp_16asu(axarr[2])
     axarr[2].set_yscale('log')
+
     if scale=='loglog':
         axarr[2].set_xscale('log')
-        axarr[2].set_xlim(0.03, 100)
-    elif scale=='loglinear':
-        axarr[2].set_xlim(-1, 40)
+
+    model(axarr)
 
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
 
     axarr[0].tick_params(axis='y', labelsize=16)
     axarr[1].tick_params(axis='y', labelsize=16)
+    axarr[1].set_yscale('log')
 
     axarr[2].set_xlabel(r'Days since $t_0$', fontsize=16)
     axarr[2].set_ylabel(r'$T_\mathrm{eff}$ (K)', fontsize=16)
+
+    axarr[2].set_xlim(xmin, xmax)
 
     #plt.subplots_adjust(hspace=0)
     plt.tight_layout()
@@ -334,4 +377,8 @@ def plot(scale='loglinear'):
 
 
 if __name__=="__main__":
-    plot(scale='loglinear')
+    # axarr[2].set_xlim(0.03, 100)
+    # axarr[2].set_xlim(-1, 40)
+    xmin = -1
+    xmax = 18
+    plot(scale='loglinear', lines=False, xmin=-1, xmax=18)

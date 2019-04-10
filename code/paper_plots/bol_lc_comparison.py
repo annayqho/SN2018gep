@@ -146,5 +146,5 @@ if __name__=="__main__":
 
     plt.subplots_adjust(wspace=0)
 
-    plt.show()
-    #plt.savefig("bol_lc_comparison.png")
+    #plt.show()
+    plt.savefig("bol_lc_comparison.eps", format="eps", dpi=1000)

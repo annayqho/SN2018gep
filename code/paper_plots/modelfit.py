@@ -123,10 +123,10 @@ def plot():
     dt, temp, ltemp, utemp = load_temp()
 
     # Load David's model
-    # mdt, ml, mr, mt = load()     
-    dat = np.loadtxt("piromod.txt")
-    mdt = dat[0]
-    ml = dat[1]
+    mdt, ml, mr, mt = load()     
+    #dat = np.loadtxt("piromod.txt")
+    #mdt = dat[0]
+    #ml = dat[1]
 
     # Initialize the figure
     fig,axarr = plt.subplots(3,1, figsize=(6,8), sharex=True)
@@ -192,7 +192,7 @@ def plot():
     plt.subplots_adjust(hspace=0)
     plt.tight_layout()
     plt.show()
-    #plt.savefig("modelfit.png")
+    #plt.savefig("modelfit.eps", format='eps', dpi=1000)
 
 
 if __name__=="__main__":

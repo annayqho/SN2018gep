@@ -59,20 +59,20 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
     fig,ax = plt.subplots(1,1,figsize=(figx, figy))
 
     # Plot the g-band LC
-    choose = np.logical_and(sn_det, filt=='ztfg')
+    # choose = np.logical_and(sn_det, filt=='ztfg')
     gcol = '#140b34'
-    ax.errorbar(
-            dt[choose], mag[choose], yerr=emag[choose], 
-            c=gcol, ms=5, fmt='s',
-            zorder=3, lw=0.5, label=None)
+    # ax.errorbar(
+    #         dt[choose], mag[choose], yerr=emag[choose], 
+    #         c=gcol, ms=5, fmt='s',
+    #         zorder=3, lw=0.5, label=None)
 
-    # Plot the r-band LC
-    choose = np.logical_and(sn_det, filt=='ztfr')
+    # # Plot the r-band LC
+    # choose = np.logical_and(sn_det, filt=='ztfr')
     rcol = '#e55c30'
-    ax.errorbar(
-            dt[choose], mag[choose], yerr=emag[choose], 
-            ms=5, fmt='o', mfc=rcol, mec=rcol,
-            c=rcol, zorder=2, lw=0.5, label=None)
+    # ax.errorbar(
+    #         dt[choose], mag[choose], yerr=emag[choose], 
+    #         ms=5, fmt='o', mfc=rcol, mec=rcol,
+    #         c=rcol, zorder=2, lw=0.5, label=None)
 
     # Plot the g-band prog LC
     choose = np.logical_and(prog_det, filt=='ztfg')
@@ -116,6 +116,14 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
             c=gcol, ms=5, fmt='s', label="$g$-band", 
             zorder=3, lw=0.5)
 
+    # Plot the UVW2 photometry
+    choose = np.logical_and(mag<99, filt=='UVW2')
+    uvcol = 'purple'
+    ax.errorbar(
+            dt[choose], mag[choose], yerr=emag[choose], 
+            ms=5, fmt='D', mfc='white', mec=uvcol, label="UVW2", 
+            c=rcol, zorder=2, lw=0.5)
+
     ax.set_ylim(ymin, ymax)
     # Add an axis on the right-hand side showing the absolute mag
     ax2 = ax.twinx()
@@ -151,20 +159,23 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
         ax.text(2.0, 20.3, 'P200', fontsize=12, horizontalalignment='center',
                 rotation=textor)
         ax.axvline(x=2.7, ymin=0, ymax=0.05, lw=0.5, c='grey') # LT
-        # ax.text(2.73, 22, 'LT', fontsize=12, horizontalalignment='center',
-        #         rotation=textor)
-        # ax.axvline(x=3.1, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
-        # ax.text(3.1, 20.3, 'P200', fontsize=12, horizontalalignment='center',
-        #         rotation=textor)
-        # ax.axvline(x=4.0, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
-        # ax.text(4.0, 20.3, 'P200', fontsize=12, horizontalalignment='center',
-        #         rotation=textor)
-        # ax.axvline(x=4.2, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
-        # ax.text(4.2, 20, 'LRIS', fontsize=12, 
-        #         horizontalalignment='center', rotation=textor)
-        # ax.axvline(x=4.8, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
-        # ax.text(4.8, 20.3, 'DCT', fontsize=12, 
-        #         horizontalalignment='center', rotation=textor)
+        ax.text(2.73, 22, 'LT', fontsize=12, horizontalalignment='center',
+                rotation=textor)
+        ax.axvline(x=3.1, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        ax.text(3.1, 20.3, 'P200', fontsize=12, horizontalalignment='center',
+                rotation=textor)
+        ax.axvline(x=4.0, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        ax.text(4.0, 20.3, 'P200', fontsize=12, horizontalalignment='center',
+                rotation=textor)
+        ax.axvline(x=4.2, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        ax.text(4.2, 20, 'LRIS', fontsize=12, 
+                horizontalalignment='center', rotation=textor)
+        ax.axvline(x=4.8, ymin=0, ymax=0.2, lw=0.5, c='grey') # P200
+        ax.text(4.8, 20.3, 'DCT', fontsize=12, 
+                horizontalalignment='center', rotation=textor)
+        ax.axvline(x=5, ymin=0, ymax=0.05, lw=0.5, c='grey') # LT
+        ax.text(5, 22, 'VLA', fontsize=12, horizontalalignment='center',
+                verticalalignment='bottom', rotation=textor)
 
     if inset is False and timeline is False:
         ax.legend(loc='upper left', fontsize=14)
@@ -248,6 +259,9 @@ def lc_fit():
 
 if __name__=="__main__":
     #full_lc(10, 3, -175, 200, 15.5, 23, "full_gr.png")
-    full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.eps", timeline=True, inset=True)
+    #full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.eps", timeline=True, inset=True)
     #full_lc(5, 3, -0.5, 5, 15.5, 22.5, "zoom_gr.png", timeline=True)
     #full_lc(10, 3, -25, 60, 15.5, 23, "full_gr.eps")
+
+    # timeline for talks
+    full_lc(6, 4, -0.5, 5.1, 14.5, 22.5, "zoom_gr.eps", timeline=True)
