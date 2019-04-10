@@ -13,15 +13,16 @@ DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
 
 
 def plot_18gep():
+    """ V-band max is 3 days after t_0 """
     # From early spectra
-    dt_early = np.array([1, 2, 4.2])
+    dt_early = np.array([1, 2, 4.2])-3 
     vel_early = np.array([45000, 33000, 30000]) / 1E3
     plt.scatter(
             dt_early, vel_early, marker='s', facecolor='white', 
             edgecolor='k', s=100, lw=2)
 
     # From Ragnhild
-    dt = np.array([4, 9, 11.5, 16.5, 22])
+    dt = np.array([4, 9, 11.5, 16.5, 22])-3
     vel = np.array([30000, 23000, 24000, 22000, 22000])/1E3
     evel = np.array([1000, 4000, 2000, 1000, 2000])/1E3
     el = np.array(['O', 'Fe', 'Fe', 'Fe', 'Fe'])
@@ -336,18 +337,18 @@ def plot_population():
 
 
 if __name__=="__main__":
-    fig,ax = plt.subplots(1, 1, figsize=(8,5))
+    fig,ax = plt.subplots(1, 1, figsize=(6,4))
 
     plot_18gep()
-    plot_grbsne()
+    #plot_grbsne()
     #plot_16asu()
-    plot_icbl()
-    plot_ic()
+    #plot_icbl()
+    #plot_ic()
     #plot_12gzk()
 
     # Formatting
     plt.legend(fontsize=14, loc='upper right', ncol=2)
-    plt.xlabel(r"$\Delta t$ [days]", fontsize=16)
+    plt.xlabel(r"Phase since V-band max (days)", fontsize=16)
     plt.ylabel(
             r"Fe II Velocity ($10^3$ km/s)", fontsize=16)
     #plt.yscale('log')
