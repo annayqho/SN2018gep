@@ -15,14 +15,14 @@ DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
 def plot_18gep():
     """ V-band max is 3 days after t_0 """
     # From early spectra
-    dt_early = np.array([1, 2, 4.2])-3 
+    dt_early = np.array([1, 2, 4.2])
     vel_early = np.array([45000, 33000, 30000]) / 1E3
     plt.scatter(
             dt_early, vel_early, marker='s', facecolor='white', 
             edgecolor='k', s=100, lw=2)
 
     # From Ragnhild
-    dt = np.array([4, 9, 11.5, 16.5, 22])-3
+    dt = np.array([4, 9, 11.5, 16.5, 22])
     vel = np.array([30000, 23000, 24000, 22000, 22000])/1E3
     evel = np.array([1000, 4000, 2000, 1000, 2000])/1E3
     el = np.array(['O', 'Fe', 'Fe', 'Fe', 'Fe'])
@@ -42,6 +42,7 @@ def plot_16asu():
     
     for the explosion date, they get 57518.53, 2016 May 10.53 (Section 3.1)
     let's use the Fe II velocity since that's the closest to what we have
+    the uncertainty on their explosion date is 0.17d
     """
     # dt between May 10.53 and May 31.99 (inclusive) = 21.47
     dt = np.array(
@@ -50,11 +51,12 @@ def plot_16asu():
             [28.3, 29.5, 25.7, 21.6, 22.0])*1000/1E3
     evel = np.array(
             [1.3, 1.4, 0.3, 0.4, 1.3])*1000/1E3
-    plt.errorbar(dt, vel, yerr=evel, marker='.', c='#84206b', fmt='--')
+    plt.errorbar(
+            dt, vel, xerr=0.17, yerr=evel, 
+            marker='o', c='#84206b', fmt='-', lw=1)
     plt.text(dt[1]*1.1, vel[1], 'iPTF16asu',
-            horizontalalignment='center', fontsize=12,
+            horizontalalignment='left', fontsize=12,
             verticalalignment='bottom')
-
 
 
 def plot_grbsne():
@@ -72,37 +74,16 @@ def plot_grbsne():
     vel = dat[:,2][is_grbsn].astype(float)*-1
     evel = dat[:,3][is_grbsn].astype(float)
 
-    # To calculate the rolling mean, leave out 100316D
-    tofit = name != 'sn2010bh'
-    tfit = dt[tofit]
-    vfit = vel[tofit]
-    evfit = evel[tofit]
 
-    dt_mean = np.arange(0,30,1)
-    vel_mean = np.zeros(len(dt_mean))
-    evel_mean = np.zeros(len(dt_mean))
-    for ii,t in enumerate(dt_mean):
-        choose = np.abs(tfit-t) <= 5
-        if sum(choose) >= 3:
-            w = 1/(evfit[choose])**2
-            mean,wsum = np.average(
-                    vfit[choose], weights=w, returned=True)
-            emean = np.sqrt(1/np.sum(w))
-            vel_mean[ii] = mean
-            evel_mean[ii] = emean
-        else:
-            vel_mean[ii] = -100
-            evel_mean[ii] = 1
-
-    plt.fill_between(
-            dt_mean, (vel_mean-evel_mean)/1E3, (vel_mean+evel_mean)/1E3,
-            color='grey', alpha=0.5, label="LLGRB-SNe")
-
+def grb171205a():
     # For GRB171205A, the g-band max is about 12 days after the GRB
     dat = np.loadtxt(
             DATA_DIR + "/grb171205a_vel.txt", dtype=float, delimiter=',')
-    dt = dat[:,0]-12
-    vel = dat[:,1]
+    dt = dat[:,0]
+    vel = dat[:,1]/1E3
+    plt.scatter(dt, vel, marker='o', c='grey')
+    plt.plot(dt, vel, ls='-', c='grey')
+    plt.text(dt[0], vel[0], 'SN2017iuk', fontsize=12)
 
 
 def plot_12gzk():
@@ -233,21 +214,22 @@ if __name__=="__main__":
     fig,ax = plt.subplots(1, 1, figsize=(6,4))
 
     plot_18gep()
-    plot_grbsne()
-    #plot_16asu()
+    plot_16asu()
+    grb171205a()
+    #plot_grbsne()
     #plot_icbl()
     #plot_ic()
     #plot_12gzk()
 
     # Formatting
     plt.legend(fontsize=14, loc='upper right', ncol=2)
-    plt.xlabel(r"Phase since V-band max (days)", fontsize=16)
+    plt.xlabel(r"Time since explosion (days)", fontsize=16)
     plt.ylabel(
             r"Fe II Velocity ($10^3$ km/s)", fontsize=16)
-    #plt.yscale('log')
+    plt.yscale('log')
     #plt.xscale('log')
-    plt.xlim(-5, 30)
-    plt.ylim(5, 50)
+    plt.xlim(0, 33)
+    plt.ylim(17, 100)
     plt.tick_params(axis='both', labelsize=16)
     plt.tight_layout()
 
