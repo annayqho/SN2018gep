@@ -11,6 +11,7 @@ rc("font", family="serif")
 rc("text", usetex=True)
 from astropy.cosmology import Planck15
 from astropy.io import ascii
+from plot_lc import get_lc
 
 z = 0.03154
 d = Planck15.luminosity_distance(z=0.03154).cgs.value
@@ -62,34 +63,22 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
     gcol = '#140b34'
     ax.errorbar(
             dt[choose], mag[choose], yerr=emag[choose], 
-            c=gcol, ms=5, fmt='s', label="P48 $g$, single images", 
-            zorder=3, lw=0.5)
+            c=gcol, ms=5, fmt='s',
+            zorder=3, lw=0.5, label=None)
 
     # Plot the r-band LC
     choose = np.logical_and(sn_det, filt=='ztfr')
     rcol = '#e55c30'
     ax.errorbar(
             dt[choose], mag[choose], yerr=emag[choose], 
-            ms=5, fmt='o', mfc=rcol, mec=rcol, label="P48 $r$, single images", 
-            c=rcol, zorder=2, lw=0.5)
-
-    # Plot the r-band non-detection, 32.5 min before the first det
-    # rband = np.logical_and(instr=='P48+ZTF', filt=='r')
-    # choose = np.logical_and(~det, rband)
-    # xnondet = -32.5/60/24
-    # ynondet = 21.25
-    # ax.scatter(
-    #         xnondet, ynondet, color='grey', marker='_', label=None, s=20)
-    # ax.arrow(
-    #         xnondet, ynondet, 0, 0.7, length_includes_head=True,
-    #         head_width=1, head_length=0.2, fc='grey', ec='grey')
+            ms=5, fmt='o', mfc=rcol, mec=rcol,
+            c=rcol, zorder=2, lw=0.5, label=None)
 
     # Plot the g-band prog LC
     choose = np.logical_and(prog_det, filt=='ztfg')
     ax.errorbar(
             dt[choose], mag[choose], yerr=emag[choose], 
-            c=gcol, mec=gcol, mfc='white', ms=5, fmt='s', zorder=1,
-            label="P48 $g$, 3-day stacks")
+            c=gcol, mec=gcol, mfc=gcol, ms=5, fmt='s', zorder=1, label=None)
 
     # Plot the g-band prog non-detections
     choose = np.logical_and(prog_nondet, filt=='ztfg')
@@ -102,9 +91,8 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
     choose = np.logical_and(prog_det, filt=='ztfr')
     ax.errorbar(
             dt[choose], mag[choose], yerr=emag[choose], 
-            ms=5, fmt='o', mfc='white', mec=rcol, c=rcol,
-            zorder=1, lw=0.5,
-            label="P48 $r$, 3-day stacks")
+            ms=5, fmt='o', mfc=rcol, mec=rcol, c=rcol,
+            zorder=1, lw=0.5, label=None)
 
     # Plot the r-band prog non-detections
     choose = np.logical_and(prog_nondet, filt=='ztfr')
@@ -112,6 +100,21 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
             dt[choose], limmag[choose], 
             color=rcol, 
             s=30, marker='_', label=None, zorder=0, lw=1.0)
+
+    # Plot all of the other r- and g-band photometry
+    dt, filt, mag, emag = get_lc()
+    choose = np.logical_and(mag<99, filt=='r')
+    rcol = '#e55c30'
+    ax.errorbar(
+            dt[choose], mag[choose], yerr=emag[choose], 
+            ms=5, fmt='o', mfc=rcol, mec=rcol, label="$r$-band", 
+            c=rcol, zorder=2, lw=0.5)
+    choose = np.logical_and(mag<99, filt=='g')
+    gcol = '#140b34'
+    ax.errorbar(
+            dt[choose], mag[choose], yerr=emag[choose], 
+            c=gcol, ms=5, fmt='s', label="$g$-band", 
+            zorder=3, lw=0.5)
 
     ax.set_ylim(ymin, ymax)
     # Add an axis on the right-hand side showing the absolute mag
@@ -163,44 +166,6 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
         # ax.text(4.8, 20.3, 'DCT', fontsize=12, 
         #         horizontalalignment='center', rotation=textor)
 
-    if inset:
-        # and an inset
-        axins = inset_axes(
-                ax, 2, 1, loc=1,
-                bbox_to_anchor=(0.57,0.98),
-                bbox_transform=ax.transAxes) 
-
-        # Plot the g-band LC
-        choose = np.logical_and(sn_det, filt=='ztfg')
-        gcol = '#140b34'
-        axins.errorbar(
-                dt[choose]*24*60, mag[choose], yerr=emag[choose], 
-                c=gcol, ms=5, fmt='s', label="P48 $g$, single images", 
-                zorder=3, lw=0.5)
-
-        # Plot the r-band LC
-        choose = np.logical_and(sn_det, filt=='ztfr')
-        rcol = '#e55c30'
-        axins.errorbar(
-                dt[choose]*24*60, mag[choose], yerr=emag[choose], 
-                ms=5, fmt='o', mfc=rcol, mec=rcol, label="P48 $r$, single images", 
-                c=rcol, zorder=2, lw=0.5)
-
-        # Format the inset
-        axins.set_xlim(-50,160)
-        axins.set_ylim(18,21.5)
-        axins.invert_yaxis()
-        axins.tick_params(axis='both', labelsize=12)
-        axins.set_ylabel(r"Apparent Mag", fontsize=12)
-        axins.set_xlabel(r"Minutes since ZTF discovery", fontsize=12)
-
-        axins.text(
-                0.55, 0.3, "1.3 mag/hr", fontsize=12, 
-                transform=axins.transAxes)
-        axins.axvline(x=-25, ls='--', lw=0.5, c='k')
-        axins.text(
-                -22, 19, "$t_0$", horizontalalignment='left', fontsize=12)
-    
     if inset is False and timeline is False:
         ax.legend(loc='upper left', fontsize=14)
 
@@ -214,7 +179,7 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
 
     plt.tight_layout()
     #plt.show()
-    plt.savefig(figname)
+    plt.savefig(figname, format='eps', dpi=1000)
 
 
 def lc_fit():
@@ -283,6 +248,6 @@ def lc_fit():
 
 if __name__=="__main__":
     #full_lc(10, 3, -175, 200, 15.5, 23, "full_gr.png")
-    #full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.png", timeline=True, inset=True)
+    full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.eps", timeline=True, inset=True)
     #full_lc(5, 3, -0.5, 5, 15.5, 22.5, "zoom_gr.png", timeline=True)
-    full_lc(10, 3, -25, 34, 15.5, 23, "full_gr.png")
+    #full_lc(10, 3, -25, 60, 15.5, 23, "full_gr.eps")
