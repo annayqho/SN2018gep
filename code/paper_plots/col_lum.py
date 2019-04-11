@@ -538,5 +538,5 @@ if __name__=="__main__":
 
     plt.tight_layout()
 
-    plt.show()
-    #plt.savefig("g_gr.png")
+    #plt.show()
+    plt.savefig("g_gr.eps", format="eps", dpi=1000)

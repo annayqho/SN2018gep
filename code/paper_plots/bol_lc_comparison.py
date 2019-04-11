@@ -123,12 +123,12 @@ if __name__=="__main__":
     ax.legend(fontsize=12)
 
     # Show the nickel decay line
-    x = np.linspace(15,40)
-    t0 = 30
-    mni = 0.28
-    y = get_qdep(x, t0, mni)
-    ax.plot(x, y, ls='--', lw=0.5, c='k')
-    ax.text(26, 3E42, "$M_\mathrm{Ni} = 0.28\,M_\odot$", fontsize=11)
+    # x = np.linspace(15,40)
+    # t0 = 30
+    # mni = 0.28
+    # y = get_qdep(x, t0, mni)
+    # ax.plot(x, y, ls='--', lw=0.5, c='k')
+    # ax.text(26, 3E42, "$M_\mathrm{Ni} = 0.28\,M_\odot$", fontsize=11)
 
     ax = axarr[1]
     at2018gep(ax)
