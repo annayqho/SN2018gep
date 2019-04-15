@@ -30,9 +30,10 @@ def mag2lum(mag):
 
 
 def emag2elum(mag,emag):
-    flux = 10**(-(mag + 48.6)/2.5)
-    eflux = emag*flux
-    elum = 4 * np.pi * d**2 * eflux
+    lum = mag2lum(mag)
+    elum_top = np.abs(mag2lum(mag+emag) - lum)
+    elum_bottom = np.abs(mag2lum(mag-emag) - lum)
+    elum = np.max([elum_top, elum_bottom], axis=0)
     return elum
 
 
@@ -75,12 +76,12 @@ def plot_firstmin_flux(ax):
     jd, filt, mag, emag, limmag, code = get_forced_phot()
     t0 = 2458370.6634
     dt = jd-t0
-    lum = mag2lum(mag)
-    elum = emag2elum(mag, emag)
     choose = np.logical_and.reduce(
             (code=='ZTF Camera', filt=='ztfg', ~np.isnan(mag)))
+    lum = mag2lum(mag[choose])
+    elum = emag2elum(mag[choose], emag[choose])
     ax.errorbar(
-            dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
+            dt[choose]*24*60, lum/1E26, yerr=elum/1E26, 
             c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
     #out,cov = get_fit_func()
     #xlab = np.linspace(-1,2)
@@ -90,24 +91,26 @@ def plot_firstmin_flux(ax):
     # Plot the r-band detections
     choose = np.logical_and.reduce(
             (code=='ZTF Camera', filt=='ztfr', ~np.isnan(mag)))
+    lum = mag2lum(mag[choose])
+    elum = emag2elum(mag[choose], emag[choose])
     ax.errorbar(
-            dt[choose]*24*60, lum[choose]/1E28, yerr=elum[choose]/1E28, 
-            ms=5, fmt='o', mfc='#e55c30', mec='#e55c30', label="P48 $r$", c='#e55c30',
+            dt[choose]*24*60, lum/1E26, yerr=elum/1E26, ms=5, fmt='o', 
+            mfc='#e55c30', mec='#e55c30', label="P48 $r$", c='#e55c30',
             zorder=0)
 
     t0,et0,fitparams = get_t0()
     xm = np.linspace(-50,150)
     xd = xm/(60*24)
     yd = fitparams[0]*xd**2 + fitparams[1]*xd + fitparams[2]
-    ax.plot(xm, yd/1E28, c='k', lw=0.5, ls='--')
+    ax.plot(xm, yd/1E26, c='k', lw=0.5, ls='--')
     ax.axvline(x=-24.83+2, c='k', lw=0.5)
     ax.axvline(x=-24.83-2, c='k', lw=0.5)
     ax.text(-20, 0.4, "$t_0=-25\pm2$ min", fontsize=14)
 
     # Format this box
     ax.set_xlim(-50, 150)
-    ax.set_ylim(0, 0.45)
-    ax.set_ylabel(r"$L_\nu$ [$10^{28}$ erg/s/Hz]", fontsize=16)
+    ax.set_ylim(0, 43)
+    ax.set_ylabel(r"$L_\nu$ [$10^{26}$ erg/s/Hz]", fontsize=16)
     ax.set_xlabel("Minutes since ZTF discovery", fontsize=16)
     ax.yaxis.set_tick_params(labelsize=14)
     ax.xaxis.set_tick_params(labelsize=14)
@@ -248,16 +251,13 @@ def plot_full_lc(ax):
 
 
 if __name__=="__main__":
+    #fig,ax = plt.subplots(1,1,figsize=(4,3))
+
     # Initialize the figure
-    #fig,axarr = plt.subplots(2,1,figsize=(4,5),sharex=True)
+    fig,axarr = plt.subplots(2,1,figsize=(4,5),sharex=True)
 
-    # top left panel: the rise in mag space
-    fig,ax = plt.subplots(1,1,figsize=(4,3))
-    plot_firstmin_mag(ax)
-
-    # bottom left panel: the fit in flux space
-
-    #plot_firstmin_flux(axarr[1])
+    plot_firstmin_mag(axarr[0])
+    plot_firstmin_flux(axarr[1])
     # print("%s +/- %s minutes" %(t0*24*60, et0*24*60))
     #plt.savefig("first_mins.eps", format='eps', dpi=1000)
 
