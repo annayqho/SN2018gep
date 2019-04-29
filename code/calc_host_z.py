@@ -1,4 +1,4 @@
-""" Calculate the host redshift """
+""" Calculate the host redshift from fitting line centroids """
 
 import numpy as np
 from scipy.optimize import curve_fit
