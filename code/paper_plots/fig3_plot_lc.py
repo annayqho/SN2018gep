@@ -1,5 +1,8 @@
-""" Christoffer's host-subtracted photometry
-Plot the light curve! """
+""" Plot full light curves, one panel per band
+Advice on aesthetic from Erik Petigura
+
+this is Fig 3 in the paper """
+
 
 import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
