@@ -1,4 +1,7 @@
-""" Plot a host image from SDSS """
+""" Plot a host image from SDSS
+
+This is Fig 1 in the paper.
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt

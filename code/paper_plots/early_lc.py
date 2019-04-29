@@ -1,5 +1,10 @@
 """ 
-Plot the full early LC, including progenitor stuff
+Plot the g & r light curve. User can adjust the time interval,
+so it's possible to zoom in.
+
+Can plot in mag space or in flux space
+
+This is for Fig 2 of the paper.
 """
 
 import numpy as np
