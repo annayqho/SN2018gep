@@ -1,5 +1,14 @@
-""" From the g & r light curves at very early times,
-estimate the blackbody fit. """
+""" 
+From the very early g & r light curves,
+estimate the temperature.
+
+At these times, we only have g & r,
+so unfortunately our constraints are not nearly
+as good as they are at later times when we have
+Swift/UVOT and full optical ground-based photometry.
+However, from the color we can tell that the temperature
+is increasing.
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt
