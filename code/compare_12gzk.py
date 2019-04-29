@@ -98,7 +98,7 @@ if __name__=="__main__":
     plt.tick_params(labelsize=14)
     plt.xlabel("dt [day]", fontsize=14)
     plt.ylabel(r"$L_\nu $[erg/s/Hz]", fontsize=14)
-    #plt.show()
+    plt.show()
 
-    plt.savefig("radio_comparison.png")
+    #plt.savefig("radio_comparison.png")
     

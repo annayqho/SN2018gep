@@ -109,5 +109,4 @@ if __name__=="__main__":
     plt.text(
             35, 3E44, str2, horizontalalignment='right', fontsize=12)
 
-    plt.show()
 
