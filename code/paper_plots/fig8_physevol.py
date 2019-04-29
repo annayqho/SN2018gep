@@ -1,4 +1,12 @@
-""" Plot the physical evolution as a power law """
+""" Plot the physical evolution
+
+Blackbody luminosity, radius, temperature
+Compare to iPTF16asu
+
+Option to include inset, to plot as power law, or exponential
+
+This is Fig 8 of the paper
+"""
 
 import numpy as np
 from math import floor, log10
