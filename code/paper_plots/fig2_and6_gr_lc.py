@@ -4,7 +4,7 @@ so it's possible to zoom in.
 
 Can plot in mag space or in flux space
 
-This is for Fig 2 of the paper.
+This is for Fig 2 and Fig 6 of the paper
 """
 
 import numpy as np
