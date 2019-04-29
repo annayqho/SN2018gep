@@ -1,8 +1,7 @@
 """ A luminosity/risetime plot 
 
-Take the values from Rest (2018) and add a few events
-
-This is Fig 4 in the paper
+Take the values from Rest (2018) and Margutti (2019) and add a few events
+One panel is Fig 4, the other is Fig 9 in the paper
 """
 
 import matplotlib.pyplot as plt
@@ -116,6 +115,6 @@ for ax in axarr:
     ax.yaxis.set_tick_params(labelsize=14)
 
 fig.tight_layout()
-plt.savefig("lum_rise_wogep.eps", format='eps', dpi=1000)
+#plt.savefig("lum_rise_wogep.eps", format='eps', dpi=1000)
 
-#plt.show()
+plt.show()
