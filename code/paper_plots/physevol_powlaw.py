@@ -162,6 +162,7 @@ def lum_panel(ax, lines=True):
 def rad_panel(ax, lines=True):
     """ Panel showing the radius evolution """
     dt, rad, lrad, urad = load_radius()
+    print(rad[0:10])
     opt = np.logical_or(dt < 0.1, np.logical_and(dt > 0.5, dt < 3.22))
     ax.errorbar(
             dt[opt], rad[opt]/1E15, yerr=[lrad[opt]/1E15,urad[opt]/1E15], 
@@ -178,13 +179,14 @@ def rad_panel(ax, lines=True):
     xvals = np.linspace(-1, 1E2, 1000)
 
     # v = 0.1c
-    # yvals = 3E14 + 0.1 * (3E10) * xvals * 86400
-    # ax.plot(xvals, yvals/1E15, ls='--', lw=0.5, c='grey')
-    # ax.text(26, 6.8, 'v=0.1c', fontsize=14, rotation=20)
+    yvals = 3E14 + 0.1 * (3E10) * xvals * 86400
+    ax.plot(xvals, yvals/1E15, ls='--', lw=0.5, c='grey')
+    #ax.text(26, 6.8, 'v=0.1c', fontsize=14, rotation=20)
+    ax.text(8, 2, 'v=0.1c', fontsize=14, rotation=0)
 
     # Inset showing the first few days
     # axins = inset_axes(
-    #         ax, 1.5, 1, loc=2)
+    #         ax, 1.5, 1, loc=4)
     # axins.errorbar(
     #         dt[opt], rad[opt]/1.496E13, yerr=[lrad[opt]/1E15,urad[opt]/1E15], 
     #         fmt='o', c='lightgrey', lw=0.5)
@@ -339,13 +341,14 @@ def plot(scale='loglinear', lines=True, xmin=0, xmax=40):
     lum_panel(axarr[0], lines=lines)
     #lum_16asu(axarr[0])
     #axarr[0].legend(fontsize=12) # wait until after 16asu
-    #if scale=='loglinear':
-    #    axarr[0].set_ylim(1E42, 1E45)
+    if scale=='loglinear':
+        axarr[0].set_ylim(1E42, 1E45)
     #elif scale=='loglog':
     #    axarr[0].set_ylim(5E41, 1E45)
 
     # Radius panel
     rad_panel(axarr[1], lines=lines)
+    axarr[1].set_ylim(0,7)
     #rad_16asu(axarr[1])
 
     # Temperature panel
@@ -356,14 +359,14 @@ def plot(scale='loglinear', lines=True, xmin=0, xmax=40):
     if scale=='loglog':
         axarr[2].set_xscale('log')
 
-    model(axarr)
+    #model(axarr)
 
     axarr[0].xaxis.label.set_visible(False)
     axarr[1].xaxis.label.set_visible(False)
 
     axarr[0].tick_params(axis='y', labelsize=16)
     axarr[1].tick_params(axis='y', labelsize=16)
-    axarr[1].set_yscale('log')
+    #axarr[1].set_yscale('log')
 
     axarr[2].set_xlabel(r'Days since $t_0$', fontsize=16)
     axarr[2].set_ylabel(r'$T_\mathrm{eff}$ (K)', fontsize=16)
@@ -373,12 +376,19 @@ def plot(scale='loglinear', lines=True, xmin=0, xmax=40):
     #plt.subplots_adjust(hspace=0)
     plt.tight_layout()
     #plt.show()
-    plt.savefig("bbfit_%s.eps" %scale, format='eps', dpi=1000)
+    plt.savefig("bbfit_%s_noasu.eps" %scale, format='eps', dpi=1000)
 
 
 if __name__=="__main__":
     # axarr[2].set_xlim(0.03, 100)
     # axarr[2].set_xlim(-1, 40)
+
+    # for the one without the model
     xmin = -1
-    xmax = 18
-    plot(scale='loglinear', lines=False, xmin=-1, xmax=18)
+    xmax = 40
+    plot(scale='loglinear', lines=True, xmin=xmin, xmax=xmax)
+
+    # for the one with the model
+    #xmin = -1
+    #xmax = 18
+    #plot(scale='loglinear', lines=False, xmin=xmin, xmax=xmax)

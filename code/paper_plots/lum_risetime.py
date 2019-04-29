@@ -39,35 +39,26 @@ def sn2018gep(axarr):
 
 def at2018cow(axarr):
     """ Rise time and peak mag, peak lbol, for AT2018cow """
-    # rise time will be upper limit in both cases 
-    trise = np.array([2, 2.5])
-    plum = np.array([-20.5, 3.5E44])
-    eplum = np.array([0.03, 3.5E44*(6E9/8.5E10)])
-    apos = trise/3
-    hw = np.array([0.02, 1E44])
-
-    for ii,ax in enumerate(axarr):
-        ax.errorbar(
-                trise[ii], plum[ii], yerr=eplum[ii], fmt='o', c='k')
+    axarr[0].errorbar(
+            2.5, -20.15, yerr=0.25, c='k', marker='o')
     
 
 def iptf16asu(axarr):
     """ 
     rise time, peak Mg, peak Lbol for iPTF16asu
     """
-    # rise time to Mg is a lower limit because we only observe it
-    # rising by 1 mag, not by 2 mag
-    # we do resolve the bolometric rise
-    trise = [1.71, 1.4]
+    # from the paper: 3.97 \pm 0.19 days in g-band
+    # peak is -20.4
+    trise = [3.97, 1.4]
+    etrise = [0.19, 0.19] # ignore the second number
 
     # we do resolve Mg, but Lbol is a strict lower limit
     plum = [-20.4, 3.4E43]
     eplum = [0.09, 0.3E43]
 
-    for ii, ax in enumerate(axarr):
-        ax.scatter(
-                trise[0], plum[1], marker='D', edgecolor='#84206b', 
-                facecolor='white', label="Ibc")
+    axarr[0].errorbar(
+            trise[0], plum[0], marker='o', c='k',
+            yerr=eplum[0], xerr=etrise[0])
 
 
 def rest2018(axarr):
@@ -128,6 +119,6 @@ for ax in axarr:
     ax.yaxis.set_tick_params(labelsize=14)
 
 fig.tight_layout()
-plt.savefig("lum_rise_wo18gep.eps", format='eps', dpi=1000)
+plt.savefig("lum_rise_wogep.eps", format='eps', dpi=1000)
 
 #plt.show()

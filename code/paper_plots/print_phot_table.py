@@ -78,7 +78,7 @@ for ii in np.arange(len(dt)):
         # If not an upper limit, print row
         mjd_str = round_sig(mjd[ii], 11)
         dt_str = np.round(dt[ii], 2)
-        mag_str = round_sig(mag[ii], 3)
+        mag_str = round_sig(mag[ii], 4)
         emag_str = np.round(emag[ii], ndec(mag_str))
         row = rowstr %(
                 mjd_str, dt_str, tel[ii], filt[ii], 

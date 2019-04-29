@@ -162,8 +162,8 @@ def plot_spec(ax, x, y, tel, epoch):
     choose_x = np.logical_and(x >= 3200, x<= 9300)
     choose = choose_x
     ax.plot(
-            x[choose], y[choose], c='grey', 
-            drawstyle='steps-mid', lw=0.5, alpha=0.4)
+            x[choose], y[choose], c='lightgrey', 
+            drawstyle='steps-mid', lw=0.4, alpha=0.1)
     return ax
 
 
@@ -494,6 +494,6 @@ if __name__=="__main__":
         ax.get_yaxis().set_ticks([])
 
     plt.subplots_adjust(hspace=0.1)
-    plt.savefig("early_spectra.png")
+    plt.savefig("early_spectra.eps", format='eps', dpi=500)
     #plt.show()
     plt.close()
