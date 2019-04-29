@@ -1,11 +1,8 @@
 """ A luminosity/risetime plot 
 
-In the left panel, show the t_{1/2,rise} in a single band
-that is close to 3000 AA in the rest frame.
-You can either do this in flux space,
-or in magnitude space, in which case it's the time
-to increase by 0.75 mag.
+Take the values from Rest (2018) and add a few events
 
+This is Fig 4 in the paper
 """
 
 import matplotlib.pyplot as plt
