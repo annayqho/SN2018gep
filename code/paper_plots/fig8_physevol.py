@@ -6,6 +6,7 @@ Compare to iPTF16asu
 Option to include inset, to plot as power law, or exponential
 
 This is Fig 8 of the paper
+and can be modified to produce Fig 19 of the paper
 """
 
 import numpy as np
