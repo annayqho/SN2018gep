@@ -4,7 +4,9 @@ import numpy as np
 from math import floor, log10
 from astropy.time import Time
 from astropy.cosmology import Planck15
-from uv_lc import get_uv_lc
+import sys
+sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
+from load_lc import get_uv_lc
 
 def round_sig(x, sig=2):
     print(x)
@@ -78,8 +80,8 @@ for ii in np.arange(len(dt)):
         # If not an upper limit, print row
         mjd_str = round_sig(mjd[ii], 11)
         dt_str = np.round(dt[ii], 2)
-        mag_str = round_sig(mag[ii], 4)
-        emag_str = np.round(emag[ii], ndec(mag_str))
+        mag_str = str(round_sig(mag[ii], 4)).zfill(5)
+        emag_str = str(np.round(emag[ii], ndec(mag_str))).zfill(4)
         row = rowstr %(
                 mjd_str, dt_str, tel[ii], filt[ii], 
                 mag_str, emag_str)
