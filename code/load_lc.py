@@ -1,11 +1,34 @@
 """ Load the individual light curve at a given band """
 
 import numpy as np
+import extinction
 from astropy.cosmology import Planck15
 from astropy.io import ascii
 
 zp = 2458370.6473
 d = Planck15.luminosity_distance(z=0.03154).cgs.value
+
+def get_ext():
+    """ Load the extinction """
+    bands = ['UVW2', 'UVM2', 'UVW1', 'U', 'u', 'B', 'g', 'V', 'r', 'i', 'z']
+    wl = {}
+    wl['UVW2'] = 1928
+    wl['UVM2'] = 2246
+    wl['UVW1'] = 2600
+    wl['U'] = 3465
+    wl['u'] = 3543
+    wl['B'] = 4392
+    wl['g'] = 4770
+    wl['V'] = 5468
+    wl['r'] = 6231
+    wl['i'] = 7625
+    wl['z'] = 9134
+
+    ext = {}
+    for band in bands:
+        ext[band] = extinction.fitzpatrick99(np.array([wl[band]]), 0.029, 3.1)[0]
+
+    return ext
 
 
 def get_uv_lc():

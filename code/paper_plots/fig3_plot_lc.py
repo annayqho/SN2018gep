@@ -18,25 +18,6 @@ from uv_lc import get_uv_lc
 
 zp = 2458370.6473
 
-# use wavelengths to get extinctions
-bands = ['UVW2', 'UVM2', 'UVW1', 'U', 'u', 'B', 'g', 'V', 'r', 'i', 'z']
-wl = {}
-wl['UVW2'] = 1928
-wl['UVM2'] = 2246
-wl['UVW1'] = 2600
-wl['U'] = 3465
-wl['u'] = 3543
-wl['B'] = 4392
-wl['g'] = 4770
-wl['V'] = 5468
-wl['r'] = 6231
-wl['i'] = 7625
-wl['z'] = 9134
-
-ext = {}
-for band in bands:
-    ext[band] = extinction.fitzpatrick99(np.array([wl[band]]), 0.029, 3.1)[0]
-
 
 def plot_inset():
     # zoomed-in window showing the earliest non-detection and detection
