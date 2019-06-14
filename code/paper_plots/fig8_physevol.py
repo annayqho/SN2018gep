@@ -267,6 +267,34 @@ def lum_16asu(ax):
             dt, lum, c='#e55c30', zorder=0, ls='--', lw=1)
 
 
+def lum_18cow(ax):
+    """ 
+    Plot the lum evolution of 18cow for comparison 
+    """
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/bol_lc"
+    dat = Table.read(
+            ddir + "/at2018cow.dat", delimiter='&', 
+            format='ascii.fast_no_header')
+    mjd = dat['col1']
+    jd0 = 58285.441 # time of optical discovery
+    dt = mjd-jd0
+    lum_raw = dat['col2']
+    lsun = 4E33
+    lum = lsun * np.array(
+        [val.split('^')[0] for val in lum_raw]).astype(float)
+    ulum = lsun*(np.array(
+        [val.split('^')[1].split('_')[0] for val in lum_raw]).astype(float))
+    llum = lsun*(np.array(
+        [val.split('^')[1].split('_')[1] for val in lum_raw]).astype(float))
+    col = '#84206b'
+    ax.errorbar(
+            dt, lum, yerr=[llum,ulum],
+            marker='x', mec=col, mfc='white', c=col, 
+            label="AT2018cow", zorder=0, ls='--', lw=0.5)
+    ax.plot(
+            dt, lum, c=col, zorder=0, ls=':', lw=1)
+
+
 def temp_16asu(ax):
     """ Plot the lum evolution of iPTF16asu for comparison """
     t0 = Time("2016-05-10").jd + 0.53
@@ -285,6 +313,34 @@ def temp_16asu(ax):
             zorder=0, ls='--', lw=0.5)
     ax.plot(
             dt[choose], temp[choose], c='#e55c30', zorder=0, ls='--', lw=1)
+
+
+def temp_18cow(ax):
+    """ 
+    Plot the temp evolution of 18cow for comparison 
+    """
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/bol_lc"
+    dat = Table.read(
+            ddir + "/at2018cow.dat", delimiter='&', 
+            format='ascii.fast_no_header')
+    mjd = dat['col1']
+    jd0 = 58285.441 # time of optical discovery
+    dt = mjd-jd0
+    T_raw = dat['col3']
+    scale = 1000
+    temp = scale * np.array(
+        [val.split('^')[0] for val in T_raw]).astype(float)
+    utemp = scale*(np.array(
+        [val.split('^')[1].split('_')[0] for val in T_raw]).astype(float))
+    ltemp = scale*(np.array(
+        [val.split('^')[1].split('_')[1] for val in T_raw]).astype(float))
+    col = '#84206b'
+    ax.errorbar(
+            dt, temp, yerr=[ltemp,utemp],
+            marker='x', mec=col, mfc='white', c=col, 
+            label="AT2018cow", zorder=0, ls='--', lw=0.5)
+    ax.plot(
+            dt, temp, c=col, zorder=0, ls=':', lw=1)
 
 
 def rad_16asu(ax):
@@ -348,8 +404,9 @@ def plot(scale='loglinear', lines=True, xmin=0, xmax=40):
 
     # Luminosity panel
     lum_panel(axarr[0], lines=lines)
-    #lum_16asu(axarr[0])
-    #axarr[0].legend(fontsize=12) # wait until after 16asu
+    lum_16asu(axarr[0])
+    lum_18cow(axarr[0])
+    axarr[0].legend(fontsize=12) # wait until after 16asu
     if scale=='loglinear':
         axarr[0].set_ylim(1E42, 1E45)
     #elif scale=='loglog':
@@ -358,11 +415,13 @@ def plot(scale='loglinear', lines=True, xmin=0, xmax=40):
     # Radius panel
     rad_panel(axarr[1], lines=lines)
     axarr[1].set_ylim(0,7)
-    #rad_16asu(axarr[1])
+    rad_16asu(axarr[1])
+    #rad_18cow(axarr[1])
 
     # Temperature panel
     temp_panel(axarr[2], lines=lines)
-    #temp_16asu(axarr[2])
+    temp_16asu(axarr[2])
+    temp_18cow(axarr[2])
     axarr[2].set_yscale('log')
 
     if scale=='loglog':
@@ -384,8 +443,8 @@ def plot(scale='loglinear', lines=True, xmin=0, xmax=40):
 
     #plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    #plt.show()
-    plt.savefig("bbfit_%s_noasu.eps" %scale, format='eps', dpi=1000)
+    plt.show()
+    #plt.savefig("bbfit_%s_noasu.eps" %scale, format='eps', dpi=1000)
 
 
 if __name__=="__main__":
