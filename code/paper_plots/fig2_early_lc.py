@@ -105,7 +105,8 @@ def plot_firstmin_flux(ax):
     ax.plot(xm, yd/1E26, c='k', lw=0.5, ls='--')
     ax.axvline(x=-24.83+2, c='k', lw=0.5)
     ax.axvline(x=-24.83-2, c='k', lw=0.5)
-    ax.text(-20, 0.4, "$t_0=-25\pm2$ min", fontsize=14)
+    ax.text(-20, 40, "$t_0=-25\pm2$ min", fontsize=14,
+            verticalalignment='top')
 
     # Format this box
     ax.set_xlim(-50, 150)
@@ -170,10 +171,8 @@ def plot_firstmin_mag(ax):
     ax.errorbar(
             dt[choose]*24*60, mag[choose], yerr=emag[choose], 
             c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
-    #out,cov = get_fit_func()
-    #xlab = np.linspace(-1,2)
-    #ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
-    #ax.plot(xlab*24*60, ylab/1E28, c='k', ls='--')
+    ax.text(63, 18.9, "$1.4 \pm 0.1$ mag/hr", fontsize=14,
+            verticalalignment='top', horizontalalignment='right')
 
     # Plot the r-band detections
     choose = np.logical_and.reduce(
@@ -259,12 +258,12 @@ if __name__=="__main__":
     plot_firstmin_mag(axarr[0])
     plot_firstmin_flux(axarr[1])
     # print("%s +/- %s minutes" %(t0*24*60, et0*24*60))
-    #plt.savefig("first_mins.eps", format='eps', dpi=1000)
+    plt.tight_layout()
+    plt.savefig("first_mins.eps", format='eps', dpi=1000)
 
     # now a tall panel showing the fit in flux space in the first 2 days
     #fig,ax = plt.subplots(1,1,figsize=(4,5),sharex=True)
     #plot_firstdays_flux(ax)
 
-    plt.tight_layout()
     #plt.savefig("first_days.eps", format='eps', dpi=1000)
-    plt.show()
+    #plt.show()

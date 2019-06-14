@@ -8,6 +8,7 @@ import sys
 from astropy.table import Table
 from astropy.cosmology import Planck15
 sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
+sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code/calculations")
 from load_lum import load_lc
 from calc_nickel import get_qdep
 
@@ -147,4 +148,5 @@ if __name__=="__main__":
     plt.subplots_adjust(wspace=0)
 
     #plt.show()
-    plt.savefig("bol_lc_comparison.eps", format="eps", dpi=1000)
+    plt.savefig("bol_lc_comparison.eps", format="eps", dpi=1000,
+            bbox_inches='tight')
