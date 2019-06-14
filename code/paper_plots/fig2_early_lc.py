@@ -41,9 +41,12 @@ def get_t0():
     jd, filt, mag, emag, limmag, code = get_forced_phot()
     # first detection was 2458370.6634
     dt = jd-2458370.6634
+    use_filter = 'ztfg'
+    use_filter = 'ztfr' # for referee report
+    window = 3
     choose = np.logical_and.reduce(
-            (code=='ZTF Camera', filt=='ztfg', ~np.isnan(mag)))
-    sec = np.logical_and(dt[choose] < 3, dt[choose] > 0)
+            (code=='ZTF Camera', filt==use_filter, ~np.isnan(mag)))
+    sec = np.logical_and(dt[choose] < window, dt[choose] > 0)
 
     x = dt[choose][sec]
     y = mag[choose][sec]
@@ -99,6 +102,7 @@ def plot_firstmin_flux(ax):
             zorder=0)
 
     t0,et0,fitparams = get_t0()
+    print(t0, et0)
     xm = np.linspace(-50,150)
     xd = xm/(60*24)
     yd = fitparams[0]*xd**2 + fitparams[1]*xd + fitparams[2]
@@ -257,13 +261,15 @@ if __name__=="__main__":
 
     plot_firstmin_mag(axarr[0])
     plot_firstmin_flux(axarr[1])
-    # print("%s +/- %s minutes" %(t0*24*60, et0*24*60))
+    #print("%s +/- %s minutes" %(t0*24*60, et0*24*60))
     plt.tight_layout()
-    plt.savefig("first_mins.eps", format='eps', dpi=1000)
+    plt.show()
+    #plt.savefig("first_mins.eps", format='eps', dpi=1000)
 
     # now a tall panel showing the fit in flux space in the first 2 days
-    #fig,ax = plt.subplots(1,1,figsize=(4,5),sharex=True)
-    #plot_firstdays_flux(ax)
+    fig,ax = plt.subplots(1,1,figsize=(4,5),sharex=True)
+    plot_firstdays_flux(ax)
 
     #plt.savefig("first_days.eps", format='eps', dpi=1000)
-    #plt.show()
+    plt.tight_layout()
+    plt.show()
