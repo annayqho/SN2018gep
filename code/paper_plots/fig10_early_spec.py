@@ -331,7 +331,7 @@ def plot_18cow(ax, scale):
     plot_smoothed_spec(
             ax, wl_cow, flux_cow/scale, ivar_cow,
             'P200', 1.0, lw=1, ls='--', 
-            label=r"AT2018cow, +5.353d, $T=26\,$kK")
+            label=r"18cow, +5.353d, $T=26\,$kK")
 
 
 def plot_10vgv(ax, scale):
@@ -340,7 +340,7 @@ def plot_10vgv(ax, scale):
     y = dat[:,1]
     ax.plot(
             x, y/scale, lw=0.5, c='#84206b', alpha=1, ls='-', 
-            label="PTF10vgv, +2d")
+            label="10vgv, +2d")
 
 
 def plot_12gzk(ax, scale):
@@ -349,7 +349,7 @@ def plot_12gzk(ax, scale):
     y = dat[:,1]
     ax.plot(
             x, y/scale-0.1, lw=0.5, c='#f6c746', ls='-', 
-            label="PTF12gzk, +3d", zorder=5)
+            label="12gzk, +3d", zorder=5)
 
 
 def spec_evol(ax):
@@ -408,7 +408,7 @@ def spec_evol(ax):
             by_label.values(), by_label.keys(), 
             loc='upper right', fontsize=12, ncol=3)
     ax.set_ylabel(
-        r"Scaled $F_{\lambda}$ + const.",
+        r"Scaled $F_{\lambda}$ + cst.",
         fontsize=16)
 
 
@@ -427,14 +427,14 @@ def early_comparison(ax):
     plot_spec(ax, wl, flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
         ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
-        label='SN2018gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000),
+        label='18gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000),
         c='#e55c30')
     plot_18cow(ax, 1.6E-14)
     plot_10vgv(ax, 0.6)
     plot_12gzk(ax, 1E-15)
     ax.set_ylim(0.05,1.8)
     ax.set_ylabel(
-            r"Scaled $F_{\lambda}$ + const.",
+            r"Scaled $F_{\lambda}$ + cst.",
             fontsize=16)
     ax.legend(fontsize=12, loc='upper right')
 
@@ -453,7 +453,7 @@ def w_comparison(ax):
     plot_spec(ax, wl, flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
         ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
-        label='SN2018gep, +4.2d, $T=20$\,kK', c='#e55c30')
+        label='18gep, +4.2d, $T=20$\,kK', c='#e55c30')
     dat = np.loadtxt(SPEC_DIR + "/2008d.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
@@ -466,12 +466,11 @@ def w_comparison(ax):
     y = dat[:,1]
     ax.plot(
             x-600, y/2+0.2, lw=1, c='#f6d746', ls='-', 
-            label="PTF12dam, -25d, $T=15$--20\,kK")
+            label="12dam, -25d, $T=15$--20\,kK")
     ax.legend(fontsize=12, loc='upper right')
     ax.set_ylim(-0.4,2.5)
-    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
     ax.set_ylabel(
-        r"Scaled $F_{\lambda}$ + const.",
+        r"Scaled $F_{\lambda}$ + cst.",
         fontsize=16)
 
 
@@ -489,13 +488,17 @@ def grbsn_comparison(ax):
     plot_spec(ax, wl, flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
         ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
-        label='SN2018gep, +4.2d, $T=20$\,kK', c='#e55c30')
+        label='18gep, +17.7d', c='#e55c30')
     ax.legend(fontsize=12, loc='upper right')
+    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+    ax.set_ylabel(
+            r"Scaled $F_{\lambda}$ + cst.",
+            fontsize=16)
     
 
 if __name__=="__main__":
     fig,axarr = plt.subplots(
-            4, 1, figsize=(8,11), sharex=True, 
+            4, 1, figsize=(7,11), sharex=True, 
             gridspec_kw={'height_ratios':[2,1,1,1]})
 
     ax = axarr[0]
@@ -515,6 +518,6 @@ if __name__=="__main__":
         ax.get_yaxis().set_ticks([])
 
     plt.subplots_adjust(hspace=0.1)
-    #plt.savefig("early_spectra.eps", format='eps', dpi=500)
-    plt.show()
-    #plt.close()
+    plt.savefig("early_spectra.eps", format='eps', dpi=500)
+    #plt.show()
+    plt.close()
