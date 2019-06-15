@@ -13,14 +13,14 @@ from astropy.time import Time
 from extinction import fitzpatrick99
 from astropy.modeling.blackbody import blackbody_lambda
 import glob
-from plot_lc import get_lc
 import sys
+sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
+from load_lc import get_lc
 sys.path.append("/Users/annaho/Github/Spectra")
 sys.path.append("/Users/annaho/Github/sigfig")
 from round_nums import round_sig
 from normalize import smooth_spec
 from measure_snr import get_snr
-sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
 from load_lum import load_lc
 from load_radius import load_radius
 from load_temp import load_temp
@@ -475,10 +475,28 @@ def w_comparison(ax):
         fontsize=16)
 
 
+def grbsn_comparison(ax):
+    """ Compare later spec with GRB-SNe """
+    files, epochs, tels = get_files(16,17)
+    f = files[0]
+    tel = tels[0]
+    dt = epochs[0]
+    wl, flux, ivar = load_spec(f, tel)
+    wl, flux = fluxcal(wl, flux, dt)
+    wl, flux = clip_lines(wl, flux, z, tel, dt)
+    wl, flux = clip_tellurics(wl, flux)
+    scale = flux[wl>4100][0]
+    plot_spec(ax, wl, flux/scale, tel, dt)
+    smoothed = plot_smoothed_spec(
+        ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
+        label='SN2018gep, +4.2d, $T=20$\,kK', c='#e55c30')
+    ax.legend(fontsize=12, loc='upper right')
+    
+
 if __name__=="__main__":
     fig,axarr = plt.subplots(
-            3, 1, figsize=(8,11), sharex=True, 
-            gridspec_kw={'height_ratios':[2,1,1]})
+            4, 1, figsize=(8,11), sharex=True, 
+            gridspec_kw={'height_ratios':[2,1,1,1]})
 
     ax = axarr[0]
     spec_evol(ax)
@@ -489,11 +507,14 @@ if __name__=="__main__":
     ax = axarr[2]
     w_comparison(ax)
 
+    ax = axarr[3]
+    grbsn_comparison(ax)
+
     for ax in axarr:
         ax.tick_params(axis='both', labelsize=14)
         ax.get_yaxis().set_ticks([])
 
     plt.subplots_adjust(hspace=0.1)
-    plt.savefig("early_spectra.eps", format='eps', dpi=500)
-    #plt.show()
-    plt.close()
+    #plt.savefig("early_spectra.eps", format='eps', dpi=500)
+    plt.show()
+    #plt.close()
