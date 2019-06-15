@@ -171,7 +171,6 @@ def lum_panel(ax, lines=True):
 def rad_panel(ax, lines=True):
     """ Panel showing the radius evolution """
     dt, rad, lrad, urad = load_radius()
-    print(rad[0:10])
     opt = np.logical_or(dt < 0.1, np.logical_and(dt > 0.5, dt < 3.22))
     ax.errorbar(
             dt[opt], rad[opt]/1E15, yerr=[lrad[opt]/1E15,urad[opt]/1E15], 
@@ -194,24 +193,24 @@ def rad_panel(ax, lines=True):
     ax.text(8, 2, 'v=0.1c', fontsize=14, rotation=0)
 
     # Inset showing the first few days
-    # axins = inset_axes(
-    #         ax, 1.5, 1, loc=4)
-    # axins.errorbar(
-    #         dt[opt], rad[opt]/1.496E13, yerr=[lrad[opt]/1E15,urad[opt]/1E15], 
-    #         fmt='o', c='lightgrey', lw=0.5)
-    # axins.errorbar(
-    #         dt[~opt], rad[~opt]/1.496E13, 
-    #         yerr=[lrad[~opt]/1E15,urad[~opt]/1E15], 
-    #         fmt='o', mec='k', mfc='lightgrey', ms=8, lw=0.5)
-    # axins.plot(
-    #         dt, rad/1.496E13, lw=1, c='k')
-    # axins.plot(xvals, yvals/1.496E13, ls='--', lw=0.5, c='grey')
-    # axins.set_xlim(-0.5,3)
-    # axins.set_ylim(10,90)
-    # axins.tick_params(labelsize=12)
-    # axins.yaxis.tick_right()
-    # #axins.set_ylabel("($10^{14}$\,cm)", rotation=270, fontsize=12)
-    # axins.yaxis.set_label_position("right")
+    axins = inset_axes(
+            ax, 1.5, 1, loc=2)
+    axins.errorbar(
+            dt[opt], rad[opt]/1.496E13, yerr=[lrad[opt]/1E15,urad[opt]/1E15], 
+            fmt='o', c='lightgrey', lw=0.5)
+    axins.errorbar(
+            dt[~opt], rad[~opt]/1.496E13, 
+            yerr=[lrad[~opt]/1E15,urad[~opt]/1E15], 
+            fmt='o', mec='k', mfc='lightgrey', ms=8, lw=0.5)
+    axins.plot(
+            dt, rad/1.496E13, lw=1, c='k')
+    axins.plot(xvals, yvals/1.496E13, ls='--', lw=0.5, c='grey')
+    axins.set_xlim(-0.5,3)
+    axins.set_ylim(10,90)
+    axins.tick_params(labelsize=12)
+    axins.yaxis.tick_right()
+    #axins.set_ylabel("($10^{14}$\,cm)", rotation=270, fontsize=12)
+    axins.yaxis.set_label_position("right")
 
     ax.set_ylabel(r'$R_\mathrm{ph}$ ($10^{15}$ cm)', fontsize=16)
     ax.set_ylim(0.1,10)
@@ -364,6 +363,34 @@ def rad_16asu(ax):
     # make an inset showing the first few days
 
 
+def rad_18cow(ax):
+    """ 
+    Plot the temp evolution of 18cow for comparison 
+    """
+    ddir = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/bol_lc"
+    dat = Table.read(
+            ddir + "/at2018cow.dat", delimiter='&', 
+            format='ascii.fast_no_header')
+    mjd = dat['col1']
+    jd0 = 58285.441 # time of optical discovery
+    dt = mjd-jd0
+    rad_raw = dat['col4']
+    scale = 1.5E13/1E15
+    rad = scale * np.array(
+        [val.split('^')[0] for val in rad_raw]).astype(float)
+    urad = scale*(np.array(
+        [val.split('^')[1].split('_')[0] for val in rad_raw]).astype(float))
+    lrad = scale*(np.array(
+        [val.split('^')[1].split('_')[1] for val in rad_raw]).astype(float))
+    col = '#84206b'
+    ax.errorbar(
+            dt, rad, yerr=[lrad,urad],
+            marker='x', mec=col, mfc='white', c=col, 
+            label="AT2018cow", zorder=0, ls='--', lw=0.5)
+    ax.plot(
+            dt, rad, c=col, zorder=0, ls=':', lw=1)
+
+
 def model(axarr): 
     """ Add in David Khatami's model """
     # add in the model
@@ -414,9 +441,9 @@ def plot(scale='loglinear', lines=True, xmin=0, xmax=40):
 
     # Radius panel
     rad_panel(axarr[1], lines=lines)
-    axarr[1].set_ylim(0,7)
+    axarr[1].set_ylim(0,10)
     rad_16asu(axarr[1])
-    #rad_18cow(axarr[1])
+    # rad_18cow(axarr[1])
 
     # Temperature panel
     temp_panel(axarr[2], lines=lines)
@@ -443,8 +470,8 @@ def plot(scale='loglinear', lines=True, xmin=0, xmax=40):
 
     #plt.subplots_adjust(hspace=0)
     plt.tight_layout()
-    plt.show()
-    #plt.savefig("bbfit_%s_noasu.eps" %scale, format='eps', dpi=1000)
+    #plt.show()
+    plt.savefig("bbfit_%s.eps" %scale, format='eps', dpi=1000)
 
 
 if __name__=="__main__":
