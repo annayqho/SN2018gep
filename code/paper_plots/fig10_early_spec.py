@@ -202,6 +202,7 @@ def choose_gal_lines(z, dt):
 def get_lines(species, v):
     """ Return wavelengths of lines shifted to some velocity, 
     taking in the species """
+    # These wavelengths are in the rest-frame at that redshift
     if species == "CIII":
         return np.array([4649, 5696])*(1-v/3E5+z)
     elif species == "CIV":
@@ -252,8 +253,9 @@ def plot_lines(ax, y, v, species, offset):
 
     wl = get_lines(species, v)
     # offset: sometimes you have to stack them
+    # wl are at the redshift of the transient
     ax.scatter(
-        wl, y*offset, marker=markers[species], 
+        wl/(1+z), y*offset, marker=markers[species], 
         facecolor=fc[species], edgecolor='k', label=species, zorder=20)
 
 
@@ -329,14 +331,14 @@ def plot_18cow(ax, scale):
     wl_cow, flux_cow, ivar_cow = load_spec(
             SPEC_DIR + "/AT2018cow/AT2018cow_20180621_P200_v3.ascii", 'P200')
     plot_smoothed_spec(
-            ax, wl_cow, flux_cow/scale, ivar_cow,
+            ax, wl_cow/(1+0.014), flux_cow/scale, ivar_cow,
             'P200', 1.0, lw=1, ls='--', 
             label=r"18cow, +5.353d, $T=26\,$kK")
 
 
 def plot_10vgv(ax, scale):
     dat = np.loadtxt(SPEC_DIR + "/ptf10vgv.txt", delimiter=',')
-    x = dat[:,0]
+    x = (dat[:,0])/(1+0.0142)
     y = dat[:,1]
     ax.plot(
             x, y/scale, lw=0.5, c='#84206b', alpha=1, ls='-', 
@@ -345,11 +347,27 @@ def plot_10vgv(ax, scale):
 
 def plot_12gzk(ax, scale):
     dat = np.loadtxt(SPEC_DIR + "/ptf12gzk.txt", delimiter=',')
-    x = dat[:,0]
+    x = (dat[:,0])/(1+0.0137)
     y = dat[:,1]
     ax.plot(
             x, y/scale-0.1, lw=0.5, c='#f6c746', ls='-', 
             label="12gzk, +3d", zorder=5)
+
+
+def plot_98bw(ax, scale):
+    dat = np.loadtxt(SPEC_DIR + "/98bw.txt", delimiter=',')
+    x = dat[:,0] / (1+0.0085)
+    y = dat[:,1]
+    ax.plot(x, y/scale, lw=0.5, c='#f6c746', ls='-',
+            label="98bw, +18d", zorder=5)
+
+
+def plot_06aj(ax, scale):
+    dat = np.loadtxt(SPEC_DIR + "/06aj.txt", delimiter=',')
+    x = dat[:,0] / (1+0.033)
+    y = dat[:,1]
+    ax.plot(x, y/scale+0.5, lw=0.5, c='#84206b', ls='-',
+            label="06aj, +18d", zorder=5)
 
 
 def spec_evol(ax):
@@ -378,15 +396,15 @@ def spec_evol(ax):
         temp = get_temp(dt)
         scale = flux[wl>4100][0]
         shifted = flux/scale-shift[ii]
-        plot_spec(ax, wl, shifted, tel, dt)
+        plot_spec(ax, wl/(1+z), shifted, tel, dt)
 
         smoothed = plot_smoothed_spec(
-                ax, wl, shifted, ivar, tel, dt)
+                ax, wl/(1+z), shifted, ivar, tel, dt)
 
         # Line identifications for dt=2
         if ii == 1:
             smoothed = plot_smoothed_spec(
-                    ax, wl, shifted, ivar, tel, dt, lw=1, c='#e55c30')
+                    ax, wl/(1+z), shifted, ivar, tel, dt, lw=1, c='#e55c30')
             sp = ["CIII", "OIII", "CIV", "OIV"]
             offsets = [1, 1, 1.1, 1.1]
             plot_species(ax, 45000, wl, smoothed, sp, offsets) 
@@ -396,7 +414,7 @@ def spec_evol(ax):
             plot_species(ax, 35000, wl, smoothed, sp, offsets)
         if ii == 7:
             smoothed = plot_smoothed_spec(
-                    ax, wl, shifted, ivar, tel, dt, lw=1, c='#e55c30')
+                    ax, wl/(1+z), shifted, ivar, tel, dt, lw=1, c='#e55c30')
             sp = ["CIII", "OII", "CII", "SIV"]
             offsets = [0.95, 1, 1, 1]
             plot_species(ax, 30000, wl, smoothed, sp, offsets)
@@ -424,9 +442,9 @@ def early_comparison(ax):
     wl, flux = clip_tellurics(wl, flux)
     scale = flux[wl>4100][0]
     #shifted = flux/scale-shift[ii]
-    plot_spec(ax, wl, flux/scale, tel, dt)
+    plot_spec(ax, wl/(1+z), flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
-        ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
+        ax, wl/(1+z), flux/scale, ivar, tel, dt, lw=1.0, text=False, 
         label='18gep, +1.0d, $T=%s$\,kK' %int(get_temp(1.0)/1000),
         c='#e55c30')
     plot_18cow(ax, 1.6E-14)
@@ -450,22 +468,22 @@ def w_comparison(ax):
     wl, flux = clip_lines(wl, flux, z, tel, dt)
     wl, flux = clip_tellurics(wl, flux)
     scale = flux[wl>4100][0]
-    plot_spec(ax, wl, flux/scale, tel, dt)
+    plot_spec(ax, wl/(1+z), flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
-        ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
+        ax, wl/(1+z), flux/scale, ivar, tel, dt, lw=1.0, text=False, 
         label='18gep, +4.2d, $T=20$\,kK', c='#e55c30')
     dat = np.loadtxt(SPEC_DIR + "/2008d.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
     ext = fitzpatrick99(x+100, 0.63)
     ax.plot(
-            x+60, y/0.1+ext-2.0, lw=0.5, c='#84206b', 
+            x-100, y/0.1+ext-2.0, lw=0.5, c='#84206b', 
             label="SN2008D, +1.4d, $T=11$\,kK")
     dat = np.loadtxt(SPEC_DIR + "/ptf12dam.txt", delimiter=',')
     x = dat[:,0]
     y = dat[:,1]
     ax.plot(
-            x-600, y/2+0.2, lw=1, c='#f6d746', ls='-', 
+            x-750, y/2+0.2, lw=1, c='#f6d746', ls='-', 
             label="12dam, -25d, $T=15$--20\,kK")
     ax.legend(fontsize=12, loc='upper right')
     ax.set_ylim(-0.4,2.5)
@@ -485,12 +503,14 @@ def grbsn_comparison(ax):
     wl, flux = clip_lines(wl, flux, z, tel, dt)
     wl, flux = clip_tellurics(wl, flux)
     scale = flux[wl>4100][0]
-    plot_spec(ax, wl, flux/scale, tel, dt)
+    plot_spec(ax, wl/(1+z), flux/scale, tel, dt)
     smoothed = plot_smoothed_spec(
-        ax, wl, flux/scale, ivar, tel, dt, lw=1.0, text=False, 
-        label='18gep, +17.7d', c='#e55c30')
-    ax.legend(fontsize=12, loc='upper right')
-    ax.set_xlabel(r"Observed Wavelength (\AA)", fontsize=16)
+        ax, wl/(1+z), flux/scale, ivar, tel, dt, lw=1.0, text=False, 
+        label='18gep, +18d', c='#e55c30')
+    plot_98bw(ax, 1E-14)
+    plot_06aj(ax, 1E-16)
+    ax.legend(fontsize=12, loc='upper left')
+    ax.set_xlabel(r"Rest Wavelength (\AA)", fontsize=16)
     ax.set_ylabel(
             r"Scaled $F_{\lambda}$ + cst.",
             fontsize=16)
