@@ -9,6 +9,7 @@ from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 from matplotlib import rc
 rc("font", family="serif")
 rc("text", usetex=True)
+import matplotlib.gridspec as gridspec
 from astropy.cosmology import Planck15
 import sys
 sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
@@ -42,7 +43,7 @@ def get_t0():
     # first detection was 2458370.6634
     dt = jd-2458370.6634
     use_filter = 'ztfg'
-    use_filter = 'ztfr' # for referee report
+    # use_filter = 'ztfr' # for referee report
     window = 3
     choose = np.logical_and.reduce(
             (code=='ZTF Camera', filt==use_filter, ~np.isnan(mag)))
@@ -86,10 +87,6 @@ def plot_firstmin_flux(ax):
     ax.errorbar(
             dt[choose]*24*60, lum/1E26, yerr=elum/1E26, 
             c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
-    #out,cov = get_fit_func()
-    #xlab = np.linspace(-1,2)
-    #ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
-    #ax.plot(xlab*24*60, ylab/1E28, c='k', ls='--')
 
     # Plot the r-band detections
     choose = np.logical_and.reduce(
@@ -102,13 +99,11 @@ def plot_firstmin_flux(ax):
             zorder=0)
 
     t0,et0,fitparams = get_t0()
-    print(t0, et0)
     xm = np.linspace(-50,150)
     xd = xm/(60*24)
     yd = fitparams[0]*xd**2 + fitparams[1]*xd + fitparams[2]
     ax.plot(xm, yd/1E26, c='k', lw=0.5, ls='--')
-    ax.axvline(x=-24.83+2, c='k', lw=0.5)
-    ax.axvline(x=-24.83-2, c='k', lw=0.5)
+    ax.axvspan(-24.83-2, -24.83+2, lw=0.5, color='lightgrey')
     ax.text(-20, 40, "$t_0=-25\pm2$ min", fontsize=14,
             verticalalignment='top')
 
@@ -166,7 +161,6 @@ def plot_firstdays_flux(ax):
 
 def plot_firstmin_mag(ax):
     """ Plot the first few minutes """
-    #dt, mag, emag, instr, filt, det = load_lc()
     jd, filt, mag, emag, limmag, code = get_forced_phot()
     t0 = 2458370.6634
     dt = jd-t0
@@ -187,7 +181,7 @@ def plot_firstmin_mag(ax):
             label="P48 $r$", c='#e55c30', zorder=0)
 
     # Format this box
-    #ax.set_xlim(-50, 150)
+    ax.set_xlim(-50, 150)
     ax.set_ylim(18, 21.5)
     ax.invert_yaxis()
     ax.set_ylabel(r"Apparent Mag", fontsize=16)
@@ -254,22 +248,14 @@ def plot_full_lc(ax):
 
 
 if __name__=="__main__":
-    #fig,ax = plt.subplots(1,1,figsize=(4,3))
-
     # Initialize the figure
-    fig,axarr = plt.subplots(2,1,figsize=(4,5),sharex=True)
+    fig = plt.figure(figsize=(8,5))
+    gs = fig.add_gridspec(
+            nrows=2, ncols=2, wspace=0.05)
+    plot_firstmin_mag(fig.add_subplot(gs[0,0]))
+    plot_firstmin_flux(fig.add_subplot(gs[1,0]))
+    plot_firstdays_flux(fig.add_subplot(gs[:,1]))
 
-    plot_firstmin_mag(axarr[0])
-    plot_firstmin_flux(axarr[1])
-    #print("%s +/- %s minutes" %(t0*24*60, et0*24*60))
-    plt.tight_layout()
-    plt.show()
-    #plt.savefig("first_mins.eps", format='eps', dpi=1000)
-
-    # now a tall panel showing the fit in flux space in the first 2 days
-    fig,ax = plt.subplots(1,1,figsize=(4,5),sharex=True)
-    plot_firstdays_flux(ax)
-
-    #plt.savefig("first_days.eps", format='eps', dpi=1000)
-    plt.tight_layout()
-    plt.show()
+    gs.tight_layout(fig)
+    plt.savefig("first_days.eps", format='eps', dpi=500)
+    #plt.show()
