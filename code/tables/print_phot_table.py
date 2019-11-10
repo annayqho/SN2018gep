@@ -80,8 +80,11 @@ for ii in np.arange(len(dt)):
         # If not an upper limit, print row
         mjd_str = round_sig(mjd[ii], 11)
         dt_str = np.round(dt[ii], 2)
-        mag_str = str(round_sig(mag[ii], 4)).zfill(5)
-        emag_str = str(np.round(emag[ii], ndec(mag_str))).zfill(4)
+        mag_str = str('{:.2f}'.format(round_sig(mag[ii], 4)))
+        emag_str = "%.2f" %np.round(emag[ii],2)
+        if emag_str == "0.00":
+            emag_str = "0.01"
+        print(emag_str)
         row = rowstr %(
                 mjd_str, dt_str, tel[ii], filt[ii], 
                 mag_str, emag_str)
