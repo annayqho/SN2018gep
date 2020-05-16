@@ -165,8 +165,8 @@ def plot_lc():
     fig.text(0.04, 0.5, 'Apparent Mag (AB)', fontsize=16, rotation='vertical')
     #fig.text(0.9, 0.5, 'Absolute Mag', fontsize=16, rotation=270)
 
-    plt.savefig("lc.eps", format='eps', dpi=1000)
-    #plt.show()
+    #plt.savefig("lc.eps", format='eps', dpi=1000)
+    plt.show()
 
 
 if __name__=="__main__":

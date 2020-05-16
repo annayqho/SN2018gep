@@ -249,13 +249,16 @@ def plot_full_lc(ax):
 
 if __name__=="__main__":
     # Initialize the figure
-    fig = plt.figure(figsize=(8,5))
-    gs = fig.add_gridspec(
-            nrows=2, ncols=2, wspace=0.05)
-    plot_firstmin_mag(fig.add_subplot(gs[0,0]))
-    plot_firstmin_flux(fig.add_subplot(gs[1,0]))
-    plot_firstdays_flux(fig.add_subplot(gs[:,1]))
+    # fig = plt.figure(figsize=(8,5))
+    # gs = fig.add_gridspec(
+    #         nrows=2, ncols=2, wspace=0.05)
+    # plot_firstmin_mag(fig.add_subplot(gs[0,0]))
+    # plot_firstmin_flux(fig.add_subplot(gs[1,0]))
+    # plot_firstdays_flux(fig.add_subplot(gs[:,1]))
 
-    gs.tight_layout(fig)
-    plt.savefig("first_days.eps", format='eps', dpi=500)
-    #plt.show()
+    # gs.tight_layout(fig)
+    # #plt.savefig("first_days.eps", format='eps', dpi=500)
+    # plt.show()
+
+    fig,ax = plt.subplots(1,1,figsize=(8,5))
+    plot_full_lc(ax)

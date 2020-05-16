@@ -8,6 +8,7 @@ from astropy.io import ascii
 zp = 2458370.6473
 d = Planck15.luminosity_distance(z=0.03154).cgs.value
 
+
 def get_ext():
     """ Load the extinction """
     bands = ['UVW2', 'UVM2', 'UVW1', 'U', 'u', 'B', 'g', 'V', 'r', 'i', 'z']
