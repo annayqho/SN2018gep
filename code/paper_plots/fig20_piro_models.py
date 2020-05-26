@@ -198,5 +198,6 @@ if __name__=="__main__":
     plt.ylabel("$L_\mathrm{bol}$ (erg/s)", fontsize=16)
     plt.yscale('log')
     plt.legend(loc='upper right', fontsize=12)
-    plt.show()
-    #plt.savefig("piro_models.png")
+    #plt.show()
+    plt.tight_layout()
+    plt.savefig("piro_models.eps", dpi=300)

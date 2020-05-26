@@ -10,9 +10,10 @@ from astropy.table import Table
 from astropy.cosmology import Planck15
 from astropy.time import Time
 import glob
-from plot_lc import get_lc
 import sys
 sys.path.append("/Users/annaho/Github/Spectra")
+sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
+from load_lc import get_lc
 from normalize import smooth_spec
 from measure_snr import get_snr
 
@@ -137,7 +138,7 @@ def plot_spec(ax, x, y, tel, epoch):
     choose_x = np.logical_and(x >= 3200, x<= 9300)
     choose = choose_x
     ax.plot(
-            x[choose], y[choose], c='grey', 
+            x[choose], y[choose], c='lightgrey', 
             drawstyle='steps-mid', lw=0.5, alpha=0.4)
     return ax
 
@@ -252,14 +253,18 @@ if __name__=="__main__":
         dt = epochs[ii]
         wl, flux, ivar = load_spec(f, tel)
         print(tel)
-        wl, flux = fluxcal(wl, flux, dt)
         wl, flux = clip_lines(wl, flux, z, tel, dt)
-        #plot_lines(ax, z, tel, dt)
         wl, flux = clip_tellurics(wl, flux)
         wl, flux = fluxcal(wl, flux, dt)
-        scale = (flux[wl > 4100][0])/2
-        plot_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
-        plot_smoothed_spec(
+        if ii < nfiles/2:
+            scale = (flux[wl > 3800][0])/2
+            plot_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
+            plot_smoothed_spec(
+                ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), ivar, tel, dt)
+        else:
+            scale = (flux[wl > 4600][0])/2
+            plot_spec(ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), tel, dt)
+            plot_smoothed_spec(
                 ax, wl, flux/scale+nfiles/2-ii%(nfiles/2), ivar, tel, dt)
         ax.tick_params(axis='both', labelsize=14)
     axarr[0].set_ylabel(
@@ -271,10 +276,10 @@ if __name__=="__main__":
     plt.xlim(3000, 11000)
     #plt.xlim(4900, 5200)
     plt.subplots_adjust(wspace=0)
-    axarr[0].set_ylim(0,11)
-    #axarr[0].set_ylim(0,5)
+    axarr[0].set_ylim(0,12)
+    axarr[1].set_ylim(1,12)
 
     #plt.tight_layout()
-    #plt.savefig("spec_sequence.png")
-    plt.show()
+    plt.savefig("spec_sequence.eps", dpi=300, bbox_inches='tight')
+    #plt.show()
     #plt.close()

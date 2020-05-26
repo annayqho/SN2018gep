@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 plt.rc("font", family="serif")
 plt.rc("text", usetex=True)
+import sys
+sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
+from load_lum import load_lc
 from scipy.integrate import quad
 from scipy.optimize import curve_fit
 from astropy.table import Table
@@ -50,7 +53,7 @@ def lph(dt, mni, tdiff):
 
 if __name__=="__main__":
     # Load the bolometric light curve
-    dt, lum, elum = load_lc()
+    dt, lum, llum, ulum = load_lc()
 
     # Plot a sample Ni light curve, say M_Ni = 0.1 solar masses
     mni0 = 0.3 # solar masses
@@ -61,7 +64,7 @@ if __name__=="__main__":
     # Plot
     fig,ax = plt.subplots(1,1,figsize=(7,5))
     ax.errorbar(
-            dt, lum, yerr=elum, fmt='o', 
+            dt, lum, yerr=[llum, ulum], fmt='o', 
             mec='k', mfc='k', ms=5, c='k')
 
     # Various models
@@ -110,5 +113,5 @@ if __name__=="__main__":
     ax.set_yscale('log')
     ax.set_ylim(1E42, 4E44)
     ax.set_xlim(-3, 45)
-    #plt.show()
-    plt.savefig("nifit.png")
+    plt.show()
+    #plt.savefig("nifit.png")

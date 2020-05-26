@@ -60,6 +60,6 @@ if __name__=="__main__":
     plt.xlabel(r"time since explosion (days)", fontsize=16)
     plt.legend(fontsize=14)
     plt.tight_layout()
-    plt.savefig("wygoda.png")
-    plt.close()
+    plt.savefig("wygoda.eps", dpi=300)
+    #plt.close()
     #plt.show()
