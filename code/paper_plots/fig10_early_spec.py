@@ -517,20 +517,24 @@ def grbsn_comparison(ax):
     
 
 if __name__=="__main__":
+    # Top panel as separate figure
+    fig,ax = plt.subplots(1,1,figsize=(7,4))
+    spec_evol(ax)
+    plt.savefig("early_spec_evol.eps", format='eps', dpi=300, bbox_inches='tight')
+    plt.close()
+
+    # Bottom panels together
     fig,axarr = plt.subplots(
-            4, 1, figsize=(7,11), sharex=True, 
-            gridspec_kw={'height_ratios':[2,1,1,1]})
+            3, 1, figsize=(7,8), sharex=True, 
+            gridspec_kw={'height_ratios':[1,1,1]})
 
     ax = axarr[0]
-    spec_evol(ax)
-    
-    ax = axarr[1]
     early_comparison(ax)
      
-    ax = axarr[2]
+    ax = axarr[1]
     w_comparison(ax)
 
-    ax = axarr[3]
+    ax = axarr[2]
     grbsn_comparison(ax)
 
     for ax in axarr:
@@ -538,6 +542,6 @@ if __name__=="__main__":
         ax.get_yaxis().set_ticks([])
 
     plt.subplots_adjust(hspace=0.1)
-    plt.savefig("early_spectra.eps", format='eps', dpi=500)
+    plt.savefig("early_spec_comparison.eps", format='eps', dpi=500, bbox_inches='tight')
     #plt.show()
     plt.close()
