@@ -1,7 +1,7 @@
 import numpy as np
 
 def load_lc():
-    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data"
+    DATA_DIR = "/Users/annaho/Dropbox/astronomy/papers_complete/ZTF18abukavn/data"
     lsun = 3.839E33
 
     dat = np.loadtxt("%s/physevol.dat" %DATA_DIR, dtype=str)

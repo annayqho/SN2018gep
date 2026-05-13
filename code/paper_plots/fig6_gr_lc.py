@@ -16,7 +16,9 @@ rc("font", family="serif")
 rc("text", usetex=True)
 from astropy.cosmology import Planck15
 from astropy.io import ascii
-from plot_lc import get_lc
+import sys
+sys.path.append("/Users/annaho/Dropbox/astro/papers/papers_complete/ZTF18abukavn/code")
+from load_lc import get_lc
 
 z = 0.03154
 d = Planck15.luminosity_distance(z=0.03154).cgs.value
@@ -35,7 +37,7 @@ def mag_to_flux(mag, emag):
 
 
 def get_data():
-    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
+    DATA_DIR = "/Users/annaho/Dropbox/astro/papers/papers_complete/ZTF18abukavn/data/phot"
 
     # Full light curve from Danny
     f = DATA_DIR + "/ZTF18abukavn.csv"
@@ -194,8 +196,8 @@ def full_lc(figx, figy, xmin, xmax, ymin, ymax, figname, timeline=False, inset=F
     ax.invert_yaxis()
 
     plt.tight_layout()
-    plt.show()
-    #plt.savefig(figname, format='eps', dpi=1000)
+    plt.savefig("output/" + figname, bbox_inches='tight', dpi=200)
+    plt.close()
 
 
 def lc_fit():
@@ -263,13 +265,9 @@ def lc_fit():
  
 
 if __name__=="__main__":
-    #full_lc(10, 3, -175, 200, 15.5, 23, "full_gr.png")
-    #full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.eps", timeline=True, inset=True)
+    # Top panel of early_data.pdf: full LC, -25 to 60 d
+    full_lc(10, 3, -25, 60, 15.5, 23, "full_gr.pdf")
 
-    # first five days
-    #full_lc(5, 3, -0.5, 5, 15.5, 22.5, "zoom_gr.png", timeline=True)
-
-    #full_lc(10, 3, -25, 60, 15.5, 23, "full_gr.eps")
-
-    # timeline for talks
-    #full_lc(6, 4, -0.5, 5.1, 14.5, 22.5, "zoom_gr.eps", timeline=True)
+    # Bottom panel of early_data.pdf: precursor zoom with follow-up timeline
+    full_lc(10, 3, -18, 2.2, 15.5, 22.5, "zoom_gr.pdf",
+            timeline=True, inset=True)

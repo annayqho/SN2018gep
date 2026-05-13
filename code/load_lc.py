@@ -33,7 +33,7 @@ def get_ext():
 
 
 def get_uv_lc():
-    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/uv"
+    DATA_DIR = "/Users/annaho/Dropbox/astro/papers/papers_complete/ZTF18abukavn/data/uv"
 
     # Dictionary mapping the filter to the wavelength
     bands = {}
@@ -63,7 +63,7 @@ def get_uv_lc():
 
 
 def get_forced_phot():
-    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
+    DATA_DIR = "/Users/annaho/Dropbox/astro/papers/papers_complete/ZTF18abukavn/data/phot"
 
     # Full light curve from Danny
     f = DATA_DIR + "/ZTF18abukavn.csv"
@@ -85,7 +85,7 @@ def get_forced_phot():
 
 def get_lc():
     # get optical light curves 
-    DATA_DIR = "/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/data/phot"
+    DATA_DIR = "/Users/annaho/Dropbox/astro/papers/papers_complete/ZTF18abukavn/data/phot"
     f = DATA_DIR + "/ZTF18abukavn_opt_phot.dat"
     dat = np.loadtxt(f, dtype=str, delimiter=' ')
     instr = dat[:,0]

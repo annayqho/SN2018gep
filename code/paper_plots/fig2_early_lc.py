@@ -12,8 +12,8 @@ rc("text", usetex=True)
 import matplotlib.gridspec as gridspec
 from astropy.cosmology import Planck15
 import sys
-sys.path.append("/Users/annaho/Dropbox/Projects/Research/ZTF18abukavn/code")
-from load_lc import get_forced_phot
+sys.path.append("/Users/annaho/Dropbox/astro/papers/papers_complete/ZTF18abukavn/code")
+from load_lc import *
 
 
 d = Planck15.luminosity_distance(z=0.03154).cgs.value
@@ -76,7 +76,6 @@ def get_t0():
 
 def plot_firstmin_flux(ax):
     """ Plot the first few minutes """
-    #dt, mag, emag, instr, filt, det = load_lc()
     jd, filt, mag, emag, limmag, code = get_forced_phot()
     t0 = 2458370.6634
     dt = jd-t0
@@ -104,7 +103,7 @@ def plot_firstmin_flux(ax):
     yd = fitparams[0]*xd**2 + fitparams[1]*xd + fitparams[2]
     ax.plot(xm, yd/1E26, c='k', lw=0.5, ls='--')
     ax.axvspan(-24.83-2, -24.83+2, lw=0.5, color='lightgrey')
-    ax.text(-20, 40, "$t_0=-25\pm2$ min", fontsize=14,
+    ax.text(-20, 40, r"$t_0=-25\pm2$ min", fontsize=14,
             verticalalignment='top')
 
     # Format this box
@@ -169,7 +168,7 @@ def plot_firstmin_mag(ax):
     ax.errorbar(
             dt[choose]*24*60, mag[choose], yerr=emag[choose], 
             c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
-    ax.text(63, 18.9, "$1.4 \pm 0.1$ mag/hr", fontsize=14,
+    ax.text(63, 18.9, r"$1.4 \pm 0.1$ mag/hr", fontsize=14,
             verticalalignment='top', horizontalalignment='right')
 
     # Plot the r-band detections
@@ -193,23 +192,27 @@ def plot_firstmin_mag(ax):
 
 def plot_full_lc(ax):
     """ plot the full LC with pre-bump """
-    dt, mag, emag, instr, filt, det = load_lc()
-    lum,elum = mag2lum(mag,emag)
-    gband = np.logical_and(instr=='P48+ZTF', filt=='g')
-    choose = np.logical_and(det, gband)
+    jd, filt, mag, emag, limmag, code = get_forced_phot()
+    t0 = 2458370.6634
+    dt = jd - t0
+    lum = mag2lum(mag)
+    elum = emag2elum(mag, emag)
+
+    gband = np.logical_and.reduce(
+            (code=='ZTF Camera', filt=='ztfg', ~np.isnan(mag)))
     ax.errorbar(
-            dt[choose], lum[choose]/1E28, yerr=elum[choose]/1E28, 
+            dt[gband], lum[gband]/1E28, yerr=elum[gband]/1E28,
             c='k', ms=5, fmt='s', label="P48 $g$", zorder=2)
-    rband = np.logical_and(instr=='P48+ZTF', filt=='r')
-    choose = np.logical_and(det, rband)
+    rband = np.logical_and.reduce(
+            (code=='ZTF Camera', filt=='ztfr', ~np.isnan(mag)))
     ax.errorbar(
-            dt[choose], lum[choose]/1E28, yerr=elum[choose]/1E28, 
+            dt[rband], lum[rband]/1E28, yerr=elum[rband]/1E28,
             ms=5, fmt='o', mfc='white', mec='grey', label="P48 $r$", c='grey',
             zorder=0)
 
-    out,cov = get_fit_func()
-    xlab = np.linspace(-1,2)
-    ylab = out[0]*xlab**2 + out[1]*xlab + out[2]
+    t0_fit, et0, fitparams = get_t0()
+    xlab = np.linspace(-1, 2)
+    ylab = fitparams[0]*xlab**2 + fitparams[1]*xlab + fitparams[2]
     ax.plot(xlab, ylab/1E28, c='k', ls='--')
 
     # Vertical line for the first UVOT epoch
@@ -262,3 +265,6 @@ if __name__=="__main__":
 
     fig,ax = plt.subplots(1,1,figsize=(8,5))
     plot_full_lc(ax)
+    plt.tight_layout()
+    plt.savefig("output/fig2_early_lc.png", dpi=200, bbox_inches='tight')
+    plt.show()

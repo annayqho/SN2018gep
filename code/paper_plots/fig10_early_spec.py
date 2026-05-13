@@ -333,7 +333,7 @@ def plot_18cow(ax, scale):
     plot_smoothed_spec(
             ax, wl_cow/(1+0.014), flux_cow/scale, ivar_cow,
             'P200', 1.0, lw=1, ls='--', 
-            label=r"18cow, +5.353d, $T=26\,$kK")
+            label=r"18cow, +5.353d, $T=26\,$kK", text=False)
 
 
 def plot_10vgv(ax, scale):
@@ -510,7 +510,6 @@ def grbsn_comparison(ax):
     plot_98bw(ax, 1E-14)
     plot_06aj(ax, 1E-16)
     ax.legend(fontsize=12, loc='upper left')
-    ax.set_xlabel(r"Rest Wavelength (\AA)", fontsize=16)
     ax.set_ylabel(
             r"Scaled $F_{\lambda}$ + cst.",
             fontsize=16)
@@ -518,8 +517,9 @@ def grbsn_comparison(ax):
 
 if __name__=="__main__":
     # Top panel as separate figure
-    fig,ax = plt.subplots(1,1,figsize=(7,4))
+    fig,ax = plt.subplots(1,1,figsize=(7,5))
     spec_evol(ax)
+    ax.set_xlabel(r"Rest Wavelength (\AA)", fontsize=16)
     plt.savefig("early_spec_evol.eps", format='eps', dpi=300, bbox_inches='tight')
     plt.close()
 
@@ -536,11 +536,13 @@ if __name__=="__main__":
 
     ax = axarr[2]
     grbsn_comparison(ax)
+    ax.set_xlabel(r"Rest Wavelength (\AA)", fontsize=16)
 
     for ax in axarr:
         ax.tick_params(axis='both', labelsize=14)
         ax.get_yaxis().set_ticks([])
 
+    ax.set_xlim(3000, 8440)
     plt.subplots_adjust(hspace=0.1)
     plt.savefig("early_spec_comparison.eps", format='eps', dpi=500, bbox_inches='tight')
     #plt.show()
